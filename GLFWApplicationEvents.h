@@ -3,9 +3,11 @@
 
 #include "GLFWApplication.h"
 
+// OpenGL
+#include <GL/glew.h>
+
 // GLFW
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 // Glm
 #include <glm/gtc/constants.hpp>

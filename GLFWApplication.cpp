@@ -5,7 +5,9 @@
 #include "Helper.h"
 #include "Mesh.h"
 #include "Message.h"
+#include "Program.h"
 #include "Shader.h"
+#include "ShaderProgram.h"
 
 // OpenGL
 #include <GL/glew.h>
@@ -28,7 +30,12 @@ GLFWApplication* GLFWApplication::getInstance()
     return &window;
 }
 
-void GLFWApplication::mouseInput(GLFWwindow* handle, int button, int action, int mods)
+void GLFWApplication::FramebufferSizeCallback(GLFWwindow *handle, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
+void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)
 {
     GLFWApplication* app = GLFWApplication::getInstance();
 
@@ -37,7 +44,7 @@ void GLFWApplication::mouseInput(GLFWwindow* handle, int button, int action, int
     }
 }
 
-void GLFWApplication::mousePos(GLFWwindow* handle, double xpos, double ypos)
+void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
 {
     GLFWApplication* app = GLFWApplication::getInstance();
 
@@ -46,12 +53,12 @@ void GLFWApplication::mousePos(GLFWwindow* handle, double xpos, double ypos)
     }
 }
 
-void GLFWApplication::mouseScroll(GLFWwindow* handle, double xoffset, double yoffset)
+void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double yoffset)
 {
 
 }
 
-void GLFWApplication::keyboardInput(GLFWwindow* handle, int key, int scancode, int action, int mods)
+void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods)
 {
 
 }
@@ -60,11 +67,9 @@ GLFWApplication::GLFWApplication() : Application(),
     windowHandle(0),
     m_interface(0),
     m_mesh(0),
-    m_program(),
-    m_program_normal(),
     m_camera(Camera::Perspective)
 {
-    init();
+
 }
 
 GLFWApplication::~GLFWApplication()
@@ -79,12 +84,14 @@ void GLFWApplication::init()
 {
     typedef Shader::ShaderType ShaderType;
 
+    // Specifies background color
     glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    // Enable depth test
     glEnable(GL_DEPTH_TEST);
     // Specifies how polygons are rendered
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     // Enable eliminaton of hidden faces
     glEnable(GL_CULL_FACE);
     // Specifies whether front or back facing facets are candidates for culling
@@ -92,61 +99,29 @@ void GLFWApplication::init()
     // Specifies the orientation of front-facing polygons
     glFrontFace(GL_CCW);
 
+    /* Set the number of screen updates to wait from the time glfwSwapBuffers was called before swapping */
+    // 0 = no waiting for rendering the next frame
+    // 1 = draw 1 image for each frames displayed on the screen (60Hz monitor = 60fps)
+    // 2 = draw 1 image every 2 frames displayed on the screen (60hz monitor = 30 draw/s = 30fps)
+    // 4 = draw 1 image every 4 frames displayed on the screen (60Hz monitor = 15 draw/s = 15fps)
+    // etc ...
+    glfwSwapInterval(2);
+
     // interface
     this->m_interface = new GLFWApplicationEvents();
 
     // mesh
-//    this->m_mesh = Mesh::fromObj("/home/henry/dev/QtProject/OpenGL/models/cube.obj");
+    //this->m_mesh = Mesh::fromObj("/home/henry/dev/QtProject/OpenGL/models/cube.obj");
     this->m_mesh = Mesh::fromObj("/home/henry/dev/QtProject/OpenGL/models/dragon_low.obj");
-//    this->m_mesh = Mesh::fromObj("/home/henry/dev/QtProject/OpenGL/models/Armadillo_simplified.obj");
+    //this->m_mesh = Mesh::fromObj("/home/henry/dev/QtProject/OpenGL/models/Armadillo_simplified.obj");
 
     if (!this->m_mesh)
         return;
 
-    // shader program
-    std::string vs;
-    std::string gs;
-    std::string fs;
-
-    Shader vertexShader(ShaderType::Vertex);
-    Shader geometryShader(ShaderType::Geometry);
-    Shader fragmentShader(ShaderType::Fragment);
-
-    // Basic program
-    gl::helper::getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/basic.vs", vs);
-    vertexShader.compileSourceCode(vs);
-    m_program.addShader(vertexShader);
-
-    gl::helper::getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/basic.gs", gs);
-//    geometryShader.compileSourceCode(gs);
-//    m_program.addShader(geometryShader);
-
-    gl::helper::getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/basic.fs", fs);
-    fragmentShader.compileSourceCode(fs);
-    m_program.addShader(fragmentShader);
-
-    m_program.link();
-
-    if (!m_program.isLinked())
-        return;
-
-    // Normal program
-    gl::helper::getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/normal.vs", vs);
-    vertexShader.compileSourceCode(vs);
-    m_program_normal.addShader(vertexShader);
-
-    gl::helper::getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/normal.gs", gs);
-    geometryShader.compileSourceCode(gs);
-    m_program_normal.addShader(geometryShader);
-
-    gl::helper::getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/normal.fs", fs);
-    fragmentShader.compileSourceCode(fs);
-    m_program_normal.addShader(fragmentShader);
-
-    m_program_normal.link();
-
-    if (!m_program_normal.isLinked())
-        return;
+    // Shader program
+    Program* program = this->addProgram();
+    program->addShaderProgram(ShaderProgram::DrawBasic);
+    program->addShaderProgram(ShaderProgram::DrawNormal);
 
     /* Camera specification */
     glm::vec3 min;
@@ -167,17 +142,7 @@ void GLFWApplication::init()
     float zNear = 0.2f * diagonal;
     float zFar = 2.0f * diagonal;
     this->m_camera.perspective(fovy, aspect, zNear, zFar);
-
-    /* Set the number of screen updates to wait from the time glfwSwapBuffers was called before swapping */
-    // 0 = no waiting for rendering the next frame
-    // 1 = draw 1 image for each frames displayed on the screen (60Hz monitor = 60fps)
-    // 2 = draw 1 image every 2 frames displayed on the screen (60hz monitor = 30 draw/s = 30fps)
-    // 4 = draw 1 image every 4 frames displayed on the screen (60Hz monitor = 15 draw/s = 15fps)
-    // etc ...
-    glfwSwapInterval(2);
 }
-
-#include "Helper.h"
 
 void GLFWApplication::loop()
 {
@@ -213,18 +178,9 @@ void GLFWApplication::draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(m_program.getProgramID());
+    const Program* program = this->getProgram(0);
+    program->draw();
 
-    glm::mat4 model = glm::mat4();
-    glm::mat4 view = this->m_camera.view();
-    glm::mat4 proj = this->m_camera.projection();
-
-    GLint viewProjLocation = glGetUniformLocation(m_program.getProgramID(), "mvp");
-    glUniformMatrix4fv(viewProjLocation, 1, GL_FALSE, glm::value_ptr(proj * view * model));
-
-    glm::vec3 color(1.0, 1.0, 0.0);
-    GLint colorLocation = glGetUniformLocation(m_program.getProgramID(), "color");
-    glUniform3fv(colorLocation, 1, glm::value_ptr(color));
 
 //    GLuint nbPixelsQuery;
 //    int nbPixel = -1;
@@ -240,19 +196,13 @@ void GLFWApplication::draw()
 
 //    msg_info("Draw") << nbPixel << " passed";
 
-    // draw here
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    this->m_mesh->draw();
 
-    glUseProgram(m_program_normal.getProgramID());
+//    glUseProgram(m_program_normal.getProgramID());
 
-    viewProjLocation = glGetUniformLocation(m_program_normal.getProgramID(), "mvp");
-    glUniformMatrix4fv(viewProjLocation, 1, GL_FALSE, glm::value_ptr(proj * view * model));
+//    GLint normalMatLocation = glGetUniformLocation(m_program_normal.getProgramID(), "normal_mat");
+//    glUniformMatrix3fv(normalMatLocation, 1, GL_FALSE, glm::value_ptr(this->m_camera.normal()));
 
-    GLint normalMatLocation = glGetUniformLocation(m_program_normal.getProgramID(), "normal_mat");
-    glUniformMatrix3fv(normalMatLocation, 1, GL_FALSE, glm::value_ptr(this->m_camera.normal()));
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+//    glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 //    this->m_mesh->drawNormal();
 
 //    color = glm::vec3(0.0, 0.0, 0.0);
@@ -262,8 +212,6 @@ void GLFWApplication::draw()
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //    glLineWidth(1);
 //    this->m_mesh->draw();
-
-    glUseProgram(0);
 }
 
 GLFWwindow* GLFWApplication::getWindow() const
@@ -279,6 +227,7 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
 
     /* Remove callbacks set to the old handle */
     if (oldHandle != nullptr) {
+        glfwSetFramebufferSizeCallback(oldHandle, nullptr);
         glfwSetMouseButtonCallback(oldHandle, nullptr);
         glfwSetCursorPosCallback(oldHandle, nullptr);
         glfwSetScrollCallback(oldHandle, nullptr);
@@ -289,10 +238,11 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
 
     /* Add callbacks to the new handle */
     if (newHandle != nullptr) {
-        glfwSetMouseButtonCallback(newHandle, GLFWApplication::mouseInput);
-        glfwSetCursorPosCallback(newHandle, GLFWApplication::mousePos);
-        glfwSetScrollCallback(newHandle, GLFWApplication::mouseScroll);
-        glfwSetKeyCallback(newHandle, GLFWApplication::keyboardInput);
+        glfwSetFramebufferSizeCallback(newHandle, GLFWApplication::FramebufferSizeCallback);
+        glfwSetMouseButtonCallback(newHandle, GLFWApplication::MouseButtonCallback);
+        glfwSetCursorPosCallback(newHandle, GLFWApplication::CursorPosCallback);
+        glfwSetScrollCallback(newHandle, GLFWApplication::ScrollCallback);
+        glfwSetKeyCallback(newHandle, GLFWApplication::KeyCallback);
     }
 }
 
@@ -305,4 +255,9 @@ void GLFWApplication::setInterface(Interface* newInterface)
 {
     // don't use this function (memory leaks)
     this->m_interface = newInterface;
+}
+
+Camera* GLFWApplication::getCamera()
+{
+    return &(this->m_camera);
 }

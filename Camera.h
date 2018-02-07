@@ -31,11 +31,13 @@ public:
 
     const glm::mat3 normal();
 
-    const glm::mat4& model();
+    const glm::mat4& model() const;
 
-    const glm::mat4& view();
+    const glm::mat4& view() const;
 
-    const glm::mat4& projection();
+    const glm::mat4& projection() const;
+
+    const glm::mat4 &mvp() const;
 
     void rotate(float rx, float ry);
 
@@ -59,6 +61,8 @@ private:
     glm::mat4 m_model;
     glm::mat4 m_view;
     glm::mat4 m_proj;
+
+    mutable glm::mat4 m_mvp;
 
     glm::vec3 m_eye;
     glm::vec3 m_target;

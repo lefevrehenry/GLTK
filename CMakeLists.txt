@@ -12,11 +12,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(HEADER_FILES
     Application.h
     Camera.h
+    Data.h
+    Data.inl
     GLFWApplicationEvents.h
     Helper.h
     GLFWApplication.h
     Mesh.h
     Message.h
+    Program.h
     Shader.h
     ShaderProgram.h
 )
@@ -24,10 +27,12 @@ set(HEADER_FILES
 set(SOURCE_FILES
     Application.cpp
     Camera.cpp
+    Data.cpp
     GLFWApplicationEvents.cpp
     GLFWApplication.cpp
     Mesh.cpp
     Message.cpp
+    Program.cpp
     Shader.cpp
     ShaderProgram.cpp
     main.cpp

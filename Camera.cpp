@@ -14,6 +14,7 @@ Camera::Camera(ProjectionType projectionType) :
     m_model(),
     m_view(),
     m_proj(),
+    m_mvp(),
     m_eye(),
     m_target(),
     m_up(),
@@ -39,26 +40,32 @@ const glm::mat3 Camera::normal()
     return glm::inverseTranspose(glm::mat3(model()));
 }
 
-const glm::mat4 &Camera::model()
+const glm::mat4& Camera::model() const
 {
     return this->m_model;
 }
 
-const glm::mat4& Camera::view()
+const glm::mat4& Camera::view() const
 {
-    if (this->m_viewDirty) {
-        this->m_view = glm::inverse(model());
-        setViewDirty(false);
-    }
+//    if (this->m_viewDirty) {
+//        this->m_view = glm::inverse(model());
+//        setViewDirty(false);
+//    }
     return this->m_view;
 }
 
-const glm::mat4& Camera::projection()
+const glm::mat4& Camera::projection() const
 {
-    if (this->m_projectionDirty) {
-        setProjectionDirty(false);
-    }
+//    if (this->m_projectionDirty) {
+//        setProjectionDirty(false);
+//    }
     return this->m_proj;
+}
+
+const glm::mat4& Camera::mvp() const
+{
+    this->m_mvp = projection() * view();
+    return this->m_mvp;
 }
 
 void Camera::rotate(float rx, float ry)
@@ -116,7 +123,9 @@ void Camera::rotate(float rx, float ry)
 //    this->m_model = glm::toMat4(q) * this->m_model;
 //    model = glm::translate(model, -this->m_target);
 
-    setViewDirty(true);
+    this->m_view = glm::inverse( this->m_model );
+
+    //setViewDirty(true);
 }
 
 void Camera::lookAt(const glm::vec3 &eye, const glm::vec3 &target, const glm::vec3 &up)
@@ -128,21 +137,21 @@ void Camera::lookAt(const glm::vec3 &eye, const glm::vec3 &target, const glm::ve
 
     this->m_model = glm::inverse( this->m_view );
 
-    setViewDirty(false);
+//    setViewDirty(false);
 }
 
 void Camera::perspective(float fovy, float aspect, float zNear, float zFar)
 {
     this->m_projectionType = Perspective;
     this->m_proj = glm::perspective(fovy, aspect, zNear, zFar);
-    setProjectionDirty(false);
+//    setProjectionDirty(false);
 }
 
 void Camera::orthographic(float left, float right, float bottom, float top, float zNear, float zFar)
 {
     this->m_projectionType = Orthograhic;
     this->m_proj = glm::ortho(left, right, bottom, top, zNear, zFar);
-    setProjectionDirty(false);
+//    setProjectionDirty(false);
 }
 
 void Camera::setModelDirty(bool dirty)

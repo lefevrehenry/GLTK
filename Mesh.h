@@ -30,7 +30,6 @@ public:
     static Mesh* fromObj(const std::string& filename);
 
     void draw() const;
-    void drawNormal() const;
 
     void printInfo() const;
 
@@ -64,7 +63,6 @@ private:
         uintVector m_indices;
 
         void draw() const;
-        void drawNormal() const;
 
         MeshEntry(const aiMesh *mesh);
         virtual ~MeshEntry();

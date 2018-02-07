@@ -1,7 +1,6 @@
 
 #include "GLFWApplication.h"
 #include "Message.h"
-#include "ShaderProgram.h"
 
 // Glew
 #include <GL/glew.h>
@@ -116,6 +115,7 @@ int main(int argc, char* argv[])
     msg_info("OpenGL") << "Congrat's ! You're running OpenGL " << major << "." << minor;
 
     app = gl::GLFWApplication::getInstance();
+    app->init();
     app->setWindow(windowHandle);
 
     app->loop();

@@ -11,11 +11,11 @@ uniform mat3 normal_mat;
 
 // data to geometry shader
 out vec4 o_pos;
-out vec3 o_normal;
+//out vec3 o_normal;
 
 void main()
 {
     o_pos = mvp * vec4(position + normal, 1.0);
-    o_normal = normalize(normal_mat * normal);
+    //o_normal = normalize(normal_mat * normal);
     gl_Position = mvp * vec4(position, 1.0);
 }

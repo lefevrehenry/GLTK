@@ -2,9 +2,6 @@
 
 #include "Message.h"
 
-// Standard Library
-#include <iostream>
-
 // Assimp
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -28,11 +25,11 @@ Mesh::~Mesh()
 Mesh* Mesh::fromObj(const std::string& filename)
 {
     Assimp::Importer importer;
-//    const aiScene *scene = importer.ReadFile(filename, aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals);
-    const aiScene *scene = importer.ReadFile(filename, aiProcess_GenNormals);
+    const aiScene *scene = importer.ReadFile(filename, aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals);
+//    const aiScene *scene = importer.ReadFile(filename, aiProcess_GenNormals);
 
     if(!scene) {
-        printf("Impossible d'importer le mesh: %s\n", importer.GetErrorString());
+        msg_error("Mesh") << importer.GetErrorString();
         return nullptr;
     }
 
@@ -51,13 +48,6 @@ void Mesh::draw() const
 {
     for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
         m_meshEntries[i]->draw();
-    }
-}
-
-void Mesh::drawNormal() const
-{
-    for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        m_meshEntries[i]->drawNormal();
     }
 }
 
@@ -153,14 +143,7 @@ Mesh::MeshEntry::~MeshEntry()
 void Mesh::MeshEntry::draw() const
 {
     glBindVertexArray(vao.id);
-    glDrawElements(GL_TRIANGLES, 3*m_indices.size(), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-}
-
-void Mesh::MeshEntry::drawNormal() const
-{
-    glBindVertexArray(vao.id);
-    glDrawElements(GL_POINTS, 3*m_indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
@@ -180,19 +163,19 @@ void Mesh::VAO::loadToGPU(floatVector &vertices, floatVector &normals, floatVect
     // Store mesh positions into buffer inside the GPU memory
     glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), mode);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
     glEnableVertexAttribArray(0);
 
     // Store mesh normals into buffer inside the GPU memory
     glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
     glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), normals.data(), mode);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, (void *)0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, (void*) 0);
     glEnableVertexAttribArray(1);
 
     // Store mesh colors into buffer inside the GPU memory
     glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
     glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(float), colors.data(), mode);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
     glEnableVertexAttribArray(2);
 
     // Store mesh indices into buffer inside the GPU memory

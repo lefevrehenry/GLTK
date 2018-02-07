@@ -41,7 +41,7 @@ private:
 
     GLuint m_shaderId;
     ShaderType m_shaderType;
-    const char * m_sourceCode;
+    const char* m_sourceCode;
 
     bool m_isCompiled;
 

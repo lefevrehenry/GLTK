@@ -37,19 +37,13 @@ public:
 
     unsigned int getNbProgram() const;
 
-    const Program* getProgram(unsigned int i) const;
+    const gl::Program* getProgram(unsigned int i) const;
 
-    void addProgram(const Program& program);
+    gl::Program* addProgram();
 
 private:
 
-    std::vector<const gl::Program*> m_shaderList;
-
-//    const gl::Mesh* m_mesh;
-//    gl::Program m_program;
-
-//    glm::mat4x4 m_view;
-//    glm::mat4x4 m_proj;
+    std::vector<const gl::Program*> m_programList;
 
 };
 

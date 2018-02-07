@@ -1,10 +1,8 @@
 #include "ShaderProgram.h"
 
+#include "Data.h"
 #include "Message.h"
 #include "Shader.h"
-
-// Standard Library
-#include <iostream>
 
 
 using namespace gl;
@@ -12,6 +10,7 @@ using namespace gl;
 ShaderProgram::ShaderProgram() :
     m_programId(0),
     m_shaderList(3),
+    m_dataList(),
     m_isLinked(false)
 {
     m_programId = glCreateProgram();
@@ -19,7 +18,16 @@ ShaderProgram::ShaderProgram() :
 
 ShaderProgram::~ShaderProgram()
 {
+    for (BaseData* baseData : m_dataList) {
+        delete baseData;
+        baseData = nullptr;
+    }
     glDeleteProgram(m_programId);
+}
+
+GLuint ShaderProgram::getProgramID() const
+{
+    return m_programId;
 }
 
 bool ShaderProgram::addShader(const Shader& shader)
@@ -29,6 +37,11 @@ bool ShaderProgram::addShader(const Shader& shader)
 
     typedef Shader::ShaderType ShaderType;
     ShaderType type = shader.getShaderType();
+
+    if (m_shaderList[type] != nullptr) {
+        msg_waring("ShaderProgram") << "Shader " << type << " already set in ShaderProgram " << m_programId;
+        return false;
+    }
 
     m_shaderList[type] = &shader;
 
@@ -60,4 +73,24 @@ void ShaderProgram::link()
         if (shader != nullptr)
             glDetachShader(m_programId, shader->getShaderID());
     }
+}
+
+bool ShaderProgram::isLinked() const
+{
+    return m_isLinked;
+}
+
+void ShaderProgram::updateDataIfDirty()
+{
+    for (BaseData* baseData : m_dataList) {
+        baseData->updateIfDirty();
+    }
+}
+
+int ShaderProgram::attributLocation(const char *name) const
+{
+    if (!m_isLinked)
+        return -1;
+
+    return glGetUniformLocation(m_programId, name);
 }
