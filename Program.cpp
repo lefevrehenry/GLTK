@@ -1,6 +1,5 @@
 #include "Program.h"
 
-#include "GLFWApplication.h"
 #include "Helper.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
@@ -12,7 +11,8 @@
 using namespace gl;
 
 Program::Program() :
-    m_shaderProgramList()
+    m_shaderProgramList(),
+    m_polygonMode(PolygonMode::FILL)
 {
 
 }
@@ -38,32 +38,29 @@ ShaderProgram* Program::getShaderProgram(unsigned int i) const
     return this->m_shaderProgramList[i];
 }
 
-ShaderProgram* Program::addShaderProgram(ShaderProgramType shaderProgramType)
+ShaderProgram* Program::addShaderProgram(ShaderProgram::ShaderProgramType shaderProgramType)
 {
     ShaderProgram* shaderProgram = helper::CreateShaderProgram(shaderProgramType);
     m_shaderProgramList.push_back(shaderProgram);
     return shaderProgram;
 }
 
+Program::PolygonMode Program::getPolygonMode()
+{
+    return this->m_polygonMode;
+}
+
+void Program::setPolygonMode(Program::PolygonMode polygonMode)
+{
+    this->m_polygonMode = polygonMode;
+}
+
 void Program::draw() const
 {
-    GLFWApplication* app = GLFWApplication::getInstance();
+    glPolygonMode(GL_FRONT_AND_BACK, m_polygonMode);
 
     for (unsigned int i = 0; i < getNbShaderProgram(); ++i) {
         ShaderProgram* shaderProgram = this->m_shaderProgramList[i];
-        GLuint programID = shaderProgram->getProgramID();
-
-        // Bind program
-        glUseProgram(programID);
-
-        // update all inputs shader so we can draw safely
-        shaderProgram->updateDataIfDirty();
-
-        // Draw
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        app->m_mesh->draw();
-
-        // Unbind program
-        glUseProgram(0);
+        shaderProgram->draw();
     }
 }

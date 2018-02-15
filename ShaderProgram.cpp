@@ -1,6 +1,8 @@
 #include "ShaderProgram.h"
 
 #include "Data.h"
+#include "GLFWApplication.h"
+#include "Mesh.h"
 #include "Message.h"
 #include "Shader.h"
 
@@ -85,6 +87,28 @@ void ShaderProgram::updateDataIfDirty()
     for (BaseData* baseData : m_dataList) {
         baseData->updateIfDirty();
     }
+}
+
+//void ShaderProgram::setDrawPrimitive(Mesh::DrawPrimitive drawPrimitive)
+//{
+//    this->m_drawPrimitive = drawPrimitive;
+//}
+
+void ShaderProgram::draw()
+{
+    GLFWApplication* app = GLFWApplication::getInstance();
+
+    // Bind program
+    glUseProgram(m_programId);
+
+    // update all inputs shader so we can draw safely
+    this->updateDataIfDirty();
+
+    // Draw
+    app->m_mesh->draw();
+
+    // Unbind program
+    glUseProgram(0);
 }
 
 int ShaderProgram::attributLocation(const char *name) const

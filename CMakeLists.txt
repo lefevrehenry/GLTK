@@ -13,13 +13,13 @@ set(HEADER_FILES
     Application.h
     Camera.h
     Data.h
-    Data.inl
     GLFWApplicationEvents.h
     Helper.h
     GLFWApplication.h
     Mesh.h
     Message.h
     Program.h
+    RigidFrame.h
     Shader.h
     ShaderProgram.h
 )
@@ -33,6 +33,7 @@ set(SOURCE_FILES
     Mesh.cpp
     Message.cpp
     Program.cpp
+    RigidFrame.cpp
     Shader.cpp
     ShaderProgram.cpp
     main.cpp
@@ -45,6 +46,16 @@ set(SHADER_FILES
     shaders/normal.vs
     shaders/normal.gs
     shaders/normal.fs
+    shaders/flatShading.vs
+    shaders/flatShading.gs
+    shaders/flatShading.fs
+    shaders/gouraudShading.vs
+    shaders/gouraudShading.fs
+    shaders/phongShading.vs
+    shaders/phongShading.fs
+    shaders/frame.vs
+    shaders/frame.gs
+    shaders/frame.fs
 )
 
 # Required packages

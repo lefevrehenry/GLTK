@@ -13,6 +13,7 @@
 
 
 class aiMesh;
+class aiScene;
 
 namespace gl {
 
@@ -27,21 +28,30 @@ public:
     typedef std::vector<float> floatVector;
     typedef std::vector<unsigned int> uintVector;
 
-    static Mesh* fromObj(const std::string& filename);
+    enum DrawPrimitive {
+        POINTS,
+        EDGES,
+        TRIANGLES
+    };
 
-    void draw() const;
+public:
 
-    void printInfo() const;
+    static Mesh* FromFile(const std::string& filename);
 
-    void getBbox(glm::vec3 &min, glm::vec3 &max) const;
+    virtual void draw() const;
+
+    virtual void drawInstanced(unsigned int instanced) const;
+
+    virtual void getBbox(glm::vec3 &min, glm::vec3 &max) const;
 
     virtual ~Mesh();
 
-private:
+protected:
 
-    Mesh(unsigned int numMeshEntries);
+    Mesh();
+    Mesh(const std::string& filename);
 
-private:
+protected:
 
     struct VAO {
         GLuint id;
@@ -57,18 +67,24 @@ private:
     struct MeshEntry {
         VAO vao;
 
+        unsigned int m_numVertices;
+        unsigned int m_numEdges;
+        unsigned int m_numTriangles;
+        unsigned int m_numQuads;
+
         floatVector m_vertices;
         floatVector m_normals;
         floatVector m_colors;
         uintVector m_indices;
 
-        void draw() const;
+        void draw(DrawPrimitive drawPrimitive) const;
+        void drawInstanced(DrawPrimitive drawPrimitive, unsigned int instanced) const;
 
         MeshEntry(const aiMesh *mesh);
         virtual ~MeshEntry();
     };
 
-private:
+protected:
 
     std::vector<const MeshEntry*> m_meshEntries;
 

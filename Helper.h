@@ -54,32 +54,60 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
     switch (shaderProgramType)
     {
-    case ShaderProgramType::DrawBasic:
-
+    case ShaderProgramType::Basic:
         getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/basic.vs", vs);
-        vertexShader.compileSourceCode(vs);
-        shaderProgram->addShader(vertexShader);
-
         getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/basic.fs", fs);
-        fragmentShader.compileSourceCode(fs);
-        shaderProgram->addShader(fragmentShader);
 
         break;
-    case ShaderProgramType::DrawNormal:
+    case ShaderProgramType::Normal:
 
         getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/normal.vs", vs);
-        vertexShader.compileSourceCode(vs);
-        shaderProgram->addShader(vertexShader);
-
         getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/normal.gs", gs);
-        geometryShader.compileSourceCode(gs);
-        shaderProgram->addShader(geometryShader);
-
         getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/normal.fs", fs);
-        fragmentShader.compileSourceCode(fs);
-        shaderProgram->addShader(fragmentShader);
 
         break;
+    case ShaderProgramType::FlatShading:
+
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/flatShading.vs", vs);
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/flatShading.gs", gs);
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/flatShading.fs", fs);
+
+        break;
+    case ShaderProgramType::GouraudShading:
+
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/gouraudShading.vs", vs);
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/gouraudShading.fs", fs);
+
+        break;
+    case ShaderProgramType::PhongShading:
+
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/phongShading.vs", vs);
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/phongShading.fs", fs);
+
+        break;
+
+    case ShaderProgramType::Frame:
+
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/frame.vs", vs);
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/frame.gs", gs);
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/frame.fs", fs);
+
+        break;
+    }
+
+    if (vs != "") {
+        vertexShader.compileSourceCode(vs);
+        shaderProgram->addShader(vertexShader);
+    }
+
+    if (gs != "") {
+        geometryShader.compileSourceCode(gs);
+        shaderProgram->addShader(geometryShader);
+    }
+
+    if (fs != "") {
+        fragmentShader.compileSourceCode(fs);
+        shaderProgram->addShader(fragmentShader);
     }
 
     shaderProgram->link();
@@ -87,17 +115,54 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     GLFWApplication* app = GLFWApplication::getInstance();
     Camera* camera = app->getCamera();
 
+    glm::vec3 dir_light(-1,-1,-0.5);
+    glm::vec3 color(1,0,0);
+
     switch (shaderProgramType)
     {
-    case ShaderProgramType::DrawBasic:
+    case ShaderProgramType::Basic:
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
-        shaderProgram->addData<glm::vec3>("color", glm::vec3(1,1,0));
+        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
+        shaderProgram->addData<glm::vec3>("color", color);
+        //shaderProgram->setDrawPrimitive(Mesh::TRIANGLES);
 
         break;
-    case ShaderProgramType::DrawNormal:
+    case ShaderProgramType::Normal:
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+        //shaderProgram->setDrawPrimitive(Mesh::TRIANGLES);
+
+        break;
+    case ShaderProgramType::FlatShading:
+
+        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+        shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
+        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
+        shaderProgram->addData<glm::vec3>("color", color);
+        //shaderProgram->setDrawPrimitive(Mesh::TRIANGLES);
+
+        break;
+    case ShaderProgramType::GouraudShading:
+
+        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
+        shaderProgram->addData<glm::vec3>("color", color);
+
+        break;
+    case ShaderProgramType::PhongShading:
+
+        shaderProgram->addData<Camera, glm::mat4>("view", camera, &Camera::view);
+        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+        shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
+        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
+
+        break;
+    case ShaderProgramType::Frame:
+
+        shaderProgram->addData<Camera, glm::mat4>("transform", camera, &Camera::mvp);
+        shaderProgram->addData<glm::mat4>("orientation", glm::mat4());
+        shaderProgram->addData<glm::vec3>("scale", glm::vec3(1,1,1));
 
         break;
     }

@@ -85,6 +85,7 @@ void GLFWApplication::init()
     typedef Shader::ShaderType ShaderType;
 
     // Specifies background color
+    //glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
@@ -111,17 +112,30 @@ void GLFWApplication::init()
     this->m_interface = new GLFWApplicationEvents();
 
     // mesh
-    //this->m_mesh = Mesh::fromObj("/home/henry/dev/QtProject/OpenGL/models/cube.obj");
-    this->m_mesh = Mesh::fromObj("/home/henry/dev/QtProject/OpenGL/models/dragon_low.obj");
-    //this->m_mesh = Mesh::fromObj("/home/henry/dev/QtProject/OpenGL/models/Armadillo_simplified.obj");
+//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/cube.obj");
+//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/dragon_low.obj");
+//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/Armadillo_simplified.obj");
+//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/sphere.obj");
+//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/pion.stl");
+//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/teapot.obj");
+    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/narrowarrow.obj");
 
     if (!this->m_mesh)
         return;
 
     // Shader program
     Program* program = this->addProgram();
-    program->addShaderProgram(ShaderProgram::DrawBasic);
-    program->addShaderProgram(ShaderProgram::DrawNormal);
+//    program->addShaderProgram(ShaderProgram::Basic);
+    program->addShaderProgram(ShaderProgram::FlatShading);
+//    program->addShaderProgram(ShaderProgram::GouraudShading);
+//    program->addShaderProgram(ShaderProgram::PhongShading);
+//    program->addShaderProgram(ShaderProgram::Normal);
+//    program->addShaderProgram(ShaderProgram::Frame);
+//    program->setPolygonMode(Program::PolygonMode::POINT);
+
+//    Program* program1 = this->addProgram();
+//    program1->addShaderProgram(ShaderProgram::Frame);
+//    program1->setPolygonMode(Program::PolygonMode::FILL);
 
     /* Camera specification */
     glm::vec3 min;
@@ -132,9 +146,12 @@ void GLFWApplication::init()
 
     // view
     glm::vec3 target = (min + max) / 2.0f;
-    glm::vec3 eye = target - (glm::vec3(0,0,1) * diagonal);
-    glm::vec3 up(0,1,0);
+    glm::vec3 eye = target - (glm::vec3(1,0,0) * diagonal);
+    glm::vec3 up(0,0,1);
     this->m_camera.lookAt(eye, target, up);
+
+//    msg_info("a") << target;
+//    msg_info("b") << up;
 
     // projection
     float fovy = 45.0f;
@@ -181,6 +198,8 @@ void GLFWApplication::draw()
     const Program* program = this->getProgram(0);
     program->draw();
 
+//    const Program* program1 = this->getProgram(1);
+//    program1->draw();
 
 //    GLuint nbPixelsQuery;
 //    int nbPixel = -1;
@@ -196,17 +215,6 @@ void GLFWApplication::draw()
 
 //    msg_info("Draw") << nbPixel << " passed";
 
-
-//    glUseProgram(m_program_normal.getProgramID());
-
-//    GLint normalMatLocation = glGetUniformLocation(m_program_normal.getProgramID(), "normal_mat");
-//    glUniformMatrix3fv(normalMatLocation, 1, GL_FALSE, glm::value_ptr(this->m_camera.normal()));
-
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-//    this->m_mesh->drawNormal();
-
-//    color = glm::vec3(0.0, 0.0, 0.0);
-//    glUniform3fv(colorLocation, 1, glm::value_ptr(color));
 
     // draw here
 //    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

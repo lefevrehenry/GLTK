@@ -19,10 +19,13 @@ class ShaderProgram;
 class Program
 {
 
-private:
-    typedef typename ShaderProgram::ShaderProgramType ShaderProgramType;
-
 public:
+
+    enum PolygonMode {
+        POINT = GL_POINT,
+        LINE = GL_LINE,
+        FILL = GL_FILL
+    };
 
     Program();
     virtual ~Program();
@@ -33,7 +36,13 @@ public:
 
     ShaderProgram* getShaderProgram(unsigned int i) const;
 
-    ShaderProgram* addShaderProgram(ShaderProgramType shaderProgramType);
+    ShaderProgram* addShaderProgram(ShaderProgram::ShaderProgramType shaderProgramType);
+
+public:
+
+    PolygonMode getPolygonMode();
+
+    void setPolygonMode(PolygonMode polygonMode);
 
 public:
 
@@ -42,6 +51,7 @@ public:
 private:
 
     std::vector<ShaderProgram*> m_shaderProgramList;
+    PolygonMode m_polygonMode;
 
 };
 

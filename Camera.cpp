@@ -5,7 +5,6 @@
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-
 using namespace gl;
 
 Camera::Camera(ProjectionType projectionType) :
@@ -15,6 +14,7 @@ Camera::Camera(ProjectionType projectionType) :
     m_view(),
     m_proj(),
     m_mvp(),
+    m_normal_mvp(),
     m_eye(),
     m_target(),
     m_up(),
@@ -35,9 +35,10 @@ bool Camera::isDirty() const
     return (/*m_modelDirty ||*/ m_viewDirty || m_projectionDirty);
 }
 
-const glm::mat3 Camera::normal()
+const glm::mat3& Camera::normal() const
 {
-    return glm::inverseTranspose(glm::mat3(model()));
+    this->m_normal_mvp = glm::inverseTranspose(glm::mat3(model()));
+    return this->m_normal_mvp;//glm::inverseTranspose(glm::mat3(model()));
 }
 
 const glm::mat4& Camera::model() const
@@ -73,7 +74,7 @@ void Camera::rotate(float rx, float ry)
     // we want to rotate camera moving on a sphere centered on
     // m_target by the angle rx (around oz) and angle ry (around oy)
 
-    // we apply the opposite rotation for the world
+    // we apply the opposite rotation to the world
     float dTheta = -rx;
     float dPhi = -ry;
 

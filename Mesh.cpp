@@ -10,56 +10,62 @@
 
 using namespace gl;
 
-Mesh::Mesh(unsigned int numMeshEntries) :
-    m_meshEntries(numMeshEntries)
+Mesh::Mesh() :
+    m_meshEntries(0)
 {
+
 }
 
-Mesh::~Mesh()
-{
-    for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        delete m_meshEntries[i];
-    }
-}
-
-Mesh* Mesh::fromObj(const std::string& filename)
+Mesh::Mesh(const std::string& filename) :
+    m_meshEntries(0)
 {
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(filename, aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals);
-//    const aiScene *scene = importer.ReadFile(filename, aiProcess_GenNormals);
+    const aiScene* scene = importer.ReadFile(filename, aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals);
+    // const aiScene* scene = importer.ReadFile(filename, aiProcess_GenNormals);
 
     if(!scene) {
         msg_error("Mesh") << importer.GetErrorString();
-        return nullptr;
+        return;
     }
 
-    Mesh* mesh = new Mesh(scene->mNumMeshes);
+    this->m_meshEntries.resize(scene->mNumMeshes);
 
     for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
         aiMesh* aimesh = scene->mMeshes[i];
         const MeshEntry* meshEntry = new MeshEntry(aimesh);
-        mesh->m_meshEntries[i] = meshEntry;
+        this->m_meshEntries[i] = meshEntry;
     }
+}
 
+Mesh::~Mesh()
+{
+    for (const MeshEntry* meshEntry : m_meshEntries) {
+        delete meshEntry;
+        meshEntry = nullptr;
+    }
+    m_meshEntries.clear();
+}
+
+Mesh* Mesh::FromFile(const std::string& filename)
+{
+    // TODO: check if file exist
+    // msg_error if not and return new Mesh()
+    Mesh* mesh = new Mesh(filename);
     return mesh;
 }
 
 void Mesh::draw() const
 {
     for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        m_meshEntries[i]->draw();
+        m_meshEntries[i]->draw(DrawPrimitive::TRIANGLES);
     }
 }
 
-void Mesh::printInfo() const
+void Mesh::drawInstanced(unsigned int instanced) const
 {
-    unsigned int nbVertices = 0;
-    unsigned int nbTriangles = 0;
-    unsigned int nbQuads = 0;
     for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        nbVertices += m_meshEntries[i]->m_vertices.size() / 3.0;
+        m_meshEntries[i]->drawInstanced(DrawPrimitive::TRIANGLES, instanced);
     }
-    msg_info("Mesh") << nbVertices << "vertices loaded";
 }
 
 void Mesh::getBbox(glm::vec3 &min, glm::vec3 &max) const
@@ -122,13 +128,51 @@ Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
     }
 
     if (mesh->HasFaces()) {
-        m_indices.resize(mesh->mNumFaces * 3);
+
+        // compte le nombre de primitive
+        m_numVertices = mesh->mNumVertices;
+        m_numEdges = 0;
+        m_numTriangles = 0;
+        m_numQuads = 0;
+
         for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
-            if (mesh->mFaces[i].mNumIndices != 3)
-                continue;
-            m_indices[3 * i] = mesh->mFaces[i].mIndices[0];
-            m_indices[3 * i + 1] = mesh->mFaces[i].mIndices[1];
-            m_indices[3 * i + 2] = mesh->mFaces[i].mIndices[2];
+            if (mesh->mFaces[i].mNumIndices == 2)
+                m_numEdges += 1;
+            if (mesh->mFaces[i].mNumIndices == 3)
+                m_numTriangles += 1;
+            if (mesh->mFaces[i].mNumIndices == 4)
+                m_numQuads += 1;
+        }
+
+        m_indices.resize(m_numVertices + (m_numEdges * 2) + (m_numTriangles * 3) + (m_numQuads * 4));
+
+        for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+            m_indices[i] = i;
+        }
+
+        unsigned int offset[4] = {0,0,0,0};
+
+        for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
+            unsigned int k = mesh->mFaces[i].mNumIndices;
+            if (k == 2) {
+                unsigned int j = m_numVertices + (2 * offset[k]);
+                m_indices[j] = mesh->mFaces[i].mIndices[0];
+                m_indices[j + 1] = mesh->mFaces[i].mIndices[1];
+                offset[k]++;
+            } else if (k == 3) {
+                unsigned int j = m_numVertices + (2 * m_numEdges) + (3 * offset[k]);
+                m_indices[j] = mesh->mFaces[i].mIndices[0];
+                m_indices[j + 1] = mesh->mFaces[i].mIndices[1];
+                m_indices[j + 2] = mesh->mFaces[i].mIndices[2];
+                offset[k]++;
+            } else if (k == 4) {
+                unsigned int j = m_numVertices + (2 * m_numEdges) + (3 * m_numTriangles) + (4 * offset[k]);
+                m_indices[j] = mesh->mFaces[i].mIndices[0];
+                m_indices[j + 1] = mesh->mFaces[i].mIndices[1];
+                m_indices[j + 2] = mesh->mFaces[i].mIndices[2];
+                m_indices[j + 3] = mesh->mFaces[i].mIndices[3];
+                offset[k]++;
+            }
         }
     }
 
@@ -140,10 +184,73 @@ Mesh::MeshEntry::~MeshEntry()
     vao.free();
 }
 
-void Mesh::MeshEntry::draw() const
+void Mesh::MeshEntry::draw(DrawPrimitive drawPrimitive) const
 {
+    GLenum primitiveType = 0;
+    unsigned int count = 0;
+    unsigned int offset = 0;
+
     glBindVertexArray(vao.id);
-    glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
+
+    switch (drawPrimitive) {
+    case DrawPrimitive::POINTS:
+        primitiveType = GL_POINTS;
+        count = m_numVertices;
+        offset = 0;
+        glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
+
+        break;
+    case DrawPrimitive::EDGES:
+        primitiveType = GL_LINES;
+        count = 2 * m_numEdges;
+        offset = m_numVertices;
+        glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
+
+        break;
+    case DrawPrimitive::TRIANGLES:
+        primitiveType = GL_TRIANGLES;
+        count = 3 * m_numTriangles;
+        offset = m_numVertices + (2 * m_numEdges);
+        glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
+
+        break;
+    }
+
+    glBindVertexArray(0);
+}
+
+void Mesh::MeshEntry::drawInstanced(Mesh::DrawPrimitive drawPrimitive, unsigned int instanced) const
+{
+    GLenum primitiveType = 0;
+    unsigned int count = 0;
+    unsigned int offset = 0;
+
+    glBindVertexArray(vao.id);
+
+    switch (drawPrimitive) {
+    case DrawPrimitive::POINTS:
+        primitiveType = GL_POINTS;
+        count = m_numVertices;
+        offset = 0;
+        glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), instanced);
+
+        break;
+    case DrawPrimitive::EDGES:
+        primitiveType = GL_LINES;
+        count = 2 * m_numEdges;
+        offset = m_numVertices;
+        glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), instanced);
+
+        break;
+    case DrawPrimitive::TRIANGLES:
+        primitiveType = GL_TRIANGLES;
+        count = 3 * m_numTriangles;
+        offset = m_numVertices + (2 * m_numEdges);
+        glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), instanced);
+
+        break;
+    }
+
     glBindVertexArray(0);
 }
 

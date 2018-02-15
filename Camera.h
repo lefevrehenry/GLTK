@@ -29,7 +29,7 @@ public:
 
     bool isDirty() const;
 
-    const glm::mat3 normal();
+    const glm::mat3& normal() const;
 
     const glm::mat4& model() const;
 
@@ -37,7 +37,7 @@ public:
 
     const glm::mat4& projection() const;
 
-    const glm::mat4 &mvp() const;
+    const glm::mat4& mvp() const;
 
     void rotate(float rx, float ry);
 
@@ -63,6 +63,7 @@ private:
     glm::mat4 m_proj;
 
     mutable glm::mat4 m_mvp;
+    mutable glm::mat3 m_normal_mvp;
 
     glm::vec3 m_eye;
     glm::vec3 m_target;

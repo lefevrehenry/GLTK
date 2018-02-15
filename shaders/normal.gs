@@ -31,6 +31,4 @@ void main()
     gl_Position = p2;
     EmitVertex();
     EndPrimitive();
-
-
 }

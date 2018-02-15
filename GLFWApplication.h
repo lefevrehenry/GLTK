@@ -21,7 +21,7 @@ class GLFWApplication : Application
 {
 
 friend class GLFWApplicationEvents;
-friend class Program;
+friend class ShaderProgram;
 
 public:
     static GLFWApplication* getInstance();

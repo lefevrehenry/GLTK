@@ -2,6 +2,7 @@
 #define SHADERPROGRAM_H
 
 #include "Data.h"
+#include "Mesh.h"
 
 // Standard Library
 #include <vector>
@@ -27,8 +28,12 @@ class ShaderProgram
 public:
 
     enum ShaderProgramType {
-        DrawBasic,
-        DrawNormal
+        Basic,
+        Normal,
+        FlatShading,
+        GouraudShading,
+        PhongShading,
+        Frame
     };
 
     ShaderProgram();
@@ -37,6 +42,8 @@ public:
 public:
 
     GLuint getProgramID() const;
+
+public:
 
     bool addShader(const Shader& shader);
 
@@ -76,6 +83,10 @@ public:
 
 public:
 
+    void draw();
+
+public:
+
     int attributLocation(const char* name) const;
 
     void setUniformValue(const char* name, float x);
@@ -106,6 +117,8 @@ private:
     std::vector<const Shader*> m_shaderList;
 
     std::vector< BaseData* > m_dataList;
+
+    //helper::GLRenderOption a;
 
     bool m_isLinked;
 
