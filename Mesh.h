@@ -28,7 +28,7 @@ public:
     typedef std::vector<float> floatVector;
     typedef std::vector<unsigned int> uintVector;
 
-    enum DrawPrimitive {
+    enum DrawPrimitiveMode {
         POINTS,
         EDGES,
         TRIANGLES
@@ -58,9 +58,10 @@ protected:
         GLuint vbo_vertices;
         GLuint vbo_normals;
         GLuint vbo_colors;
+        GLuint vbo_uvcoords;
         GLuint vbo_indices;
 
-        void loadToGPU(floatVector &vertices, floatVector &normals, floatVector &colors, uintVector &indices, GLenum mode);
+        void loadToGPU(floatVector& vertices, floatVector& normals, floatVector& colors, floatVector& uvcoords, uintVector& indices, GLenum mode);
         void free();
     };
 
@@ -75,10 +76,11 @@ protected:
         floatVector m_vertices;
         floatVector m_normals;
         floatVector m_colors;
+        floatVector m_uvcoord;
         uintVector m_indices;
 
-        void draw(DrawPrimitive drawPrimitive) const;
-        void drawInstanced(DrawPrimitive drawPrimitive, unsigned int instanced) const;
+        void draw(DrawPrimitiveMode drawMode) const;
+        void drawInstanced(DrawPrimitiveMode drawMode, unsigned int instanced) const;
 
         MeshEntry(const aiMesh *mesh);
         virtual ~MeshEntry();
@@ -87,6 +89,8 @@ protected:
 protected:
 
     std::vector<const MeshEntry*> m_meshEntries;
+
+    DrawPrimitiveMode drawMode;
 
 };
 

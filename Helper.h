@@ -7,6 +7,7 @@
 #include "Program.h"
 #include "Shader.h"
 #include "ShaderProgram.h"
+#include "Texture.h"
 
 // Standard Library
 #include <fstream>
@@ -41,6 +42,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 {
     typedef Shader::ShaderType ShaderType;
     typedef ShaderProgram::ShaderProgramType ShaderProgramType;
+    typedef ShaderProgram::PolygonMode PolygonMode;
 
     ShaderProgram* shaderProgram = new ShaderProgram();
 
@@ -89,8 +91,19 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::Frame:
 
         getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/frame.vs", vs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/frame.gs", gs);
         getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/frame.fs", fs);
+
+        break;
+    case ShaderProgramType::HighLight:
+
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/highLight.vs", vs);
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/highLight.fs", fs);
+
+        break;
+    case ShaderProgramType::Texturing:
+
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/texturing.vs", vs);
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/texturing.fs", fs);
 
         break;
     }
@@ -115,32 +128,33 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     GLFWApplication* app = GLFWApplication::getInstance();
     Camera* camera = app->getCamera();
 
-    glm::vec3 dir_light(-1,-1,-0.5);
+    glm::vec3 dir_light(-1,-1,-1);
     glm::vec3 color(1,0,0);
+    static Texture texture(0);
+    if (!texture.isLoaded())
+        texture.load("/home/henry/dev/QtProject/OpenGL/textures/chesterfield-color.png");
 
     switch (shaderProgramType)
     {
     case ShaderProgramType::Basic:
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+        shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addData<glm::vec3>("color", color);
-        //shaderProgram->setDrawPrimitive(Mesh::TRIANGLES);
 
         break;
     case ShaderProgramType::Normal:
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
-        //shaderProgram->setDrawPrimitive(Mesh::TRIANGLES);
 
         break;
     case ShaderProgramType::FlatShading:
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
-        shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
+        //shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addData<glm::vec3>("color", color);
-        //shaderProgram->setDrawPrimitive(Mesh::TRIANGLES);
 
         break;
     case ShaderProgramType::GouraudShading:
@@ -160,9 +174,26 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::Frame:
 
-        shaderProgram->addData<Camera, glm::mat4>("transform", camera, &Camera::mvp);
-        shaderProgram->addData<glm::mat4>("orientation", glm::mat4());
+        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
+        shaderProgram->addData<glm::mat4>("model", glm::mat4());
         shaderProgram->addData<glm::vec3>("scale", glm::vec3(1,1,1));
+        shaderProgram->setNbInstance(3);
+
+        break;
+    case ShaderProgramType::HighLight:
+
+        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+        shaderProgram->addData<glm::vec3>("color", glm::vec3(1.0,0.8,0.0));
+        shaderProgram->setPolygonMode(PolygonMode::LINE);
+
+        break;
+    case ShaderProgramType::Texturing:
+
+        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+        shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
+        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
+        shaderProgram->addData<Texture>("textureMap", texture);
 
         break;
     }

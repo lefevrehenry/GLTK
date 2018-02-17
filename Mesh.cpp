@@ -17,11 +17,11 @@ Mesh::Mesh() :
 }
 
 Mesh::Mesh(const std::string& filename) :
-    m_meshEntries(0)
+    m_meshEntries(0),
+    drawMode(DrawPrimitiveMode::TRIANGLES)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(filename, aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals);
-    // const aiScene* scene = importer.ReadFile(filename, aiProcess_GenNormals);
 
     if(!scene) {
         msg_error("Mesh") << importer.GetErrorString();
@@ -57,14 +57,14 @@ Mesh* Mesh::FromFile(const std::string& filename)
 void Mesh::draw() const
 {
     for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        m_meshEntries[i]->draw(DrawPrimitive::TRIANGLES);
+        m_meshEntries[i]->draw(this->drawMode);
     }
 }
 
 void Mesh::drawInstanced(unsigned int instanced) const
 {
     for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        m_meshEntries[i]->drawInstanced(DrawPrimitive::TRIANGLES, instanced);
+        m_meshEntries[i]->drawInstanced(this->drawMode, instanced);
     }
 }
 
@@ -127,6 +127,17 @@ Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
         }
     }
 
+    if (mesh->HasPositions() && mesh->GetNumUVChannels() > 0) {
+        m_uvcoord.resize(mesh->mNumVertices * 2);
+        unsigned int channel = mesh->GetNumUVChannels()-1;
+//        msg_info("XLAAA") << mesh->mNumVertices;
+        for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+//            msg_info("X") << mesh->mTextureCoords[channel][i].x << ", " << mesh->mTextureCoords[channel][i].y;
+            m_uvcoord[i * 2] = mesh->mTextureCoords[channel][i].x;
+            m_uvcoord[i * 2 + 1] = mesh->mTextureCoords[channel][i].y;
+        }
+    }
+
     if (mesh->HasFaces()) {
 
         // compte le nombre de primitive
@@ -176,7 +187,7 @@ Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
         }
     }
 
-    vao.loadToGPU(m_vertices, m_normals, m_colors, m_indices, GL_STATIC_DRAW);
+    vao.loadToGPU(m_vertices, m_normals, m_colors, m_uvcoord, m_indices, GL_STATIC_DRAW);
 }
 
 Mesh::MeshEntry::~MeshEntry()
@@ -184,7 +195,7 @@ Mesh::MeshEntry::~MeshEntry()
     vao.free();
 }
 
-void Mesh::MeshEntry::draw(DrawPrimitive drawPrimitive) const
+void Mesh::MeshEntry::draw(DrawPrimitiveMode drawMode) const
 {
     GLenum primitiveType = 0;
     unsigned int count = 0;
@@ -192,22 +203,22 @@ void Mesh::MeshEntry::draw(DrawPrimitive drawPrimitive) const
 
     glBindVertexArray(vao.id);
 
-    switch (drawPrimitive) {
-    case DrawPrimitive::POINTS:
+    switch (drawMode) {
+    case DrawPrimitiveMode::POINTS:
         primitiveType = GL_POINTS;
         count = m_numVertices;
         offset = 0;
         glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
         break;
-    case DrawPrimitive::EDGES:
+    case DrawPrimitiveMode::EDGES:
         primitiveType = GL_LINES;
         count = 2 * m_numEdges;
         offset = m_numVertices;
         glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
         break;
-    case DrawPrimitive::TRIANGLES:
+    case DrawPrimitiveMode::TRIANGLES:
         primitiveType = GL_TRIANGLES;
         count = 3 * m_numTriangles;
         offset = m_numVertices + (2 * m_numEdges);
@@ -219,7 +230,7 @@ void Mesh::MeshEntry::draw(DrawPrimitive drawPrimitive) const
     glBindVertexArray(0);
 }
 
-void Mesh::MeshEntry::drawInstanced(Mesh::DrawPrimitive drawPrimitive, unsigned int instanced) const
+void Mesh::MeshEntry::drawInstanced(DrawPrimitiveMode drawMode, unsigned int instanced) const
 {
     GLenum primitiveType = 0;
     unsigned int count = 0;
@@ -227,22 +238,22 @@ void Mesh::MeshEntry::drawInstanced(Mesh::DrawPrimitive drawPrimitive, unsigned 
 
     glBindVertexArray(vao.id);
 
-    switch (drawPrimitive) {
-    case DrawPrimitive::POINTS:
+    switch (drawMode) {
+    case DrawPrimitiveMode::POINTS:
         primitiveType = GL_POINTS;
         count = m_numVertices;
         offset = 0;
         glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), instanced);
 
         break;
-    case DrawPrimitive::EDGES:
+    case DrawPrimitiveMode::EDGES:
         primitiveType = GL_LINES;
         count = 2 * m_numEdges;
         offset = m_numVertices;
         glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), instanced);
 
         break;
-    case DrawPrimitive::TRIANGLES:
+    case DrawPrimitiveMode::TRIANGLES:
         primitiveType = GL_TRIANGLES;
         count = 3 * m_numTriangles;
         offset = m_numVertices + (2 * m_numEdges);
@@ -254,7 +265,7 @@ void Mesh::MeshEntry::drawInstanced(Mesh::DrawPrimitive drawPrimitive, unsigned 
     glBindVertexArray(0);
 }
 
-void Mesh::VAO::loadToGPU(floatVector &vertices, floatVector &normals, floatVector &colors, uintVector &indices, GLenum mode) {
+void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVector& colors, floatVector& uvcoords, uintVector& indices, GLenum mode) {
     // Create a vertex array object
     glGenVertexArrays(1, &id);
 
@@ -262,6 +273,7 @@ void Mesh::VAO::loadToGPU(floatVector &vertices, floatVector &normals, floatVect
     glGenBuffers(1, &vbo_vertices);
     glGenBuffers(1, &vbo_normals);
     glGenBuffers(1, &vbo_colors);
+    glGenBuffers(1, &vbo_uvcoords);
     glGenBuffers(1, &vbo_indices);
 
     // Activate VAO
@@ -285,6 +297,12 @@ void Mesh::VAO::loadToGPU(floatVector &vertices, floatVector &normals, floatVect
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
     glEnableVertexAttribArray(2);
 
+    // Store mesh uv coords into buffer inside the GPU memory
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_uvcoords);
+    glBufferData(GL_ARRAY_BUFFER, uvcoords.size() * sizeof(float), uvcoords.data(), mode);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+    glEnableVertexAttribArray(3);
+
     // Store mesh indices into buffer inside the GPU memory
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_indices);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), mode);
@@ -297,6 +315,7 @@ void Mesh::VAO::free() {
     glDeleteBuffers(1, &vbo_vertices);
     glDeleteBuffers(1, &vbo_normals);
     glDeleteBuffers(1, &vbo_colors);
+    glDeleteBuffers(1, &vbo_uvcoords);
     glDeleteBuffers(1, &vbo_indices);
     glDeleteVertexArrays(1, &id);
 }

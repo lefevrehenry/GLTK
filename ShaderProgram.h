@@ -3,6 +3,7 @@
 
 #include "Data.h"
 #include "Mesh.h"
+#include "Texture.h"
 
 // Standard Library
 #include <vector>
@@ -33,8 +34,22 @@ public:
         FlatShading,
         GouraudShading,
         PhongShading,
-        Frame
+        Frame,
+        HighLight,
+        Texturing
     };
+
+    // Specifies how polygons are rendered
+    enum PolygonMode {
+        POINT = GL_POINT,
+        LINE = GL_LINE,
+        FILL = GL_FILL
+    };
+
+//    struct RenderOption {
+//        PolygonMode polygoneMode = FILL;
+//        bool depth = true;
+//    };
 
     ShaderProgram();
     virtual ~ShaderProgram();
@@ -42,6 +57,16 @@ public:
 public:
 
     GLuint getProgramID() const;
+
+    unsigned int getNbInstance() const;
+
+    void setNbInstance(unsigned int instance);
+
+public:
+
+    PolygonMode getPolygonMode() const;
+
+    void setPolygonMode(PolygonMode polygonMode);
 
 public:
 
@@ -62,6 +87,31 @@ public:
             return false;
 
         int dataLocation = glGetUniformLocation(m_programId, name);
+
+        if (dataLocation == -1) {
+            msg_info("ShaderProgram") << "location of '" << name << "' not found. Data not added";
+            return false;
+        }
+
+        Data<T>* data = new Data<T>(value, dataLocation);
+        m_dataList.push_back(data);
+
+        return true;
+    }
+
+    template< typename T >
+    bool addData(const char* name, const Texture& value)
+    {
+        if (!m_isLinked)
+            return false;
+
+        int dataLocation = glGetUniformLocation(m_programId, name);
+
+        if (dataLocation == -1) {
+            msg_info("ShaderProgram") << "location of '" << name << "' not found. Data not added";
+            return false;
+        }
+
         Data<T>* data = new Data<T>(value, dataLocation);
         m_dataList.push_back(data);
 
@@ -75,11 +125,27 @@ public:
             return false;
 
         int dataLocation = glGetUniformLocation(m_programId, name);
+
+        if (dataLocation == -1) {
+            msg_info("ShaderProgram") << "location of '" << name << "' not found. Data not added";
+            return false;
+        }
+
         DataTracker<C, T>* data = new DataTracker<C, T>(instance, callback, dataLocation);
         m_dataList.push_back(data);
 
         return true;
     }
+
+//    bool addDataTexture(const char* name, const Texture& texture)
+//    {
+//        if (!m_isLinked)
+//            return false;
+
+//        int dataLocation = glGetUniformLocation(m_programId, name);
+
+//        return true;
+//    }
 
 public:
 
@@ -114,11 +180,13 @@ private:
 
     GLuint m_programId;
 
+    unsigned int m_instanced;
+
+    PolygonMode m_polygonMode;
+
     std::vector<const Shader*> m_shaderList;
 
     std::vector< BaseData* > m_dataList;
-
-    //helper::GLRenderOption a;
 
     bool m_isLinked;
 

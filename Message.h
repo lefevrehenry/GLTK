@@ -56,7 +56,7 @@ const std::string WHITE         = std::string("\033[0;37m");
 const std::string DEFAULT_COLOR = std::string("\033[0m");
 
 #define msg_info(x) gl::helper::Message() << GREEN << "[" << x << "] " << DEFAULT_COLOR
-#define msg_waring(x) gl::helper::Message() << BLUE << "[" << x << "] " << DEFAULT_COLOR
+#define msg_warning(x) gl::helper::Message() << CYAN << "[" << x << "] " << DEFAULT_COLOR
 #define msg_error(x) gl::helper::Message() << RED << "[" << x << "] " << DEFAULT_COLOR
 #define msg_fatal(x) gl::helper::Message() << PURPLE << "[" << x << "] " << DEFAULT_COLOR
 

@@ -6,10 +6,10 @@ layout(location = 2) in vec3 color;
 
 uniform mat4 mvp;
 
-out vec3 n;
+out vec3 o_normal;
 
 void main()
 {
-    n = normal;
+    o_normal = normal;
     gl_Position = mvp * vec4(position, 1.0);
 }

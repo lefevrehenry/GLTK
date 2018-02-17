@@ -67,6 +67,7 @@ GLFWApplication::GLFWApplication() : Application(),
     windowHandle(0),
     m_interface(0),
     m_mesh(0),
+    m_frame(0),
     m_camera(Camera::Perspective)
 {
 
@@ -76,6 +77,8 @@ GLFWApplication::~GLFWApplication()
 {
     delete this->m_mesh;
     this->m_mesh = nullptr;
+    delete this->m_frame;
+    this->m_frame = nullptr;
     delete this->m_interface;
     this->m_interface = nullptr;
 }
@@ -85,20 +88,17 @@ void GLFWApplication::init()
     typedef Shader::ShaderType ShaderType;
 
     // Specifies background color
-    //glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+//    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
-    // Specifies how polygons are rendered
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     // Enable eliminaton of hidden faces
     glEnable(GL_CULL_FACE);
     // Specifies whether front or back facing facets are candidates for culling
     glCullFace(GL_BACK);
     // Specifies the orientation of front-facing polygons
     glFrontFace(GL_CCW);
+
 
     /* Set the number of screen updates to wait from the time glfwSwapBuffers was called before swapping */
     // 0 = no waiting for rendering the next frame
@@ -113,29 +113,36 @@ void GLFWApplication::init()
 
     // mesh
 //    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/cube.obj");
+    //this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/flatQuad.obj");
 //    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/dragon_low.obj");
 //    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/Armadillo_simplified.obj");
 //    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/sphere.obj");
 //    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/pion.stl");
-//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/teapot.obj");
-    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/narrowarrow.obj");
+//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/tour.stl");
+    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/teapot.obj");
+//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/monkey.off");
+//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/ceasar.off");
 
     if (!this->m_mesh)
+        return;
+
+    this->m_frame = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/arrow.obj");
+    if (!this->m_frame)
         return;
 
     // Shader program
     Program* program = this->addProgram();
 //    program->addShaderProgram(ShaderProgram::Basic);
-    program->addShaderProgram(ShaderProgram::FlatShading);
+//    program->addShaderProgram(ShaderProgram::FlatShading);
 //    program->addShaderProgram(ShaderProgram::GouraudShading);
-//    program->addShaderProgram(ShaderProgram::PhongShading);
+    program->addShaderProgram(ShaderProgram::PhongShading);
 //    program->addShaderProgram(ShaderProgram::Normal);
 //    program->addShaderProgram(ShaderProgram::Frame);
-//    program->setPolygonMode(Program::PolygonMode::POINT);
+//    program->addShaderProgram(ShaderProgram::HighLight);
+//    program->addShaderProgram(ShaderProgram::Texturing);
 
-//    Program* program1 = this->addProgram();
-//    program1->addShaderProgram(ShaderProgram::Frame);
-//    program1->setPolygonMode(Program::PolygonMode::FILL);
+    Program* program1 = this->addProgram();
+    program1->addShaderProgram(ShaderProgram::Frame);
 
     /* Camera specification */
     glm::vec3 min;
@@ -149,9 +156,6 @@ void GLFWApplication::init()
     glm::vec3 eye = target - (glm::vec3(1,0,0) * diagonal);
     glm::vec3 up(0,0,1);
     this->m_camera.lookAt(eye, target, up);
-
-//    msg_info("a") << target;
-//    msg_info("b") << up;
 
     // projection
     float fovy = 45.0f;
@@ -198,8 +202,8 @@ void GLFWApplication::draw()
     const Program* program = this->getProgram(0);
     program->draw();
 
-//    const Program* program1 = this->getProgram(1);
-//    program1->draw();
+    const Program* program1 = this->getProgram(1);
+    program1->draw();
 
 //    GLuint nbPixelsQuery;
 //    int nbPixel = -1;
@@ -214,12 +218,6 @@ void GLFWApplication::draw()
 //    glDeleteQueries(1, &nbPixelsQuery);
 
 //    msg_info("Draw") << nbPixel << " passed";
-
-
-    // draw here
-//    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//    glLineWidth(1);
-//    this->m_mesh->draw();
 }
 
 GLFWwindow* GLFWApplication::getWindow() const

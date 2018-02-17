@@ -13,8 +13,11 @@ out vec4 outColor;
 void main()
 {
     const vec3 ambientColor  = vec3(0.3,0.3,0.2);
-    const vec3 diffuseColor  = vec3(1.0,0.0,0.0);
-    const vec3 specularColor = vec3(0.8,0.8,0.8);
+    const vec3 diffuseColor  = vec3(0.3,0.5,0.8);
+    const vec3 specularColor = vec3(0.8,0.2,0.2);
+    //const vec3 ambientColor  = vec3(0.3,0.3,0.2);
+    //const vec3 diffuseColor  = vec3(1.0,0.0,0.0);
+    //const vec3 specularColor = vec3(0.8,0.8,0.8);
     const float et = 50.0;
 
     // normal / view and light directions (in camera space)

@@ -11,8 +11,7 @@
 using namespace gl;
 
 Program::Program() :
-    m_shaderProgramList(),
-    m_polygonMode(PolygonMode::FILL)
+    m_shaderProgramList()
 {
 
 }
@@ -45,20 +44,9 @@ ShaderProgram* Program::addShaderProgram(ShaderProgram::ShaderProgramType shader
     return shaderProgram;
 }
 
-Program::PolygonMode Program::getPolygonMode()
-{
-    return this->m_polygonMode;
-}
-
-void Program::setPolygonMode(Program::PolygonMode polygonMode)
-{
-    this->m_polygonMode = polygonMode;
-}
 
 void Program::draw() const
 {
-    glPolygonMode(GL_FRONT_AND_BACK, m_polygonMode);
-
     for (unsigned int i = 0; i < getNbShaderProgram(); ++i) {
         ShaderProgram* shaderProgram = this->m_shaderProgramList[i];
         shaderProgram->draw();

@@ -5,22 +5,19 @@
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+
 using namespace gl;
 
 Camera::Camera(ProjectionType projectionType) :
     m_projectionType(projectionType),
-    m_orientation(),
     m_model(),
     m_view(),
     m_proj(),
     m_mvp(),
-    m_normal_mvp(),
-    m_eye(),
+    m_normal(),
     m_target(),
-    m_up(),
-    m_modelDirty(true),
-    m_viewDirty(true),
-    m_projectionDirty(true)
+    m_mvpDirty(true),
+    m_normalDirty(true)
 {
 
 }
@@ -30,15 +27,28 @@ Camera::~Camera()
 
 }
 
-bool Camera::isDirty() const
+glm::vec3 Camera::right() const
 {
-    return (/*m_modelDirty ||*/ m_viewDirty || m_projectionDirty);
+    glm::vec4 right = glm::column(this->m_model, 0);
+    return glm::vec3(right);
 }
 
-const glm::mat3& Camera::normal() const
+glm::vec3 Camera::up() const
 {
-    this->m_normal_mvp = glm::inverseTranspose(glm::mat3(model()));
-    return this->m_normal_mvp;//glm::inverseTranspose(glm::mat3(model()));
+    glm::vec4 up = glm::column(this->m_model, 1);
+    return glm::vec3(up);
+}
+
+glm::vec3 Camera::direction() const
+{
+    glm::vec4 direction = glm::column(this->m_model, 2);
+    return glm::vec3(direction);
+}
+
+glm::vec3 Camera::eye() const
+{
+    glm::vec4 eye = glm::column(this->m_model, 3);
+    return glm::vec3(eye);
 }
 
 const glm::mat4& Camera::model() const
@@ -48,124 +58,91 @@ const glm::mat4& Camera::model() const
 
 const glm::mat4& Camera::view() const
 {
-//    if (this->m_viewDirty) {
-//        this->m_view = glm::inverse(model());
-//        setViewDirty(false);
-//    }
     return this->m_view;
 }
 
 const glm::mat4& Camera::projection() const
 {
-//    if (this->m_projectionDirty) {
-//        setProjectionDirty(false);
-//    }
     return this->m_proj;
 }
 
 const glm::mat4& Camera::mvp() const
 {
-    this->m_mvp = projection() * view();
+    if (isMvpDirty()) {
+        this->m_mvp = projection() * view();
+        setMvpDirty(false);
+    }
     return this->m_mvp;
 }
 
-void Camera::rotate(float rx, float ry)
+const glm::mat3& Camera::normal() const
+{
+    if (isNormalDirty()) {
+        this->m_normal = glm::inverseTranspose(glm::mat3(model()));
+        setNormalDirty(false);
+    }
+    return this->m_normal;
+}
+
+void Camera::rotate(float theta, float phi)
 {
     // we want to rotate camera moving on a sphere centered on
-    // m_target by the angle rx (around oz) and angle ry (around oy)
+    // m_target by the angle theta (around oz) and angle phi (around oy)
 
-    // we apply the opposite rotation to the world
-    float dTheta = -rx;
-    float dPhi = -ry;
+    glm::mat4 transform;
 
-    // fetch the two rotations axis (world coord)
-    glm::vec4 right = glm::column(this->m_model, 0);
-    glm::vec4 up    = glm::column(this->m_model, 1);
+    transform = glm::translate(glm::mat4(), this->m_target);
+    transform = glm::rotate(transform, -theta, up());
+    transform = glm::rotate(transform, phi, right());
+    transform = glm::translate(transform, -this->m_target);
 
-    // compute corresponding quaternion
-    glm::quat q1 = glm::angleAxis(dTheta, glm::vec3(up));
-    glm::quat q2 = glm::angleAxis(-dPhi, glm::vec3(right));
-    glm::quat q = q2 * q1;
-
-    glm::mat4& model = this->m_model;
-
-    // orient the world, m_target as center of rotation
-    model = glm::translate(model, this->m_target);
-    model = glm::toMat4(q) * model;
-    model = glm::translate(model, -this->m_target);
-
-//    // get vector corresponding to the angle (dTheta,dPhi)
-//    float costheta = glm::cos(dTheta);
-//    float sintheta = glm::sin(dTheta);
-//    float cosphi = glm::cos(dPhi);
-//    float sinphi = glm::sin(dPhi);
-
-//    // the parametrized vector starts from -z axis
-//    float z = -costheta * cosphi;
-//    float x = -sintheta * cosphi;
-//    float y = sinphi;
-
-//    // compute corresponding quaternion (sphere coord system)
-//    glm::vec3 src(0,0,-1);
-//    glm::vec3 dest(x, y, z);
-
-//    // position the two vectors on the world
-//    glm::quat qw(this->m_model);
-//    src = glm::rotate(qw, src);
-//    dest = glm::rotate(qw, dest);
-
-//    // compute corresponding quaternion (world coord)
-//    glm::quat q = glm::rotation(src, dest);
-
-//    glm::mat4& model = this->m_model;
-
-//    // orient the world, m_target as center of rotation
-//    model = glm::translate(model, this->m_target);
-//    this->m_model = glm::toMat4(q) * this->m_model;
-//    model = glm::translate(model, -this->m_target);
-
+    this->m_model = transform * this->m_model;
     this->m_view = glm::inverse( this->m_model );
 
-    //setViewDirty(true);
+    setMvpDirty(true);
+    setNormalDirty(true);
 }
 
 void Camera::lookAt(const glm::vec3 &eye, const glm::vec3 &target, const glm::vec3 &up)
 {
-    this->m_eye = glm::vec3(eye);
     this->m_target = glm::vec3(target);
-    this->m_up = glm::vec3(up);
     this->m_view = glm::lookAt(eye, target, up);
-
     this->m_model = glm::inverse( this->m_view );
 
-//    setViewDirty(false);
+    setMvpDirty(true);
+    setNormalDirty(true);
 }
 
 void Camera::perspective(float fovy, float aspect, float zNear, float zFar)
 {
     this->m_projectionType = Perspective;
     this->m_proj = glm::perspective(fovy, aspect, zNear, zFar);
-//    setProjectionDirty(false);
+    setMvpDirty(true);
 }
 
 void Camera::orthographic(float left, float right, float bottom, float top, float zNear, float zFar)
 {
     this->m_projectionType = Orthograhic;
     this->m_proj = glm::ortho(left, right, bottom, top, zNear, zFar);
-//    setProjectionDirty(false);
+    setMvpDirty(true);
 }
 
-void Camera::setModelDirty(bool dirty)
+bool Camera::isMvpDirty() const
 {
-    this->m_modelDirty = dirty;
+    return this->m_mvpDirty;
 }
 
-void Camera::setViewDirty(bool dirty)
+bool Camera::isNormalDirty() const
 {
-    this->m_viewDirty = dirty;
+    return this->m_normalDirty;
 }
 
-void Camera::setProjectionDirty(bool dirty)
+void Camera::setMvpDirty(bool dirty) const
 {
-    this->m_projectionDirty = dirty;
+    this->m_mvpDirty = dirty;
+}
+
+void Camera::setNormalDirty(bool dirty) const
+{
+    this->m_normalDirty = dirty;
 }

@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "Camera.h"
 #include "Message.h"
+#include "Texture.h"
 
 // Glew
 #include <GL/glew.h>
@@ -21,7 +22,8 @@ class BaseData
 {
 
 public:
-    BaseData(int dataLocation);
+
+    BaseData(int dataLocation);    
     virtual ~BaseData();
 
 public:
@@ -46,6 +48,7 @@ protected:
     virtual void update() = 0;
 
 protected:
+
     int m_dataLocation;
     bool m_dirty;
 
@@ -140,6 +143,14 @@ template<> inline void Data<glm::mat3>::update()
 template<> inline void Data<glm::mat4>::update()
 {
     glUniformMatrix4fv(this->m_dataLocation, 1, GL_FALSE, glm::value_ptr(this->m_value));
+}
+
+template<> inline void Data<Texture>::update()
+{
+    unsigned int id = this->m_value.getTextureID();
+    unsigned short unit = this->m_value.getTextureUnit();
+    glBindTexture(GL_TEXTURE_2D, id);
+    glUniform1i(this->m_dataLocation, unit);
 }
 
 /**

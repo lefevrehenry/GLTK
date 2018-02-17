@@ -22,6 +22,7 @@ set(HEADER_FILES
     RigidFrame.h
     Shader.h
     ShaderProgram.h
+    Texture.h
 )
 
 set(SOURCE_FILES
@@ -36,6 +37,7 @@ set(SOURCE_FILES
     RigidFrame.cpp
     Shader.cpp
     ShaderProgram.cpp
+    Texture.cpp
     main.cpp
 )
 
@@ -43,31 +45,35 @@ set(SHADER_FILES
     shaders/basic.vs
     shaders/basic.gs
     shaders/basic.fs
-    shaders/normal.vs
-    shaders/normal.gs
-    shaders/normal.fs
     shaders/flatShading.vs
     shaders/flatShading.gs
     shaders/flatShading.fs
+    shaders/frame.vs
+    shaders/frame.fs
     shaders/gouraudShading.vs
     shaders/gouraudShading.fs
+    shaders/highLight.vs
+    shaders/highLight.fs
+    shaders/normal.vs
+    shaders/normal.gs
+    shaders/normal.fs
     shaders/phongShading.vs
     shaders/phongShading.fs
-    shaders/frame.vs
-    shaders/frame.gs
-    shaders/frame.fs
+    shaders/texturing.vs
+    shaders/texturing.fs
 )
 
 # Required packages
 find_package(OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui OpenGL REQUIRED)
 #find_package(GLEW REQUIRED)
 #find_package(GLUT REQUIRED)
 
 #========== Creation of the library ==========#
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR})# ${GLEW_INCLUDE_DIRS} ${GLUT_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES})# ${GLEW_LIBRARIES} ${GLUT_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})# ${GLEW_INCLUDE_DIRS} ${GLUT_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} Qt5::Core Qt5::Gui Qt5::OpenGL)# ${GLEW_LIBRARIES} ${GLUT_LIBRARIES})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE USE_GLUT)
 

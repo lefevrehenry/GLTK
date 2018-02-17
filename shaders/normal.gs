@@ -5,7 +5,7 @@
 layout(triangles) in;
 
 // type of output primitives
-layout(line_strip, max_vertices = 2) out;
+layout(line_strip, max_vertices = 6) out;
 
 // data from vertex shader
 in vec4 o_pos[3];

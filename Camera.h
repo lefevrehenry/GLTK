@@ -27,9 +27,15 @@ public:
 
 public:
 
-    bool isDirty() const;
+    glm::vec3 right() const;
 
-    const glm::mat3& normal() const;
+    glm::vec3 up() const;
+
+    glm::vec3 direction() const;
+
+    glm::vec3 eye() const;
+
+public:
 
     const glm::mat4& model() const;
 
@@ -39,7 +45,11 @@ public:
 
     const glm::mat4& mvp() const;
 
-    void rotate(float rx, float ry);
+    const glm::mat3& normal() const;
+
+public:
+
+    void rotate(float theta, float phi);
 
     void lookAt(const glm::vec3& eye, const glm::vec3& target, const glm::vec3& up);
 
@@ -49,29 +59,26 @@ public:
 
 private:
 
-    void setModelDirty(bool dirty);
-    void setViewDirty(bool dirty);
-    void setProjectionDirty(bool dirty);
+    bool isMvpDirty() const;
+    bool isNormalDirty() const;
+
+    void setMvpDirty(bool dirty) const;
+    void setNormalDirty(bool dirty) const;
 
 private:
     ProjectionType m_projectionType;
-
-    glm::quat m_orientation;
 
     glm::mat4 m_model;
     glm::mat4 m_view;
     glm::mat4 m_proj;
 
     mutable glm::mat4 m_mvp;
-    mutable glm::mat3 m_normal_mvp;
+    mutable glm::mat3 m_normal;
 
-    glm::vec3 m_eye;
     glm::vec3 m_target;
-    glm::vec3 m_up;
 
-    bool m_modelDirty;
-    bool m_viewDirty;
-    bool m_projectionDirty;
+    mutable bool m_mvpDirty;
+    mutable bool m_normalDirty;
 
 };
 

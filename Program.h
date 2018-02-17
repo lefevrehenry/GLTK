@@ -21,12 +21,6 @@ class Program
 
 public:
 
-    enum PolygonMode {
-        POINT = GL_POINT,
-        LINE = GL_LINE,
-        FILL = GL_FILL
-    };
-
     Program();
     virtual ~Program();
 
@@ -40,18 +34,11 @@ public:
 
 public:
 
-    PolygonMode getPolygonMode();
-
-    void setPolygonMode(PolygonMode polygonMode);
-
-public:
-
     void draw() const;
 
 private:
 
     std::vector<ShaderProgram*> m_shaderProgramList;
-    PolygonMode m_polygonMode;
 
 };
 

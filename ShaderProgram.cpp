@@ -11,6 +11,8 @@ using namespace gl;
 
 ShaderProgram::ShaderProgram() :
     m_programId(0),
+    m_instanced(1),
+    m_polygonMode(PolygonMode::FILL),
     m_shaderList(3),
     m_dataList(),
     m_isLinked(false)
@@ -32,6 +34,29 @@ GLuint ShaderProgram::getProgramID() const
     return m_programId;
 }
 
+unsigned int ShaderProgram::getNbInstance() const
+{
+    return m_instanced;
+}
+
+void ShaderProgram::setNbInstance(unsigned int instance)
+{
+    if (instance == 0)
+        instance = 1;
+
+    m_instanced = instance;
+}
+
+ShaderProgram::PolygonMode ShaderProgram::getPolygonMode() const
+{
+    return this->m_polygonMode;
+}
+
+void ShaderProgram::setPolygonMode(PolygonMode polygonMode)
+{
+    this->m_polygonMode = polygonMode;
+}
+
 bool ShaderProgram::addShader(const Shader& shader)
 {
     if (!shader.isCompiled())
@@ -41,7 +66,7 @@ bool ShaderProgram::addShader(const Shader& shader)
     ShaderType type = shader.getShaderType();
 
     if (m_shaderList[type] != nullptr) {
-        msg_waring("ShaderProgram") << "Shader " << type << " already set in ShaderProgram " << m_programId;
+        msg_warning("ShaderProgram") << "Shader " << type << " already set in ShaderProgram " << m_programId;
         return false;
     }
 
@@ -89,14 +114,11 @@ void ShaderProgram::updateDataIfDirty()
     }
 }
 
-//void ShaderProgram::setDrawPrimitive(Mesh::DrawPrimitive drawPrimitive)
-//{
-//    this->m_drawPrimitive = drawPrimitive;
-//}
-
 void ShaderProgram::draw()
 {
     GLFWApplication* app = GLFWApplication::getInstance();
+
+    glPolygonMode(GL_FRONT_AND_BACK, this->m_polygonMode);
 
     // Bind program
     glUseProgram(m_programId);
@@ -105,7 +127,11 @@ void ShaderProgram::draw()
     this->updateDataIfDirty();
 
     // Draw
-    app->m_mesh->draw();
+    if (m_instanced == 1) {
+        app->m_mesh->draw();
+    } else {
+        app->m_frame->drawInstanced(m_instanced);
+    }
 
     // Unbind program
     glUseProgram(0);
@@ -116,5 +142,5 @@ int ShaderProgram::attributLocation(const char *name) const
     if (!m_isLinked)
         return -1;
 
-    return glGetUniformLocation(m_programId, name);
+    return glGetUniformLocation(this->m_programId, name);
 }

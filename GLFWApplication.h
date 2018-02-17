@@ -69,6 +69,7 @@ private:
     Interface* m_interface;
 
     const gl::Mesh* m_mesh;
+    const gl::Mesh* m_frame;
     Camera m_camera;
 
 };
