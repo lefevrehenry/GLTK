@@ -82,7 +82,7 @@ GLFWApplication::~GLFWApplication()
     delete this->m_interface;
     this->m_interface = nullptr;
 }
-
+#include <glm/gtc/matrix_access.hpp>
 void GLFWApplication::init()
 {
     typedef Shader::ShaderType ShaderType;
@@ -119,9 +119,8 @@ void GLFWApplication::init()
 //    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/sphere.obj");
 //    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/pion.stl");
 //    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/tour.stl");
-    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/teapot.obj");
-//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/monkey.off");
-//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/ceasar.off");
+//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/teapot.obj");
+    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/monkey.off");
 
     if (!this->m_mesh)
         return;
@@ -153,8 +152,8 @@ void GLFWApplication::init()
 
     // view
     glm::vec3 target = (min + max) / 2.0f;
-    glm::vec3 eye = target - (glm::vec3(1,0,0) * diagonal);
-    glm::vec3 up(0,0,1);
+    glm::vec3 eye = target - (glm::vec3(0,0,-1) * diagonal);
+    glm::vec3 up(0,1,0);
     this->m_camera.lookAt(eye, target, up);
 
     // projection

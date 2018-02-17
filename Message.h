@@ -36,6 +36,12 @@ public:
         return *this;
     }
 
+    Message& operator<<(const glm::vec4& x)
+    {
+        m_message << "(" << x[0] << "," << x[1] << "," << x[2] << "," << x[3] << ")";
+        return *this;
+    }
+
 private:
     std::stringstream m_message;
 

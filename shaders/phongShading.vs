@@ -16,8 +16,8 @@ out vec3 eyeView;
 
 void main()
 {
-    normalView = normalize(normal_mat * normal);
-    eyeView = normalize(view * vec4(position,1.0)).xyz;
+    normalView = normal_mat * normal;
+    eyeView = (view * vec4(position,1.0)).xyz;
 
     gl_Position = mvp * vec4(position, 1.0);
 }

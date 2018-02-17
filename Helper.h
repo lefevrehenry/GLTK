@@ -139,7 +139,6 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::Basic:
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
-        shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addData<glm::vec3>("color", color);
 
@@ -147,6 +146,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::Normal:
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+        shaderProgram->addData<float>("scale", 0.02);
 
         break;
     case ShaderProgramType::FlatShading:
@@ -176,7 +176,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
-        shaderProgram->addData<glm::mat4>("model", glm::mat4());
+//        shaderProgram->addData<glm::mat4>("model", glm::mat4());
         shaderProgram->addData<glm::vec3>("scale", glm::vec3(1,1,1));
         shaderProgram->setNbInstance(3);
 

@@ -78,7 +78,7 @@ const glm::mat4& Camera::mvp() const
 const glm::mat3& Camera::normal() const
 {
     if (isNormalDirty()) {
-        this->m_normal = glm::inverseTranspose(glm::mat3(model()));
+        this->m_normal = glm::inverseTranspose(glm::mat3(view()));
         setNormalDirty(false);
     }
     return this->m_normal;

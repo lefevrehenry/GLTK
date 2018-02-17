@@ -9,6 +9,7 @@ out vec4 outColor;
 
 void main()
 {
-    float d = max(-dot(n, dir_light), 0.4);
+    vec3 l = normalize(dir_light);
+    float d = max(-dot(n, l), 0.0);
     outColor = d * vec4(color, 1.0);
 }

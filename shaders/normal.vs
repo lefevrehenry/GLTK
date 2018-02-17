@@ -7,15 +7,14 @@ layout(location = 2) in vec3 color;
 
 // uniform input
 uniform mat4 mvp;
-uniform mat3 normal_mat;
+uniform float scale;
 
 // data to geometry shader
 out vec4 o_pos;
-//out vec3 o_normal;
 
 void main()
 {
-    o_pos = mvp * vec4(position + normal, 1.0);
+    o_pos = mvp * vec4(position + (scale * normal), 1.0);
     //o_normal = normalize(normal_mat * normal);
     gl_Position = mvp * vec4(position, 1.0);
 }
