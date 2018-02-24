@@ -13,6 +13,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+
 namespace gl {
 
 /**
@@ -151,6 +152,7 @@ template<> inline void Data<Texture>::update()
     unsigned short unit = this->m_value.getTextureUnit();
     glBindTexture(GL_TEXTURE_2D, id);
     glUniform1i(this->m_dataLocation, unit);
+//    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 /**

@@ -17,7 +17,7 @@ class Program;
 /**
  * @brief The GLFWApplication class
  */
-class GLFWApplication : Application
+class GLFWApplication : public Application
 {
 
 friend class GLFWApplicationEvents;
@@ -36,14 +36,6 @@ protected:
     GLFWApplication();
     virtual ~GLFWApplication();
 
-public:
-
-    virtual void init();
-
-    virtual void loop();
-
-    void draw();
-
 private:
     // C++ 11
     // =======
@@ -54,23 +46,31 @@ private:
 
 public:
 
+    virtual void init();
+
+    virtual void loop();
+
+private:
+
+    void draw();
+
+public:
+
     GLFWwindow* getWindow() const;
 
     void setWindow(GLFWwindow* newHandle);
+
+public:
 
     Interface* getInterface() const;
 
     void setInterface(Interface* newInterface);
 
-    Camera* getCamera();
-
 private:
-    GLFWwindow* windowHandle;
-    Interface* m_interface;
 
-    const gl::Mesh* m_mesh;
-    const gl::Mesh* m_frame;
-    Camera m_camera;
+    GLFWwindow* windowHandle;
+
+    Interface* m_interface;
 
 };
 

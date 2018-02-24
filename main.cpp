@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
 
     app->loop();
 
-    app->setInterface(nullptr);
+    app->setWindow(nullptr);
     glfwDestroyWindow(windowHandle);
 
     glfwTerminate();

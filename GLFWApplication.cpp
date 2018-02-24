@@ -65,24 +65,23 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 
 GLFWApplication::GLFWApplication() : Application(),
     windowHandle(0),
-    m_interface(0),
-    m_mesh(0),
-    m_frame(0),
-    m_camera(Camera::Perspective)
+    m_interface(0)
 {
 
 }
 
 GLFWApplication::~GLFWApplication()
 {
-    delete this->m_mesh;
-    this->m_mesh = nullptr;
-    delete this->m_frame;
-    this->m_frame = nullptr;
-    delete this->m_interface;
-    this->m_interface = nullptr;
+    if (this->m_interface) {
+        delete this->m_interface;
+        this->m_interface = nullptr;
+    }
+    if (this->m_scene) {
+        delete this->m_scene;
+        this->m_scene = nullptr;
+    }
 }
-#include <glm/gtc/matrix_access.hpp>
+
 void GLFWApplication::init()
 {
     typedef Shader::ShaderType ShaderType;
@@ -99,7 +98,6 @@ void GLFWApplication::init()
     // Specifies the orientation of front-facing polygons
     glFrontFace(GL_CCW);
 
-
     /* Set the number of screen updates to wait from the time glfwSwapBuffers was called before swapping */
     // 0 = no waiting for rendering the next frame
     // 1 = draw 1 image for each frames displayed on the screen (60Hz monitor = 60fps)
@@ -111,23 +109,21 @@ void GLFWApplication::init()
     // interface
     this->m_interface = new GLFWApplicationEvents();
 
+    // scene
+    this->m_scene = new Scene();
+
     // mesh
-//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/cube.obj");
-    //this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/flatQuad.obj");
-//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/dragon_low.obj");
-//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/Armadillo_simplified.obj");
-//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/sphere.obj");
-//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/pion.stl");
-//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/tour.stl");
-//    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/teapot.obj");
-    this->m_mesh = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/monkey.off");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/cube.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/flatQuad.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/dragon_low.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/Armadillo_simplified.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/sphere.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/pion.stl");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/tour.stl");
+    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/teapot.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/monkey.off");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/monkey_uv.obj");
 
-    if (!this->m_mesh)
-        return;
-
-    this->m_frame = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/models/arrow.obj");
-    if (!this->m_frame)
-        return;
 
     // Shader program
     Program* program = this->addProgram();
@@ -139,14 +135,17 @@ void GLFWApplication::init()
 //    program->addShaderProgram(ShaderProgram::Frame);
 //    program->addShaderProgram(ShaderProgram::HighLight);
 //    program->addShaderProgram(ShaderProgram::Texturing);
+//    program->addShaderProgram(ShaderProgram::TangentSpace);
 
-    Program* program1 = this->addProgram();
-    program1->addShaderProgram(ShaderProgram::Frame);
+//    Program* program1 = this->addProgram();
+//    program1->addShaderProgram(ShaderProgram::Frame);
 
     /* Camera specification */
+    Camera& camera = this->m_scene->getCamera();
+
     glm::vec3 min;
     glm::vec3 max;
-    this->m_mesh->getBbox(min, max);
+    this->m_scene->getBbox(min, max);
 
     float diagonal = glm::length(max - min);
 
@@ -154,14 +153,14 @@ void GLFWApplication::init()
     glm::vec3 target = (min + max) / 2.0f;
     glm::vec3 eye = target - (glm::vec3(0,0,-1) * diagonal);
     glm::vec3 up(0,1,0);
-    this->m_camera.lookAt(eye, target, up);
+    camera.lookAt(eye, target, up);
 
     // projection
     float fovy = 45.0f;
     float aspect = 4.0f / 3.0f;
     float zNear = 0.2f * diagonal;
     float zFar = 2.0f * diagonal;
-    this->m_camera.perspective(fovy, aspect, zNear, zFar);
+    camera.perspective(fovy, aspect, zNear, zFar);
 }
 
 void GLFWApplication::loop()
@@ -198,11 +197,10 @@ void GLFWApplication::draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    const Program* program = this->getProgram(0);
-    program->draw();
-
-    const Program* program1 = this->getProgram(1);
-    program1->draw();
+    for (unsigned int i = 0; i < getNbProgram(); ++i) {
+        const Program* program = getProgram(i);
+        program->draw();
+    }
 
 //    GLuint nbPixelsQuery;
 //    int nbPixel = -1;
@@ -258,11 +256,5 @@ Interface* GLFWApplication::getInterface() const
 
 void GLFWApplication::setInterface(Interface* newInterface)
 {
-    // don't use this function (memory leaks)
     this->m_interface = newInterface;
-}
-
-Camera* GLFWApplication::getCamera()
-{
-    return &(this->m_camera);
 }

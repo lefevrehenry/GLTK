@@ -2,6 +2,7 @@
 #define GLFWAPPLICATIONEVENTS_H
 
 #include "GLFWApplication.h"
+#include "Scene.h"
 
 // OpenGL
 #include <GL/glew.h>
@@ -57,7 +58,7 @@ public:
             float rx = ( dx / width) * (2.0 * pi);
             float ry = (-dy / height) * pi;
             GLFWApplication* app = GLFWApplication::getInstance();
-            app->m_camera.rotate(rx, ry);
+            app->getScene()->getCamera().rotate(rx, ry);
         }
         this->x = xpos;
         this->y = ypos;

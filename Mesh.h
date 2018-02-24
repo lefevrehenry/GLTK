@@ -1,6 +1,8 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include "ShaderProgram.h"
+
 // Standard Library
 #include <string>
 #include <vector>
@@ -28,21 +30,15 @@ public:
     typedef std::vector<float> floatVector;
     typedef std::vector<unsigned int> uintVector;
 
-    enum DrawPrimitiveMode {
-        POINTS,
-        EDGES,
-        TRIANGLES
-    };
-
 public:
 
     static Mesh* FromFile(const std::string& filename);
 
-    virtual void draw() const;
+    void draw(gl::PrimitiveMode primitiveMode) const;
 
-    virtual void drawInstanced(unsigned int instanced) const;
+    void drawInstanced(gl::PrimitiveMode primitiveMode, unsigned short instanced) const;
 
-    virtual void getBbox(glm::vec3 &min, glm::vec3 &max) const;
+    void getBbox(glm::vec3 &min, glm::vec3 &max) const;
 
     virtual ~Mesh();
 
@@ -57,11 +53,12 @@ protected:
         GLuint id;
         GLuint vbo_vertices;
         GLuint vbo_normals;
-        GLuint vbo_colors;
+        GLuint vbo_tangents;
+        GLuint vbo_bitangents;
         GLuint vbo_uvcoords;
         GLuint vbo_indices;
 
-        void loadToGPU(floatVector& vertices, floatVector& normals, floatVector& colors, floatVector& uvcoords, uintVector& indices, GLenum mode);
+        void loadToGPU(floatVector& vertices, floatVector& normals, floatVector& tangents, floatVector& bitangents, floatVector& uvcoords, uintVector& indices, GLenum mode);
         void free();
     };
 
@@ -75,12 +72,13 @@ protected:
 
         floatVector m_vertices;
         floatVector m_normals;
-        floatVector m_colors;
+        floatVector m_tangents;
+        floatVector m_bitangents;
         floatVector m_uvcoord;
         uintVector m_indices;
 
-        void draw(DrawPrimitiveMode drawMode) const;
-        void drawInstanced(DrawPrimitiveMode drawMode, unsigned int instanced) const;
+        void draw(gl::PrimitiveMode primitiveMode) const;
+        void drawInstanced(gl::PrimitiveMode primitiveMode, unsigned short instanced) const;
 
         MeshEntry(const aiMesh *mesh);
         virtual ~MeshEntry();
@@ -89,8 +87,6 @@ protected:
 protected:
 
     std::vector<const MeshEntry*> m_meshEntries;
-
-    DrawPrimitiveMode drawMode;
 
 };
 

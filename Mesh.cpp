@@ -17,11 +17,10 @@ Mesh::Mesh() :
 }
 
 Mesh::Mesh(const std::string& filename) :
-    m_meshEntries(0),
-    drawMode(DrawPrimitiveMode::TRIANGLES)
+    m_meshEntries(0)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(filename, aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals);
+    const aiScene* scene = importer.ReadFile(filename, aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 
     if(!scene) {
         msg_error("Mesh") << importer.GetErrorString();
@@ -54,17 +53,17 @@ Mesh* Mesh::FromFile(const std::string& filename)
     return mesh;
 }
 
-void Mesh::draw() const
+void Mesh::draw(PrimitiveMode primitiveMode) const
 {
     for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        m_meshEntries[i]->draw(this->drawMode);
+        m_meshEntries[i]->draw(primitiveMode);
     }
 }
 
-void Mesh::drawInstanced(unsigned int instanced) const
+void Mesh::drawInstanced(PrimitiveMode primitiveMode, unsigned short instanced) const
 {
     for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        m_meshEntries[i]->drawInstanced(this->drawMode, instanced);
+        m_meshEntries[i]->drawInstanced(primitiveMode, instanced);
     }
 }
 
@@ -100,41 +99,45 @@ Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
 {
     msg_info("MeshLoader") << mesh->mName.data << " imported";
 
-    if (mesh->HasPositions()) {
-        m_vertices.resize(mesh->mNumVertices * 3);
-        for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+    m_vertices.resize(mesh->mNumVertices * 3);
+    m_normals.resize(mesh->mNumVertices * 3);
+    m_tangents.resize(mesh->mNumVertices * 3);
+    m_bitangents.resize(mesh->mNumVertices * 3);
+    m_uvcoord.resize(mesh->mNumVertices * 2);
+
+    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+
+        // Vertices
+        if (mesh->HasPositions()) {
             m_vertices[i * 3] = mesh->mVertices[i].x;
             m_vertices[i * 3 + 1] = mesh->mVertices[i].y;
             m_vertices[i * 3 + 2] = mesh->mVertices[i].z;
         }
-    }
 
-    if (mesh->HasNormals()) {
-        m_normals.resize(mesh->mNumVertices * 3);
-        for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+        // Normals
+        if (mesh->HasNormals()) {
             m_normals[i * 3] = mesh->mNormals[i].x;
             m_normals[i * 3 + 1] = mesh->mNormals[i].y;
             m_normals[i * 3 + 2] = mesh->mNormals[i].z;
         }
-    }
 
-    if (mesh->HasPositions()) {
-        m_colors.resize(mesh->mNumVertices * 3);
-        for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-            m_colors[i * 3] = 0.8f;
-            m_colors[i * 3 + 1] = 0.8f;
-            m_colors[i * 3 + 2] = 0.8f;
+        // Tangents and BiTangents
+        if (mesh->HasTangentsAndBitangents()) {
+            m_tangents[i * 3] = mesh->mTangents[i].x;
+            m_tangents[i * 3 + 1] = mesh->mTangents[i].y;
+            m_tangents[i * 3 + 2] = mesh->mTangents[i].z;
+            m_bitangents[i * 3] = mesh->mBitangents[i].x;
+            m_bitangents[i * 3 + 1] = mesh->mBitangents[i].y;
+            m_bitangents[i * 3 + 2] = mesh->mBitangents[i].z;
         }
-    }
 
-    if (mesh->HasPositions() && mesh->GetNumUVChannels() > 0) {
-        m_uvcoord.resize(mesh->mNumVertices * 2);
-        unsigned int channel = mesh->GetNumUVChannels()-1;
-//        msg_info("XLAAA") << mesh->mNumVertices;
-        for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-//            msg_info("X") << mesh->mTextureCoords[channel][i].x << ", " << mesh->mTextureCoords[channel][i].y;
-            m_uvcoord[i * 2] = mesh->mTextureCoords[channel][i].x;
-            m_uvcoord[i * 2 + 1] = mesh->mTextureCoords[channel][i].y;
+        // UV coordinates
+        if (mesh->GetNumUVChannels() == 2) {
+            unsigned int channel = mesh->GetNumUVChannels()-1;
+            for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+                m_uvcoord[i * 2] = mesh->mTextureCoords[channel][i].x;
+                m_uvcoord[i * 2 + 1] = mesh->mTextureCoords[channel][i].y;
+            }
         }
     }
 
@@ -187,7 +190,7 @@ Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
         }
     }
 
-    vao.loadToGPU(m_vertices, m_normals, m_colors, m_uvcoord, m_indices, GL_STATIC_DRAW);
+    vao.loadToGPU(m_vertices, m_normals, m_tangents, m_bitangents, m_uvcoord, m_indices, GL_STATIC_DRAW);
 }
 
 Mesh::MeshEntry::~MeshEntry()
@@ -195,7 +198,7 @@ Mesh::MeshEntry::~MeshEntry()
     vao.free();
 }
 
-void Mesh::MeshEntry::draw(DrawPrimitiveMode drawMode) const
+void Mesh::MeshEntry::draw(PrimitiveMode primitiveMode) const
 {
     GLenum primitiveType = 0;
     unsigned int count = 0;
@@ -203,22 +206,22 @@ void Mesh::MeshEntry::draw(DrawPrimitiveMode drawMode) const
 
     glBindVertexArray(vao.id);
 
-    switch (drawMode) {
-    case DrawPrimitiveMode::POINTS:
+    switch (primitiveMode) {
+    case PrimitiveMode::POINTS:
         primitiveType = GL_POINTS;
         count = m_numVertices;
         offset = 0;
         glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
         break;
-    case DrawPrimitiveMode::EDGES:
+    case PrimitiveMode::EDGES:
         primitiveType = GL_LINES;
         count = 2 * m_numEdges;
         offset = m_numVertices;
         glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
         break;
-    case DrawPrimitiveMode::TRIANGLES:
+    case PrimitiveMode::TRIANGLES:
         primitiveType = GL_TRIANGLES;
         count = 3 * m_numTriangles;
         offset = m_numVertices + (2 * m_numEdges);
@@ -230,7 +233,7 @@ void Mesh::MeshEntry::draw(DrawPrimitiveMode drawMode) const
     glBindVertexArray(0);
 }
 
-void Mesh::MeshEntry::drawInstanced(DrawPrimitiveMode drawMode, unsigned int instanced) const
+void Mesh::MeshEntry::drawInstanced(PrimitiveMode primitiveMode, unsigned short instanced) const
 {
     GLenum primitiveType = 0;
     unsigned int count = 0;
@@ -238,22 +241,22 @@ void Mesh::MeshEntry::drawInstanced(DrawPrimitiveMode drawMode, unsigned int ins
 
     glBindVertexArray(vao.id);
 
-    switch (drawMode) {
-    case DrawPrimitiveMode::POINTS:
+    switch (primitiveMode) {
+    case PrimitiveMode::POINTS:
         primitiveType = GL_POINTS;
         count = m_numVertices;
         offset = 0;
         glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), instanced);
 
         break;
-    case DrawPrimitiveMode::EDGES:
+    case PrimitiveMode::EDGES:
         primitiveType = GL_LINES;
         count = 2 * m_numEdges;
         offset = m_numVertices;
         glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), instanced);
 
         break;
-    case DrawPrimitiveMode::TRIANGLES:
+    case PrimitiveMode::TRIANGLES:
         primitiveType = GL_TRIANGLES;
         count = 3 * m_numTriangles;
         offset = m_numVertices + (2 * m_numEdges);
@@ -265,14 +268,15 @@ void Mesh::MeshEntry::drawInstanced(DrawPrimitiveMode drawMode, unsigned int ins
     glBindVertexArray(0);
 }
 
-void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVector& colors, floatVector& uvcoords, uintVector& indices, GLenum mode) {
+void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVector& tangents, floatVector& bitangents, floatVector& uvcoords, uintVector& indices, GLenum mode) {
     // Create a vertex array object
     glGenVertexArrays(1, &id);
 
     // Create buffers inside the GPU memory
     glGenBuffers(1, &vbo_vertices);
     glGenBuffers(1, &vbo_normals);
-    glGenBuffers(1, &vbo_colors);
+    glGenBuffers(1, &vbo_tangents);
+    glGenBuffers(1, &vbo_bitangents);
     glGenBuffers(1, &vbo_uvcoords);
     glGenBuffers(1, &vbo_indices);
 
@@ -291,17 +295,23 @@ void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVect
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, (void*) 0);
     glEnableVertexAttribArray(1);
 
-    // Store mesh colors into buffer inside the GPU memory
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-    glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(float), colors.data(), mode);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
-    glEnableVertexAttribArray(2);
-
     // Store mesh uv coords into buffer inside the GPU memory
     glBindBuffer(GL_ARRAY_BUFFER, vbo_uvcoords);
     glBufferData(GL_ARRAY_BUFFER, uvcoords.size() * sizeof(float), uvcoords.data(), mode);
     glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
     glEnableVertexAttribArray(3);
+
+    // Store mesh tangents into buffer inside the GPU memory
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_tangents);
+    glBufferData(GL_ARRAY_BUFFER, tangents.size() * sizeof(float), tangents.data(), mode);
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_TRUE, 0, (void*) 0);
+    glEnableVertexAttribArray(4);
+
+    // Store mesh bitangents into buffer inside the GPU memory
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_bitangents);
+    glBufferData(GL_ARRAY_BUFFER, bitangents.size() * sizeof(float), bitangents.data(), mode);
+    glVertexAttribPointer(5, 3, GL_FLOAT, GL_TRUE, 0, (void*) 0);
+    glEnableVertexAttribArray(5);
 
     // Store mesh indices into buffer inside the GPU memory
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_indices);
@@ -314,7 +324,8 @@ void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVect
 void Mesh::VAO::free() {
     glDeleteBuffers(1, &vbo_vertices);
     glDeleteBuffers(1, &vbo_normals);
-    glDeleteBuffers(1, &vbo_colors);
+    glDeleteBuffers(1, &vbo_tangents);
+    glDeleteBuffers(1, &vbo_bitangents);
     glDeleteBuffers(1, &vbo_uvcoords);
     glDeleteBuffers(1, &vbo_indices);
     glDeleteVertexArrays(1, &id);

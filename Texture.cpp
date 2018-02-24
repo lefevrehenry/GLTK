@@ -74,7 +74,8 @@ void Texture::load(const std::string& filename)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     glGenerateMipmap(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
+
+//    glBindTexture(GL_TEXTURE_2D, 0);
 
     this->m_isLoaded = true;
 }

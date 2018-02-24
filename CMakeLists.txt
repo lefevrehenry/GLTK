@@ -13,13 +13,14 @@ set(HEADER_FILES
     Application.h
     Camera.h
     Data.h
+#    Framebuffer.h
     GLFWApplicationEvents.h
     Helper.h
     GLFWApplication.h
     Mesh.h
     Message.h
     Program.h
-    RigidFrame.h
+    Scene.h
     Shader.h
     ShaderProgram.h
     Texture.h
@@ -29,12 +30,13 @@ set(SOURCE_FILES
     Application.cpp
     Camera.cpp
     Data.cpp
+#    Framebuffer.cpp
     GLFWApplicationEvents.cpp
     GLFWApplication.cpp
     Mesh.cpp
     Message.cpp
     Program.cpp
-    RigidFrame.cpp
+    Scene.cpp
     Shader.cpp
     ShaderProgram.cpp
     Texture.cpp
@@ -59,6 +61,9 @@ set(SHADER_FILES
     shaders/normal.fs
     shaders/phongShading.vs
     shaders/phongShading.fs
+    shaders/tangentSpace.vs
+    shaders/tangentSpace.gs
+    shaders/tangentSpace.fs
     shaders/texturing.vs
     shaders/texturing.fs
 )

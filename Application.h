@@ -1,6 +1,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+
 // Standard Library
 #include <vector>
 
@@ -8,6 +9,7 @@
 namespace gl {
 
 class Program;
+class Scene;
 
 /**
  * @brief The Application class
@@ -35,13 +37,21 @@ private:
 
 public:
 
+    Scene* getScene();
+
+    void setScene(Scene* scene);
+
+public:
+
     unsigned int getNbProgram() const;
 
     const gl::Program* getProgram(unsigned int i) const;
 
     gl::Program* addProgram();
 
-private:
+protected:
+
+    Scene* m_scene;
 
     std::vector<const gl::Program*> m_programList;
 

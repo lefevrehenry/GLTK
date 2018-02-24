@@ -1,18 +1,18 @@
 #include "ShaderProgram.h"
 
-#include "Data.h"
 #include "GLFWApplication.h"
 #include "Mesh.h"
 #include "Message.h"
+#include "Scene.h"
 #include "Shader.h"
 
 
 using namespace gl;
 
+GLFWApplication* app = GLFWApplication::getInstance();
+
 ShaderProgram::ShaderProgram() :
     m_programId(0),
-    m_instanced(1),
-    m_polygonMode(PolygonMode::FILL),
     m_shaderList(3),
     m_dataList(),
     m_isLinked(false)
@@ -34,27 +34,37 @@ GLuint ShaderProgram::getProgramID() const
     return m_programId;
 }
 
-unsigned int ShaderProgram::getNbInstance() const
+PolygonMode ShaderProgram::getPolygonMode() const
 {
-    return m_instanced;
-}
-
-void ShaderProgram::setNbInstance(unsigned int instance)
-{
-    if (instance == 0)
-        instance = 1;
-
-    m_instanced = instance;
-}
-
-ShaderProgram::PolygonMode ShaderProgram::getPolygonMode() const
-{
-    return this->m_polygonMode;
+    return this->m_drawStyle.polygonMode;
 }
 
 void ShaderProgram::setPolygonMode(PolygonMode polygonMode)
 {
-    this->m_polygonMode = polygonMode;
+    this->m_drawStyle.polygonMode = polygonMode;
+}
+
+PrimitiveMode ShaderProgram::getPrimitiveMode() const
+{
+    return this->m_drawStyle.primitiveMode;
+}
+
+void ShaderProgram::setPrimitiveMode(PrimitiveMode primitiveMode)
+{
+    this->m_drawStyle.primitiveMode = primitiveMode;
+}
+
+unsigned int ShaderProgram::getNbInstance() const
+{
+    return this->m_drawStyle.instanced;
+}
+
+void ShaderProgram::setNbInstance(unsigned short instance)
+{
+    if (instance == 0)
+        instance = 1;
+
+    this->m_drawStyle.instanced = instance;
 }
 
 bool ShaderProgram::addShader(const Shader& shader)
@@ -116,9 +126,7 @@ void ShaderProgram::updateDataIfDirty()
 
 void ShaderProgram::draw()
 {
-    GLFWApplication* app = GLFWApplication::getInstance();
-
-    glPolygonMode(GL_FRONT_AND_BACK, this->m_polygonMode);
+    Scene* scene = app->getScene();
 
     // Bind program
     glUseProgram(m_programId);
@@ -126,12 +134,8 @@ void ShaderProgram::draw()
     // update all inputs shader so we can draw safely
     this->updateDataIfDirty();
 
-    // Draw
-    if (m_instanced == 1) {
-        app->m_mesh->draw();
-    } else {
-        app->m_frame->drawInstanced(m_instanced);
-    }
+    if (scene != nullptr)
+        scene->draw(this->m_drawStyle);
 
     // Unbind program
     glUseProgram(0);

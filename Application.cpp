@@ -2,10 +2,10 @@
 
 #include "Program.h"
 
-
 using namespace gl;
 
 Application::Application() :
+    m_scene(0),
     m_programList(0)
 {
 
@@ -18,6 +18,16 @@ Application::~Application()
         m_programList[i] = nullptr;
     }
     m_programList.clear();
+}
+
+Scene* Application::getScene()
+{
+    return this->m_scene;
+}
+
+void Application::setScene(Scene *scene)
+{
+    this->m_scene = scene;
 }
 
 unsigned int Application::getNbProgram() const

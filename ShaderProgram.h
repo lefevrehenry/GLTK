@@ -2,7 +2,6 @@
 #define SHADERPROGRAM_H
 
 #include "Data.h"
-#include "Mesh.h"
 #include "Texture.h"
 
 // Standard Library
@@ -20,6 +19,26 @@ namespace gl {
 class BaseData;
 class Shader;
 
+// Specifies how polygons are rendered
+enum PolygonMode {
+    POINT = GL_POINT,
+    LINE = GL_LINE,
+    FILL = GL_FILL
+};
+
+// Specifies what kind of primives has to be rendered
+enum PrimitiveMode {
+    POINTS = GL_POINTS,
+    EDGES = GL_LINES,
+    TRIANGLES = GL_TRIANGLES
+};
+
+struct DrawStyle {
+    PolygonMode polygonMode = FILL;
+    PrimitiveMode primitiveMode = TRIANGLES;
+    unsigned short instanced = 1;
+};
+
 /**
  * @brief The ShaderProgram class
  */
@@ -36,20 +55,11 @@ public:
         PhongShading,
         Frame,
         HighLight,
-        Texturing
+        Texturing,
+        TangentSpace
     };
 
-    // Specifies how polygons are rendered
-    enum PolygonMode {
-        POINT = GL_POINT,
-        LINE = GL_LINE,
-        FILL = GL_FILL
-    };
-
-//    struct RenderOption {
-//        PolygonMode polygoneMode = FILL;
-//        bool depth = true;
-//    };
+public:
 
     ShaderProgram();
     virtual ~ShaderProgram();
@@ -58,15 +68,23 @@ public:
 
     GLuint getProgramID() const;
 
-    unsigned int getNbInstance() const;
-
-    void setNbInstance(unsigned int instance);
-
 public:
 
     PolygonMode getPolygonMode() const;
 
     void setPolygonMode(PolygonMode polygonMode);
+
+public:
+
+    PrimitiveMode getPrimitiveMode() const;
+
+    void setPrimitiveMode(PrimitiveMode primitiveMode);
+
+public:
+
+    unsigned int getNbInstance() const;
+
+    void setNbInstance(unsigned short instance);
 
 public:
 
@@ -137,16 +155,6 @@ public:
         return true;
     }
 
-//    bool addDataTexture(const char* name, const Texture& texture)
-//    {
-//        if (!m_isLinked)
-//            return false;
-
-//        int dataLocation = glGetUniformLocation(m_programId, name);
-
-//        return true;
-//    }
-
 public:
 
     void draw();
@@ -176,17 +184,24 @@ public:
     void setUniformValue(const char* name, const glm::mat4& m);
     void setUniformValue(int attributLocation, const glm::mat4& m);
 
+
+//private:
+
+//    struct DrawStyle {
+//        PolygonMode polygonMode = FILL;
+//        PrimitiveMode primitiveMode = TRIANGLES;
+//        unsigned short instanced = 1;
+//    };
+
 private:
 
     GLuint m_programId;
 
-    unsigned int m_instanced;
-
-    PolygonMode m_polygonMode;
-
-    std::vector<const Shader*> m_shaderList;
+    std::vector< const Shader* > m_shaderList;
 
     std::vector< BaseData* > m_dataList;
+
+    DrawStyle m_drawStyle;
 
     bool m_isLinked;
 

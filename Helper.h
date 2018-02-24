@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Message.h"
 #include "Program.h"
+#include "Scene.h"
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
@@ -42,7 +43,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 {
     typedef Shader::ShaderType ShaderType;
     typedef ShaderProgram::ShaderProgramType ShaderProgramType;
-    typedef ShaderProgram::PolygonMode PolygonMode;
+    typedef gl::PolygonMode PolygonMode;
 
     ShaderProgram* shaderProgram = new ShaderProgram();
 
@@ -106,6 +107,13 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/texturing.fs", fs);
 
         break;
+    case ShaderProgramType::TangentSpace:
+
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/tangentSpace.vs", vs);
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/tangentSpace.gs", gs);
+        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/tangentSpace.fs", fs);
+
+        break;
     }
 
     if (vs != "") {
@@ -126,13 +134,17 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     shaderProgram->link();
 
     GLFWApplication* app = GLFWApplication::getInstance();
-    Camera* camera = app->getCamera();
+    Camera* camera = &(app->getScene()->getCamera());
+    float normalScale = 4;
 
     glm::vec3 dir_light(-1,-1,-1);
     glm::vec3 color(1,0,0);
-    static Texture texture(0);
-    if (!texture.isLoaded())
-        texture.load("/home/henry/dev/QtProject/OpenGL/textures/chesterfield-color.png");
+    static Texture colorMap(0);
+    if (!colorMap.isLoaded())
+        colorMap.load("/home/henry/dev/QtProject/OpenGL/textures/chesterfield-color.png");
+    static Texture normalMap(1);
+    if (!normalMap.isLoaded())
+        normalMap.load("/home/henry/dev/QtProject/OpenGL/textures/chesterfield-normal.png");
 
     switch (shaderProgramType)
     {
@@ -146,13 +158,12 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::Normal:
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
-        shaderProgram->addData<float>("scale", 0.02);
+        shaderProgram->addData<float>("scale", normalScale);
 
         break;
     case ShaderProgramType::FlatShading:
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
-        //shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addData<glm::vec3>("color", color);
 
@@ -176,7 +187,6 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
-//        shaderProgram->addData<glm::mat4>("model", glm::mat4());
         shaderProgram->addData<glm::vec3>("scale", glm::vec3(1,1,1));
         shaderProgram->setNbInstance(3);
 
@@ -191,9 +201,16 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::Texturing:
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
-        shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
-        shaderProgram->addData<Texture>("textureMap", texture);
+        shaderProgram->addData<Texture>("colorMap", colorMap);
+        shaderProgram->addData<Texture>("normalMap", normalMap);
+
+        break;
+    case ShaderProgramType::TangentSpace:
+
+        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+        shaderProgram->addData<float>("scale", normalScale);
+        shaderProgram->setPrimitiveMode(PrimitiveMode::POINTS);
 
         break;
     }
