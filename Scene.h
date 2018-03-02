@@ -27,6 +27,8 @@ public:
 
 public:
 
+    void addMesh(const Mesh* mesh);
+
     void addMesh(const std::string& filename);
 
     void getBbox(glm::vec3& gmin, glm::vec3& gmax) const;
@@ -36,6 +38,8 @@ public:
 public:
 
     Camera& getCamera();
+
+    void fit();
 
 private:
 

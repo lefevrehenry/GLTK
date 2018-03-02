@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>shaders/basic.fs</file>
+        <file>shaders/basic.gs</file>
+        <file>shaders/basic.vs</file>
+        <file>shaders/flatShading.fs</file>
+        <file>shaders/flatShading.gs</file>
+        <file>shaders/flatShading.vs</file>
+        <file>shaders/frame.fs</file>
+        <file>shaders/frame.vs</file>
+        <file>shaders/gouraudShading.fs</file>
+        <file>shaders/gouraudShading.vs</file>
+        <file>shaders/highLight.fs</file>
+        <file>shaders/highLight.vs</file>
+        <file>shaders/normal.fs</file>
+        <file>shaders/normal.gs</file>
+        <file>shaders/normal.vs</file>
+        <file>shaders/phongShading.fs</file>
+        <file>shaders/phongShading.vs</file>
+        <file>shaders/tangentSpace.fs</file>
+        <file>shaders/tangentSpace.gs</file>
+        <file>shaders/tangentSpace.vs</file>
+        <file>shaders/texturing.fs</file>
+        <file>shaders/texturing.vs</file>
+    </qresource>
+</RCC>

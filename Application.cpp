@@ -1,6 +1,8 @@
 #include "Application.h"
 
 #include "Program.h"
+#include "Scene.h"
+
 
 using namespace gl;
 
@@ -8,11 +10,15 @@ Application::Application() :
     m_scene(0),
     m_programList(0)
 {
-
+    // scene
+    this->m_scene = new Scene();
 }
 
 Application::~Application()
 {
+    delete this->m_scene;
+    this->m_scene = nullptr;
+
     for (unsigned int i = 0; i < m_programList.size(); ++i) {
         delete m_programList[i];
         m_programList[i] = nullptr;
@@ -23,11 +29,6 @@ Application::~Application()
 Scene* Application::getScene()
 {
     return this->m_scene;
-}
-
-void Application::setScene(Scene *scene)
-{
-    this->m_scene = scene;
 }
 
 unsigned int Application::getNbProgram() const

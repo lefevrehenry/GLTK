@@ -30,6 +30,75 @@ GLFWApplication* GLFWApplication::getInstance()
     return &window;
 }
 
+GLFWApplication* GLFWApplication::CreateWindow()
+{
+    /* GLFW initialization */
+    if (!glfwInit())
+        return nullptr;
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    /* Create a windowed mode window and its OpenGL context */
+    GLFWwindow* windowHandle = glfwCreateWindow(640, 480, "OpenGL", nullptr, nullptr);
+
+    if (!windowHandle)
+    {
+        glfwTerminate();
+        msg_error("GLFW") << "Cannot create a window and its opengl context";
+        return nullptr;
+    }
+
+    /* Make the window's context current */
+    glfwMakeContextCurrent(windowHandle);
+
+    // Glew initialization
+    GLenum err = glewInit();
+    if (err != GLEW_OK)
+    {
+        // Problem: glewInit failed, something is seriously wrong.
+        msg_error("OpenGL") << "Glew init failed";
+        return nullptr;
+    }
+
+    static GLFWApplication* app = GLFWApplication::getInstance();
+    app->setWindow(windowHandle);
+
+    // Specifies background color
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    // Enable depth test
+    glEnable(GL_DEPTH_TEST);
+    // Enable eliminaton of hidden faces
+    glEnable(GL_CULL_FACE);
+    // Specifies whether front or back facing facets are candidates for culling
+    glCullFace(GL_BACK);
+    // Specifies the orientation of front-facing polygons
+    glFrontFace(GL_CCW);
+
+    /* Set the number of screen updates to wait from the time glfwSwapBuffers was called before swapping */
+    // 0 = no waiting for rendering the next frame
+    // 1 = draw 1 image for each frames displayed on the screen (60Hz monitor = 60fps)
+    // 2 = draw 1 image every 2 frames displayed on the screen (60hz monitor = 30 draw/s = 30fps)
+    // 4 = draw 1 image every 4 frames displayed on the screen (60Hz monitor = 15 draw/s = 15fps)
+    // etc ...
+    glfwSwapInterval(2);
+
+    return app;
+}
+
+void GLFWApplication::Terminate()
+{
+    static GLFWApplication* app = GLFWApplication::getInstance();
+
+    if (!app->windowHandle) {
+        glfwDestroyWindow(app->windowHandle);
+        app->setWindow(nullptr);
+    }
+
+    glfwTerminate();
+}
+
 void GLFWApplication::FramebufferSizeCallback(GLFWwindow *handle, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -55,19 +124,28 @@ void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double 
 
 void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double yoffset)
 {
+    GLFWApplication* app = GLFWApplication::getInstance();
 
+    if (app->getInterface() != nullptr) {
+        app->getInterface()->scrollCallback(handle, xoffset, yoffset);
+    }
 }
 
 void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods)
 {
+    GLFWApplication* app = GLFWApplication::getInstance();
 
+    if (app->getInterface() != nullptr) {
+        app->getInterface()->keyCallback(handle, key, scancode, action, mods);
+    }
 }
 
 GLFWApplication::GLFWApplication() : Application(),
     windowHandle(0),
     m_interface(0)
 {
-
+    // interface
+    this->m_interface = new GLFWApplicationEvents();
 }
 
 GLFWApplication::~GLFWApplication()
@@ -76,53 +154,23 @@ GLFWApplication::~GLFWApplication()
         delete this->m_interface;
         this->m_interface = nullptr;
     }
-    if (this->m_scene) {
-        delete this->m_scene;
-        this->m_scene = nullptr;
-    }
 }
 
 void GLFWApplication::init()
 {
     typedef Shader::ShaderType ShaderType;
 
-    // Specifies background color
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-//    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-    // Enable depth test
-    glEnable(GL_DEPTH_TEST);
-    // Enable eliminaton of hidden faces
-    glEnable(GL_CULL_FACE);
-    // Specifies whether front or back facing facets are candidates for culling
-    glCullFace(GL_BACK);
-    // Specifies the orientation of front-facing polygons
-    glFrontFace(GL_CCW);
-
-    /* Set the number of screen updates to wait from the time glfwSwapBuffers was called before swapping */
-    // 0 = no waiting for rendering the next frame
-    // 1 = draw 1 image for each frames displayed on the screen (60Hz monitor = 60fps)
-    // 2 = draw 1 image every 2 frames displayed on the screen (60hz monitor = 30 draw/s = 30fps)
-    // 4 = draw 1 image every 4 frames displayed on the screen (60Hz monitor = 15 draw/s = 15fps)
-    // etc ...
-    glfwSwapInterval(2);
-
-    // interface
-    this->m_interface = new GLFWApplicationEvents();
-
-    // scene
-    this->m_scene = new Scene();
-
     // mesh
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/cube.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/flatQuad.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/dragon_low.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/Armadillo_simplified.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/sphere.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/pion.stl");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/tour.stl");
-    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/teapot.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/monkey.off");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/models/monkey_uv.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/cube.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/flatQuad.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/dragon_low.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/Armadillo_simplified.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/sphere.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/pion.stl");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/tour.stl");
+    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/teapot.obj");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/monkey.off");
+//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/monkey_uv.obj");
 
 
     // Shader program
@@ -141,35 +189,21 @@ void GLFWApplication::init()
 //    program1->addShaderProgram(ShaderProgram::Frame);
 
     /* Camera specification */
-    Camera& camera = this->m_scene->getCamera();
-
-    glm::vec3 min;
-    glm::vec3 max;
-    this->m_scene->getBbox(min, max);
-
-    float diagonal = glm::length(max - min);
-
-    // view
-    glm::vec3 target = (min + max) / 2.0f;
-    glm::vec3 eye = target - (glm::vec3(0,0,-1) * diagonal);
-    glm::vec3 up(0,1,0);
-    camera.lookAt(eye, target, up);
-
-    // projection
-    float fovy = 45.0f;
-    float aspect = 4.0f / 3.0f;
-    float zNear = 0.2f * diagonal;
-    float zFar = 2.0f * diagonal;
-    camera.perspective(fovy, aspect, zNear, zFar);
+    this->m_scene->fit();
 }
 
 void GLFWApplication::loop()
 {
+    if (this->windowHandle == nullptr) {
+        msg_error("App") << "Can't loop, set window first";
+        return;
+    }
+
     double lastTime = glfwGetTime();
     unsigned int nbFrames = 0;
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(windowHandle))
+    while (!glfwWindowShouldClose(this->windowHandle))
     {
 //        // Measure speed
 //        double currentTime = glfwGetTime();

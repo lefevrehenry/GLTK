@@ -13,10 +13,12 @@ set(HEADER_FILES
     Application.h
     Camera.h
     Data.h
+    FileRepository.h
 #    Framebuffer.h
+	GLFWApplication.h
     GLFWApplicationEvents.h
+    Interface.h
     Helper.h
-    GLFWApplication.h
     Mesh.h
     Message.h
     Program.h
@@ -30,9 +32,11 @@ set(SOURCE_FILES
     Application.cpp
     Camera.cpp
     Data.cpp
+    FileRepository.cpp
 #    Framebuffer.cpp
-    GLFWApplicationEvents.cpp
     GLFWApplication.cpp
+    GLFWApplicationEvents.cpp
+    Interface.cpp
     Mesh.cpp
     Message.cpp
     Program.cpp
@@ -40,7 +44,6 @@ set(SOURCE_FILES
     Shader.cpp
     ShaderProgram.cpp
     Texture.cpp
-    main.cpp
 )
 
 set(SHADER_FILES
@@ -68,14 +71,26 @@ set(SHADER_FILES
     shaders/texturing.fs
 )
 
+set(QRC_FILES
+    resources.qrc
+)
+
+# set(SHARE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/share")
+
 # Required packages
 find_package(OpenGL REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui OpenGL REQUIRED)
 #find_package(GLEW REQUIRED)
 #find_package(GLUT REQUIRED)
 
+qt5_add_resources(RESOURCE_FILES ${QRC_FILES})
+
+add_subdirectory(app)
+
 #========== Creation of the library ==========#
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES})
+#add_executable(${PROJECT_NAME} main.cpp ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES} ${QRC_FILES} ${RESOURCE_FILES})
+
+add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES} ${QRC_FILES} ${RESOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})# ${GLEW_INCLUDE_DIRS} ${GLUT_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} Qt5::Core Qt5::Gui Qt5::OpenGL)# ${GLEW_LIBRARIES} ${GLUT_LIBRARIES})

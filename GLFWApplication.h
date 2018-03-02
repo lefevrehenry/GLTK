@@ -2,7 +2,6 @@
 #define GLFWAPPLICATION_H
 
 #include "Application.h"
-#include "Camera.h"
 
 
 class GLFWwindow;
@@ -20,11 +19,11 @@ class Program;
 class GLFWApplication : public Application
 {
 
-friend class GLFWApplicationEvents;
-friend class ShaderProgram;
-
 public:
     static GLFWApplication* getInstance();
+
+    static GLFWApplication *CreateWindow();
+    static void Terminate();
 
     static void FramebufferSizeCallback(GLFWwindow* handle, int width, int height);
     static void MouseButtonCallback(GLFWwindow* handle, int button, int action, int mods);
@@ -33,16 +32,9 @@ public:
     static void KeyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods);
 
 protected:
+
     GLFWApplication();
     virtual ~GLFWApplication();
-
-private:
-    // C++ 11
-    // =======
-    // We can use the better technique of deleting the methods
-    // we don't want.
-    GLFWApplication(const GLFWApplication&) = delete;
-    void operator=(const GLFWApplication&)  = delete;
 
 public:
 

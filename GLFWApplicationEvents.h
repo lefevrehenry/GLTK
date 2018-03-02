@@ -2,17 +2,14 @@
 #define GLFWAPPLICATIONEVENTS_H
 
 #include "GLFWApplication.h"
+#include "Interface.h"
 #include "Scene.h"
-
-// OpenGL
-#include <GL/glew.h>
 
 // GLFW
 #include <GLFW/glfw3.h>
 
 // Glm
-#include <glm/gtc/constants.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 
 class GLFWwindow;
@@ -20,23 +17,9 @@ class GLFWwindow;
 namespace gl {
 
 /**
- * @brief The Interface class
- */
-class Interface
-{
-
-public:
-
-    virtual void mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods) = 0;
-
-    virtual void cursorPosCallback(GLFWwindow* handle, double xpos, double ypos) = 0;
-
-};
-
-/**
  * @brief The GLFWApplicationEvents class
  */
-class GLFWApplicationEvents : public Interface
+class GLFWApplicationEvents : public DefaultInterface
 {
 
 public:

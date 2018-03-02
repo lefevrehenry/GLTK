@@ -1,8 +1,8 @@
 #ifndef HELPER_H
 #define HELPER_H
 
-#include "GLFWApplication.h"
 #include "Camera.h"
+#include "GLFWApplication.h"
 #include "Message.h"
 #include "Program.h"
 #include "Scene.h"
@@ -13,6 +13,10 @@
 // Standard Library
 #include <fstream>
 #include <string>
+
+// Qt
+#include <QFile>
+#include <QString>
 
 
 namespace gl {
@@ -39,6 +43,22 @@ static bool getStringFromFile(const std::string& filename, std::string& dest) {
     return true;
 }
 
+static bool getStringFromQrcFile(const std::string& filename, std::string& dest) {
+    QFile file(QString::fromStdString(filename));
+    file.open(QIODevice::ReadOnly);
+
+    if (!file.isOpen()) {
+        msg_error("Error") << "Could not open file " << filename;
+        return false;
+    }
+
+    dest = file.readAll().toStdString();
+
+    file.close();
+
+    return true;
+}
+
 static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shaderProgramType)
 {
     typedef Shader::ShaderType ShaderType;
@@ -58,60 +78,61 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     switch (shaderProgramType)
     {
     case ShaderProgramType::Basic:
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/basic.vs", vs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/basic.fs", fs);
+
+        getStringFromQrcFile(":/shaders/basic.vs", vs);
+        getStringFromQrcFile(":/shaders/basic.fs", fs);
 
         break;
     case ShaderProgramType::Normal:
 
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/normal.vs", vs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/normal.gs", gs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/normal.fs", fs);
+        getStringFromQrcFile(":/shaders/normal.vs", vs);
+        getStringFromQrcFile(":/shaders/normal.gs", gs);
+        getStringFromQrcFile(":/shaders/normal.fs", fs);
 
         break;
     case ShaderProgramType::FlatShading:
 
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/flatShading.vs", vs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/flatShading.gs", gs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/flatShading.fs", fs);
+        getStringFromQrcFile(":/shaders/flatShading.vs", vs);
+        getStringFromQrcFile(":/shaders/flatShading.gs", gs);
+        getStringFromQrcFile(":/shaders/flatShading.fs", fs);
 
         break;
     case ShaderProgramType::GouraudShading:
 
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/gouraudShading.vs", vs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/gouraudShading.fs", fs);
+        getStringFromQrcFile(":/shaders/gouraudShading.vs", vs);
+        getStringFromQrcFile(":/shaders/gouraudShading.fs", fs);
 
         break;
     case ShaderProgramType::PhongShading:
 
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/phongShading.vs", vs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/phongShading.fs", fs);
+        getStringFromQrcFile(":/shaders/phongShading.vs", vs);
+        getStringFromQrcFile(":/shaders/phongShading.fs", fs);
 
         break;
 
     case ShaderProgramType::Frame:
 
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/frame.vs", vs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/frame.fs", fs);
+        getStringFromQrcFile(":/shaders/frame.vs", vs);
+        getStringFromQrcFile(":/shaders/frame.fs", fs);
 
         break;
     case ShaderProgramType::HighLight:
 
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/highLight.vs", vs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/highLight.fs", fs);
+        getStringFromQrcFile(":/shaders/highLight.vs", vs);
+        getStringFromQrcFile(":/shaders/highLight.fs", fs);
 
         break;
     case ShaderProgramType::Texturing:
 
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/texturing.vs", vs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/texturing.fs", fs);
+        getStringFromQrcFile(":/shaders/texturing.vs", vs);
+        getStringFromQrcFile(":/shaders/texturing.fs", fs);
 
         break;
     case ShaderProgramType::TangentSpace:
 
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/tangentSpace.vs", vs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/tangentSpace.gs", gs);
-        getStringFromFile("/home/henry/dev/QtProject/OpenGL/shaders/tangentSpace.fs", fs);
+        getStringFromQrcFile(":/shaders/tangentSpace.vs", vs);
+        getStringFromQrcFile(":/shaders/tangentSpace.gs", gs);
+        getStringFromQrcFile(":/shaders/tangentSpace.fs", fs);
 
         break;
     }
@@ -141,10 +162,10 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     glm::vec3 color(1,0,0);
     static Texture colorMap(0);
     if (!colorMap.isLoaded())
-        colorMap.load("/home/henry/dev/QtProject/OpenGL/textures/chesterfield-color.png");
+        colorMap.load("/home/henry/dev/QtProject/OpenGL/share/textures/chesterfield-color.png");
     static Texture normalMap(1);
     if (!normalMap.isLoaded())
-        normalMap.load("/home/henry/dev/QtProject/OpenGL/textures/chesterfield-normal.png");
+        normalMap.load("/home/henry/dev/QtProject/OpenGL/share/textures/chesterfield-normal.png");
 
     switch (shaderProgramType)
     {

@@ -32,6 +32,8 @@ public:
 
 public:
 
+    const glm::mat4& getTransform() const;
+
     static Mesh* FromFile(const std::string& filename);
 
     void draw(gl::PrimitiveMode primitiveMode) const;
@@ -88,6 +90,13 @@ protected:
 
     std::vector<const MeshEntry*> m_meshEntries;
 
+    mutable glm::mat4 m_transform;
+
+    glm::vec3 m_translation;
+    glm::quat m_orientation;
+    glm::vec3 m_scale;
+
+    mutable bool m_transformDirty;
 };
 
 }   // namespace gl

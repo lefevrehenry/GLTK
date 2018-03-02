@@ -19,6 +19,11 @@ Scene::~Scene()
     m_meshes.clear();
 }
 
+void Scene::addMesh(const Mesh *mesh)
+{
+    this->m_meshes.push_back(mesh);
+}
+
 void Scene::addMesh(const std::string &filename)
 {
     Mesh* mesh = Mesh::FromFile(filename);
@@ -66,4 +71,26 @@ void Scene::draw(DrawStyle drawStyle)
 Camera& Scene::getCamera()
 {
     return this->m_camera;
+}
+
+void Scene::fit()
+{
+    glm::vec3 min;
+    glm::vec3 max;
+    this->getBbox(min, max);
+
+    float diagonal = glm::length(max - min);
+
+    // view
+    glm::vec3 target = (min + max) / 2.0f;
+    glm::vec3 eye = target - (glm::vec3(0,0,-1) * diagonal);
+    glm::vec3 up(0,1,0);
+    this->m_camera.lookAt(eye, target, up);
+
+    // projection
+    float fovy = 45.0f;
+    float aspect = 4.0f / 3.0f;
+    float zNear = 0.2f * diagonal;
+    float zFar = 2.0f * diagonal;
+    this->m_camera.perspective(fovy, aspect, zNear, zFar);
 }

@@ -1,7 +1,6 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-
 // Standard Library
 #include <vector>
 
@@ -38,8 +37,6 @@ private:
 public:
 
     Scene* getScene();
-
-    void setScene(Scene* scene);
 
 public:
 
