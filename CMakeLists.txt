@@ -26,6 +26,7 @@ set(HEADER_FILES
     Shader.h
     ShaderProgram.h
     Texture.h
+    Transform.h
 )
 
 set(SOURCE_FILES
@@ -44,6 +45,7 @@ set(SOURCE_FILES
     Shader.cpp
     ShaderProgram.cpp
     Texture.cpp
+    Transform.cpp
 )
 
 set(SHADER_FILES

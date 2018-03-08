@@ -21,10 +21,7 @@ Mesh::Mesh() :
 }
 
 Mesh::Mesh(const std::string& filename) :
-    m_meshEntries(0),
-    m_translation(0,0,0),
-    m_orientation(1,0,0,0),
-    m_scale(1,1,1)
+    m_meshEntries(0)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(filename, aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
@@ -50,20 +47,6 @@ Mesh::~Mesh()
         meshEntry = nullptr;
     }
     m_meshEntries.clear();
-}
-
-const glm::mat4& Mesh::getTransform() const
-{
-    if (this->m_transformDirty) {
-        glm::mat4 transform;
-        transform = glm::translate(transform, this->m_translation);
-        transform = glm::rotate(transform, glm::angle(this->m_orientation), glm::axis(this->m_orientation));
-        transform = glm::scale(transform, this->m_scale);
-        this->m_transform = transform;
-        this->m_transformDirty = false;
-    }
-
-    return this->m_transform;
 }
 
 Mesh* Mesh::FromFile(const std::string& filename)

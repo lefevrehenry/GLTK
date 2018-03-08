@@ -7,9 +7,6 @@
 #include <string>
 #include <vector>
 
-// Glm
-#include <glm/glm.hpp>
-
 // OpenGL
 #include <GL/glew.h>
 
@@ -31,8 +28,6 @@ public:
     typedef std::vector<unsigned int> uintVector;
 
 public:
-
-    const glm::mat4& getTransform() const;
 
     static Mesh* FromFile(const std::string& filename);
 
@@ -90,13 +85,6 @@ protected:
 
     std::vector<const MeshEntry*> m_meshEntries;
 
-    mutable glm::mat4 m_transform;
-
-    glm::vec3 m_translation;
-    glm::quat m_orientation;
-    glm::vec3 m_scale;
-
-    mutable bool m_transformDirty;
 };
 
 }   // namespace gl
