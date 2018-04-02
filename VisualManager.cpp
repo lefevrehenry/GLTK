@@ -99,7 +99,10 @@ VisualManager::VisualManager() :
     glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), &identity, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    // Bind l'uniform buffer object a l'index 0 dans la table de liaison d'OpenGL
+    this->updateUniformBufferTransform(Transform());
+    //this->updateUniformBufferMaterial(Material());
+
+    // Bind l'uniform buffer object a l'index 1 dans la table de liaison d'OpenGL
     GLuint binding_ubo_point_index = 1;
     glBindBufferBase(GL_UNIFORM_BUFFER, binding_ubo_point_index, m_ubo);
 }
@@ -109,13 +112,21 @@ VisualManager::~VisualManager()
     glDeleteBuffers(1, &m_ubo);
 }
 
-void VisualManager::updateUniformBufferTransform(const Transform &transform)
+void VisualManager::updateUniformBufferTransform(const Transform& transform)
 {
     const glm::mat4& matrix = transform.matrix();
     glBindBuffer(GL_UNIFORM_BUFFER, this->m_ubo);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(matrix));
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
+
+//void VisualManager::updateUniformBufferMaterial(const Material& material)
+//{
+//    const glm::mat4& matrix = material.matrix();
+//    glBindBuffer(GL_UNIFORM_BUFFER, this->m_ubo);
+//    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(matrix));
+//    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+//}
 
 void VisualManager::draw(Node *node)
 {
@@ -126,9 +137,9 @@ void VisualManager::draw(Node *node)
 
     ShaderProgram* top = nullptr;
 
-    if (!m_shaderStack.empty()) {
+    // get the current shader program
+    if (!m_shaderStack.empty())
         top = m_shaderStack.top();
-    }
 
     // bind the current ShaderProgram
     if (top != nullptr) {
@@ -142,7 +153,9 @@ void VisualManager::draw(Node *node)
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
             const VisualModel* visual = node->getVisual(i);
             const Transform& transform = visual->transform();
+            //const Material& material = visual->material();
             this->updateUniformBufferTransform(transform);
+            //this->updateUniformBufferMaterial(material);
             visual->draw(primitiveMode);
         }
     }

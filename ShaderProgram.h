@@ -102,7 +102,7 @@ public:
         int dataLocation = glGetUniformLocation(m_programId, name);
 
         if (dataLocation == -1) {
-            msg_info("ShaderProgram") << "location of '" << name << "' not found. Data not added";
+            msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Data not added";
             return false;
         }
 
@@ -121,7 +121,7 @@ public:
         int dataLocation = glGetUniformLocation(m_programId, name);
 
         if (dataLocation == -1) {
-            msg_info("ShaderProgram") << "location of '" << name << "' not found. Data not added";
+            msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Data not added";
             return false;
         }
 
@@ -140,7 +140,7 @@ public:
         int dataLocation = glGetUniformLocation(m_programId, name);
 
         if (dataLocation == -1) {
-            msg_info("ShaderProgram") << "location of '" << name << "' not found. Data not added";
+            msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Data not added";
             return false;
         }
 
@@ -150,9 +150,9 @@ public:
         return true;
     }
 
-//public:
+public:
 
-//    void draw();
+    bool addUniformBlock(const char* name, unsigned int binding_index);
 
 public:
 

@@ -202,6 +202,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
+        shaderProgram->addUniformBlock("transform", 1);
 
         break;
     case ShaderProgramType::Frame:

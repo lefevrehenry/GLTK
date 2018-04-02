@@ -121,22 +121,19 @@ void ShaderProgram::updateDataIfDirty()
     }
 }
 
-//void ShaderProgram::draw()
-//{
-//    Scene* scene = app->getScene();
+bool ShaderProgram::addUniformBlock(const char* name, unsigned int binding_index)
+{
+    unsigned int block_index = glGetUniformBlockIndex(this->m_programId, name);
 
-//    // Bind program
-//    glUseProgram(m_programId);
+    if (block_index == GL_INVALID_INDEX) {
+        msg_warning("ShaderProgram") << "uniform block location '" << name << "' not found. Binding index not added";
+        return false;
+    }
 
-//    // update all inputs shader so we can draw safely
-//    this->updateDataIfDirty();
+    glUniformBlockBinding(this->m_programId, block_index, binding_index);
 
-//    if (scene != nullptr)
-//        scene->draw(this->m_drawStyle);
-
-//    // Unbind program
-//    glUseProgram(0);
-//}
+    return true;
+}
 
 int ShaderProgram::attributLocation(const char *name) const
 {

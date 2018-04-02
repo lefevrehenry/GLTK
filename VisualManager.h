@@ -67,7 +67,7 @@ public:
 
 public:
     void updateUniformBufferTransform(const gl::Transform& transform);
-    /* void updateUniformBufferMaterial(const gl::Material& material); */
+    //void updateUniformBufferMaterial(const gl::Material& material);
 
 public:
     void draw(Node* node);
