@@ -32,9 +32,9 @@ public:
 
     ShaderProgram* addShaderProgram(ShaderProgram::ShaderProgramType shaderProgramType);
 
-public:
-
-    void draw() const;
+//public:
+//
+//    void draw() const;
 
 private:
 

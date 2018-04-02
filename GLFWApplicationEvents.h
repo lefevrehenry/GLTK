@@ -41,7 +41,7 @@ public:
             float rx = ( dx / width) * (2.0 * pi);
             float ry = (-dy / height) * pi;
             GLFWApplication* app = GLFWApplication::getInstance();
-            app->getScene()->getCamera().rotate(rx, ry);
+            app->getScene()->camera()->rotate(rx, ry);
         }
         this->x = xpos;
         this->y = ypos;

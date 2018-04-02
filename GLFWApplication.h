@@ -12,6 +12,7 @@ class GLFWApplicationEvents;
 class Interface;
 class Mesh;
 class Program;
+class Scene;
 
 /**
  * @brief The GLFWApplication class
@@ -22,7 +23,7 @@ class GLFWApplication : public Application
 public:
     static GLFWApplication* getInstance();
 
-    static GLFWApplication *CreateWindow();
+    static GLFWApplication* CreateWindow();
     static void Terminate();
 
     static void FramebufferSizeCallback(GLFWwindow* handle, int width, int height);
@@ -58,11 +59,17 @@ public:
 
     void setInterface(Interface* newInterface);
 
+public:
+
+    Scene* getScene();
+
 private:
 
     GLFWwindow* windowHandle;
 
     Interface* m_interface;
+
+    Scene* m_scene;
 
 };
 

@@ -27,6 +27,8 @@ set(HEADER_FILES
     ShaderProgram.h
     Texture.h
     Transform.h
+    VisualManager.h
+    VisualModel.h
 )
 
 set(SOURCE_FILES
@@ -46,6 +48,8 @@ set(SOURCE_FILES
     ShaderProgram.cpp
     Texture.cpp
     Transform.cpp
+    VisualManager.cpp
+    VisualModel.cpp
 )
 
 set(SHADER_FILES

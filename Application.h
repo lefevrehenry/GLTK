@@ -7,9 +7,6 @@
 
 namespace gl {
 
-class Program;
-class Scene;
-
 /**
  * @brief The Application class
  */
@@ -33,24 +30,6 @@ private:
     // we don't want.
     Application(const Application&)     = delete;
     void operator=(const Application&)  = delete;
-
-public:
-
-    Scene* getScene();
-
-public:
-
-    unsigned int getNbProgram() const;
-
-    const gl::Program* getProgram(unsigned int i) const;
-
-    gl::Program* addProgram();
-
-protected:
-
-    Scene* m_scene;
-
-    std::vector<const gl::Program*> m_programList;
 
 };
 

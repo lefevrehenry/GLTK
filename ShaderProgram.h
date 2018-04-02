@@ -36,7 +36,6 @@ enum PrimitiveMode {
 struct DrawStyle {
     PolygonMode polygonMode = FILL;
     PrimitiveMode primitiveMode = TRIANGLES;
-    unsigned short instanced = 1;
 };
 
 /**
@@ -71,20 +70,10 @@ public:
 public:
 
     PolygonMode getPolygonMode() const;
-
     void setPolygonMode(PolygonMode polygonMode);
 
-public:
-
     PrimitiveMode getPrimitiveMode() const;
-
     void setPrimitiveMode(PrimitiveMode primitiveMode);
-
-public:
-
-    unsigned int getNbInstance() const;
-
-    void setNbInstance(unsigned short instance);
 
 public:
 
@@ -93,6 +82,12 @@ public:
     void link();
 
     bool isLinked() const;
+
+public:
+
+    void bind() const;
+
+    void unbind() const;
 
 public:
 
@@ -155,9 +150,9 @@ public:
         return true;
     }
 
-public:
+//public:
 
-    void draw();
+//    void draw();
 
 public:
 

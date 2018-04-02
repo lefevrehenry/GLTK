@@ -44,10 +44,10 @@ ShaderProgram* Program::addShaderProgram(ShaderProgram::ShaderProgramType shader
     return shaderProgram;
 }
 
-void Program::draw() const
-{
-    for (unsigned int i = 0; i < getNbShaderProgram(); ++i) {
-        ShaderProgram* shaderProgram = this->m_shaderProgramList[i];
-        shaderProgram->draw();
-    }
-}
+//void Program::draw() const
+//{
+//    for (unsigned int i = 0; i < getNbShaderProgram(); ++i) {
+//        ShaderProgram* shaderProgram = this->m_shaderProgramList[i];
+//        shaderProgram->draw();
+//    }
+//}

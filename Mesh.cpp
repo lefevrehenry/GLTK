@@ -64,13 +64,6 @@ void Mesh::draw(PrimitiveMode primitiveMode) const
     }
 }
 
-void Mesh::drawInstanced(PrimitiveMode primitiveMode, unsigned short instanced) const
-{
-    for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        m_meshEntries[i]->drawInstanced(primitiveMode, instanced);
-    }
-}
-
 void Mesh::getBbox(glm::vec3 &min, glm::vec3 &max) const
 {
     float minf = std::numeric_limits<float>::lowest();
@@ -237,85 +230,79 @@ void Mesh::MeshEntry::draw(PrimitiveMode primitiveMode) const
     glBindVertexArray(0);
 }
 
-void Mesh::MeshEntry::drawInstanced(PrimitiveMode primitiveMode, unsigned short instanced) const
-{
-    GLenum primitiveType = 0;
-    unsigned int count = 0;
-    unsigned int offset = 0;
-
-    glBindVertexArray(vao.id);
-
-    switch (primitiveMode) {
-    case PrimitiveMode::POINTS:
-        primitiveType = GL_POINTS;
-        count = m_numVertices;
-        offset = 0;
-        glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), instanced);
-
-        break;
-    case PrimitiveMode::EDGES:
-        primitiveType = GL_LINES;
-        count = 2 * m_numEdges;
-        offset = m_numVertices;
-        glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), instanced);
-
-        break;
-    case PrimitiveMode::TRIANGLES:
-        primitiveType = GL_TRIANGLES;
-        count = 3 * m_numTriangles;
-        offset = m_numVertices + (2 * m_numEdges);
-        glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), instanced);
-
-        break;
-    }
-
-    glBindVertexArray(0);
-}
-
 void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVector& tangents, floatVector& bitangents, floatVector& uvcoords, uintVector& indices, GLenum mode) {
     // Create a vertex array object
     glGenVertexArrays(1, &id);
 
     // Create buffers inside the GPU memory
     glGenBuffers(1, &vbo_vertices);
-    glGenBuffers(1, &vbo_normals);
-    glGenBuffers(1, &vbo_tangents);
-    glGenBuffers(1, &vbo_bitangents);
-    glGenBuffers(1, &vbo_uvcoords);
+//    glGenBuffers(1, &vbo_normals);
+//    glGenBuffers(1, &vbo_tangents);
+//    glGenBuffers(1, &vbo_bitangents);
+//    glGenBuffers(1, &vbo_uvcoords);
     glGenBuffers(1, &vbo_indices);
 
     // Activate VAO
     glBindVertexArray(id);
 
-    // Store mesh positions into buffer inside the GPU memory
+    size_t verticesBufferSize = vertices.size() * sizeof(float);
+    size_t normalsBufferSize = normals.size() * sizeof(float);
+    size_t uvcoordsBufferSize = uvcoords.size() * sizeof(float);
+    size_t tangentsBufferSize = tangents.size() * sizeof(float);
+    size_t bitangentsBufferSize = bitangents.size() * sizeof(float);
+
+    size_t bufferSize = verticesBufferSize + normalsBufferSize + uvcoordsBufferSize + tangentsBufferSize + bitangentsBufferSize;
+
     glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), mode);
+    glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, mode);
+
+    glBufferSubData(GL_ARRAY_BUFFER, 0, verticesBufferSize, vertices.data());
+    glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize, normalsBufferSize, normals.data());
+    glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize, uvcoordsBufferSize, uvcoords.data());
+    glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize + uvcoordsBufferSize, tangentsBufferSize, tangents.data());
+    glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize + uvcoordsBufferSize + tangentsBufferSize, bitangentsBufferSize, bitangents.data());
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize));
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*) (verticesBufferSize + normalsBufferSize));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize + normalsBufferSize + uvcoordsBufferSize));
+    glVertexAttribPointer(5, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize + normalsBufferSize + uvcoordsBufferSize + tangentsBufferSize));
+
     glEnableVertexAttribArray(0);
-
-    // Store mesh normals into buffer inside the GPU memory
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
-    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), normals.data(), mode);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, (void*) 0);
     glEnableVertexAttribArray(1);
-
-    // Store mesh uv coords into buffer inside the GPU memory
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_uvcoords);
-    glBufferData(GL_ARRAY_BUFFER, uvcoords.size() * sizeof(float), uvcoords.data(), mode);
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
     glEnableVertexAttribArray(3);
-
-    // Store mesh tangents into buffer inside the GPU memory
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_tangents);
-    glBufferData(GL_ARRAY_BUFFER, tangents.size() * sizeof(float), tangents.data(), mode);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_TRUE, 0, (void*) 0);
     glEnableVertexAttribArray(4);
-
-    // Store mesh bitangents into buffer inside the GPU memory
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_bitangents);
-    glBufferData(GL_ARRAY_BUFFER, bitangents.size() * sizeof(float), bitangents.data(), mode);
-    glVertexAttribPointer(5, 3, GL_FLOAT, GL_TRUE, 0, (void*) 0);
     glEnableVertexAttribArray(5);
+
+//    // Store mesh positions into buffer inside the GPU memory
+//    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+//    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), mode);
+//    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+//    glEnableVertexAttribArray(0);
+
+//    // Store mesh normals into buffer inside the GPU memory
+//    glBindBuffer(GL_ARRAY_BUFFER, vbo_normals);
+//    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), normals.data(), mode);
+//    glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, (void*) 0);
+//    glEnableVertexAttribArray(1);
+
+//    // Store mesh tangents into buffer inside the GPU memory
+//    glBindBuffer(GL_ARRAY_BUFFER, vbo_tangents);
+//    glBufferData(GL_ARRAY_BUFFER, tangents.size() * sizeof(float), tangents.data(), mode);
+//    glVertexAttribPointer(4, 3, GL_FLOAT, GL_TRUE, 0, (void*) 0);
+//    glEnableVertexAttribArray(4);
+
+//    // Store mesh bitangents into buffer inside the GPU memory
+//    glBindBuffer(GL_ARRAY_BUFFER, vbo_bitangents);
+//    glBufferData(GL_ARRAY_BUFFER, bitangents.size() * sizeof(float), bitangents.data(), mode);
+//    glVertexAttribPointer(5, 3, GL_FLOAT, GL_TRUE, 0, (void*) 0);
+//    glEnableVertexAttribArray(5);
+
+//    // Store mesh uv coords into buffer inside the GPU memory
+//    glBindBuffer(GL_ARRAY_BUFFER, vbo_uvcoords);
+//    glBufferData(GL_ARRAY_BUFFER, uvcoords.size() * sizeof(float), uvcoords.data(), mode);
+//    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+//    glEnableVertexAttribArray(3);
 
     // Store mesh indices into buffer inside the GPU memory
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_indices);
@@ -327,10 +314,10 @@ void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVect
 
 void Mesh::VAO::free() {
     glDeleteBuffers(1, &vbo_vertices);
-    glDeleteBuffers(1, &vbo_normals);
-    glDeleteBuffers(1, &vbo_tangents);
-    glDeleteBuffers(1, &vbo_bitangents);
-    glDeleteBuffers(1, &vbo_uvcoords);
+//    glDeleteBuffers(1, &vbo_normals);
+//    glDeleteBuffers(1, &vbo_tangents);
+//    glDeleteBuffers(1, &vbo_bitangents);
+//    glDeleteBuffers(1, &vbo_uvcoords);
     glDeleteBuffers(1, &vbo_indices);
     glDeleteVertexArrays(1, &id);
 }

@@ -2,17 +2,15 @@
 #define SCENE_H
 
 #include "Camera.h"
-#include "Mesh.h"
-#include "ShaderProgram.h"
-
-// Standard Library
-#include <vector>
+#include "VisualManager.h"
 
 // Glm
 #include <glm/glm.hpp>
 
 
 namespace gl {
+
+class VisualModel;
 
 /**
  * @brief The Scene class
@@ -21,31 +19,31 @@ class Scene
 {
 
 public:
-
     Scene();
     virtual ~Scene();
 
 public:
-
-    void addMesh(const Mesh* mesh);
-
-    void addMesh(const std::string& filename);
-
-    void getBbox(glm::vec3& gmin, glm::vec3& gmax) const;
-
-    void draw(gl::DrawStyle drawStyle);
+    Node* root();
+    Camera* camera();
 
 public:
+    void draw(Node* node);  // draw sub-graph
+    void draw();            // draw scene graph from the root
 
-    Camera& getCamera();
+public:
+//    void addMesh(const Mesh* mesh);
+//    void addMesh(const std::string& filename);
+    void getBbox(glm::vec3& min, glm::vec3& max) const;
+//    void draw(gl::DrawStyle drawStyle);
 
-    void fit();
+public:
+    void fitCamera();
 
 private:
+    Node    m_rootNode;
+    Camera  m_camera;
 
-    std::vector<const Mesh*> m_meshes;
-
-    Camera m_camera;
+    VisualManager m_visualManager;
 
 };
 

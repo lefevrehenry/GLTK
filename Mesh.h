@@ -33,8 +33,6 @@ public:
 
     void draw(gl::PrimitiveMode primitiveMode) const;
 
-    void drawInstanced(gl::PrimitiveMode primitiveMode, unsigned short instanced) const;
-
     void getBbox(glm::vec3 &min, glm::vec3 &max) const;
 
     virtual ~Mesh();
@@ -49,10 +47,10 @@ protected:
     struct VAO {
         GLuint id;
         GLuint vbo_vertices;
-        GLuint vbo_normals;
-        GLuint vbo_tangents;
-        GLuint vbo_bitangents;
-        GLuint vbo_uvcoords;
+//        GLuint vbo_normals;
+//        GLuint vbo_tangents;
+//        GLuint vbo_bitangents;
+//        GLuint vbo_uvcoords;
         GLuint vbo_indices;
 
         void loadToGPU(floatVector& vertices, floatVector& normals, floatVector& tangents, floatVector& bitangents, floatVector& uvcoords, uintVector& indices, GLenum mode);
@@ -75,7 +73,6 @@ protected:
         uintVector m_indices;
 
         void draw(gl::PrimitiveMode primitiveMode) const;
-        void drawInstanced(gl::PrimitiveMode primitiveMode, unsigned short instanced) const;
 
         MeshEntry(const aiMesh *mesh);
         virtual ~MeshEntry();

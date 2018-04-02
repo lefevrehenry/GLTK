@@ -1,15 +1,9 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-// Standard Library
-//#include <string>
-
 // Glm
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
-
-// OpenGL
-//#include <GL/glew.h>
 
 
 namespace gl {
@@ -25,8 +19,7 @@ public:
     virtual ~Transform();
 
 public:
-
-    const glm::mat4& getMatrix() const;
+    const glm::mat4& matrix() const;
 
 public:
     void translate(float x, float y, float z);
@@ -39,12 +32,11 @@ public:
     void scale(const glm::vec3& scale);
 
 private:
-
-    mutable glm::mat4 m_transform;
-
     glm::vec3 m_translation;
     glm::quat m_orientation;
     glm::vec3 m_scale;
+
+    mutable glm::mat4 m_transform;
 
     mutable bool m_isDirty;
 

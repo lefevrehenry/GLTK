@@ -155,7 +155,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     shaderProgram->link();
 
     GLFWApplication* app = GLFWApplication::getInstance();
-    Camera* camera = &(app->getScene()->getCamera());
+    Camera* camera = app->getScene()->camera();
     float normalScale = 4;
 
     glm::vec3 dir_light(-1,-1,-1);
@@ -209,7 +209,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addData<glm::vec3>("scale", glm::vec3(1,1,1));
-        shaderProgram->setNbInstance(3);
+        //shaderProgram->setNbInstance(3);
 
         break;
     case ShaderProgramType::HighLight:

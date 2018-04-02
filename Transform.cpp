@@ -20,7 +20,7 @@ gl::Transform::~Transform()
 
 }
 
-const glm::mat4& gl::Transform::getMatrix() const
+const glm::mat4& gl::Transform::matrix() const
 {
     if (this->m_isDirty) {
         glm::mat4 tr = glm::translate(this->m_translation);
@@ -39,6 +39,7 @@ void gl::Transform::translate(float x, float y, float z)
     this->m_translation.x += x;
     this->m_translation.y += y;
     this->m_translation.z += z;
+    this->m_isDirty = true;
 }
 
 void gl::Transform::translate(const glm::vec3 &translate)
@@ -49,6 +50,7 @@ void gl::Transform::translate(const glm::vec3 &translate)
 void gl::Transform::rotate(const glm::quat &quat)
 {
     this->m_orientation = glm::normalize(quat * this->m_orientation);
+    this->m_isDirty = true;
 }
 
 void gl::Transform::rotate(float radian, const glm::vec3 &axis)
@@ -62,6 +64,7 @@ void gl::Transform::scale(float sx, float sy, float sz)
     this->m_scale.x *= sx;
     this->m_scale.y *= sy;
     this->m_scale.z *= sz;
+    this->m_isDirty = true;
 }
 
 void gl::Transform::scale(const glm::vec3 &scale)

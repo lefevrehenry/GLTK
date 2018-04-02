@@ -173,10 +173,10 @@ public:
 
     virtual void updateIfDirty()
     {
-        const T& newvalue = (this->m_instance->*getValue)();
+        const T& newValue = (this->m_instance->*getValue)();
 
-        if (this->m_value != newvalue)
-            this->setValue(newvalue);
+        if (this->m_value != newValue)
+            this->setValue(newValue);
 
         Data<T>::updateIfDirty();
     }

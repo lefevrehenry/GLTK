@@ -1,6 +1,6 @@
 #include "ShaderProgram.h"
 
-#include "GLFWApplication.h"
+//#include "GLFWApplication.h"
 #include "Mesh.h"
 #include "Message.h"
 #include "Scene.h"
@@ -9,7 +9,7 @@
 
 using namespace gl;
 
-GLFWApplication* app = GLFWApplication::getInstance();
+//GLFWApplication* app = GLFWApplication::getInstance();
 
 ShaderProgram::ShaderProgram() :
     m_programId(0),
@@ -52,19 +52,6 @@ PrimitiveMode ShaderProgram::getPrimitiveMode() const
 void ShaderProgram::setPrimitiveMode(PrimitiveMode primitiveMode)
 {
     this->m_drawStyle.primitiveMode = primitiveMode;
-}
-
-unsigned int ShaderProgram::getNbInstance() const
-{
-    return this->m_drawStyle.instanced;
-}
-
-void ShaderProgram::setNbInstance(unsigned short instance)
-{
-    if (instance == 0)
-        instance = 1;
-
-    this->m_drawStyle.instanced = instance;
 }
 
 bool ShaderProgram::addShader(const Shader& shader)
@@ -117,6 +104,16 @@ bool ShaderProgram::isLinked() const
     return m_isLinked;
 }
 
+void ShaderProgram::bind() const
+{
+    glUseProgram(m_programId);
+}
+
+void ShaderProgram::unbind() const
+{
+    glUseProgram(0);
+}
+
 void ShaderProgram::updateDataIfDirty()
 {
     for (BaseData* baseData : m_dataList) {
@@ -124,22 +121,22 @@ void ShaderProgram::updateDataIfDirty()
     }
 }
 
-void ShaderProgram::draw()
-{
-    Scene* scene = app->getScene();
+//void ShaderProgram::draw()
+//{
+//    Scene* scene = app->getScene();
 
-    // Bind program
-    glUseProgram(m_programId);
+//    // Bind program
+//    glUseProgram(m_programId);
 
-    // update all inputs shader so we can draw safely
-    this->updateDataIfDirty();
+//    // update all inputs shader so we can draw safely
+//    this->updateDataIfDirty();
 
-    if (scene != nullptr)
-        scene->draw(this->m_drawStyle);
+//    if (scene != nullptr)
+//        scene->draw(this->m_drawStyle);
 
-    // Unbind program
-    glUseProgram(0);
-}
+//    // Unbind program
+//    glUseProgram(0);
+//}
 
 int ShaderProgram::attributLocation(const char *name) const
 {

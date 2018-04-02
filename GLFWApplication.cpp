@@ -6,6 +6,7 @@
 #include "Mesh.h"
 #include "Message.h"
 #include "Program.h"
+#include "Scene.h"
 #include "Shader.h"
 #include "ShaderProgram.h"
 
@@ -62,7 +63,13 @@ GLFWApplication* GLFWApplication::CreateWindow()
         return nullptr;
     }
 
-    static GLFWApplication* app = GLFWApplication::getInstance();
+    int glMajor;
+    int glMinor;
+    glGetIntegerv(GL_MAJOR_VERSION, &glMajor);
+    glGetIntegerv(GL_MINOR_VERSION, &glMinor);
+    {msg_info("OpenGL") << "Congrat's ! You're running OpenGL " << glMajor << "." << glMinor;}
+
+    GLFWApplication* app = GLFWApplication::getInstance();
     app->setWindow(windowHandle);
 
     // Specifies background color
@@ -99,7 +106,7 @@ void GLFWApplication::Terminate()
     glfwTerminate();
 }
 
-void GLFWApplication::FramebufferSizeCallback(GLFWwindow *handle, int width, int height)
+void GLFWApplication::FramebufferSizeCallback(GLFWwindow* handle, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
@@ -142,10 +149,13 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 
 GLFWApplication::GLFWApplication() : Application(),
     windowHandle(0),
-    m_interface(0)
+    m_interface(0),
+    m_scene(0)
 {
     // interface
     this->m_interface = new GLFWApplicationEvents();
+    // scene
+    this->m_scene = new Scene();
 }
 
 GLFWApplication::~GLFWApplication()
@@ -154,42 +164,14 @@ GLFWApplication::~GLFWApplication()
         delete this->m_interface;
         this->m_interface = nullptr;
     }
+
+    delete this->m_scene;
+    this->m_scene = nullptr;
 }
 
 void GLFWApplication::init()
 {
-    typedef Shader::ShaderType ShaderType;
 
-    // mesh
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/cube.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/flatQuad.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/dragon_low.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/Armadillo_simplified.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/sphere.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/pion.stl");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/tour.stl");
-    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/teapot.obj");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/monkey.off");
-//    this->m_scene->addMesh("/home/henry/dev/QtProject/OpenGL/share/models/monkey_uv.obj");
-
-
-    // Shader program
-    Program* program = this->addProgram();
-//    program->addShaderProgram(ShaderProgram::Basic);
-//    program->addShaderProgram(ShaderProgram::FlatShading);
-//    program->addShaderProgram(ShaderProgram::GouraudShading);
-    program->addShaderProgram(ShaderProgram::PhongShading);
-//    program->addShaderProgram(ShaderProgram::Normal);
-//    program->addShaderProgram(ShaderProgram::Frame);
-//    program->addShaderProgram(ShaderProgram::HighLight);
-//    program->addShaderProgram(ShaderProgram::Texturing);
-//    program->addShaderProgram(ShaderProgram::TangentSpace);
-
-//    Program* program1 = this->addProgram();
-//    program1->addShaderProgram(ShaderProgram::Frame);
-
-    /* Camera specification */
-    this->m_scene->fit();
 }
 
 void GLFWApplication::loop()
@@ -199,8 +181,8 @@ void GLFWApplication::loop()
         return;
     }
 
-    double lastTime = glfwGetTime();
-    unsigned int nbFrames = 0;
+//    double lastTime = glfwGetTime();
+//    unsigned int nbFrames = 0;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(this->windowHandle))
@@ -231,10 +213,7 @@ void GLFWApplication::draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (unsigned int i = 0; i < getNbProgram(); ++i) {
-        const Program* program = getProgram(i);
-        program->draw();
-    }
+    this->m_scene->draw();
 
 //    GLuint nbPixelsQuery;
 //    int nbPixel = -1;
@@ -291,4 +270,9 @@ Interface* GLFWApplication::getInterface() const
 void GLFWApplication::setInterface(Interface* newInterface)
 {
     this->m_interface = newInterface;
+}
+
+Scene *GLFWApplication::getScene()
+{
+    return this->m_scene;
 }
