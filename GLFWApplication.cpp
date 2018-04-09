@@ -63,12 +63,6 @@ GLFWApplication* GLFWApplication::CreateWindow()
         return nullptr;
     }
 
-    int glMajor;
-    int glMinor;
-    glGetIntegerv(GL_MAJOR_VERSION, &glMajor);
-    glGetIntegerv(GL_MINOR_VERSION, &glMinor);
-    {msg_info("OpenGL") << "Congrat's ! You're running OpenGL " << glMajor << "." << glMinor;}
-
     GLFWApplication* app = GLFWApplication::getInstance();
     app->setWindow(windowHandle);
 

@@ -9,12 +9,26 @@
 #include <Program.h>
 #include <ShaderProgram.h>
 #include <VisualModel.h>
+#include <VisualOption.h>
 
 // OpenGL
 #include <GL/gl.h>
 
 
 using namespace gl;
+
+//void print()
+//{
+//    GLint polyMode;
+//    glGetIntegerv(GL_POLYGON_MODE, &polyMode);
+
+//    if ( polyMode == GL_POINT )
+//        msg_info("Visu") << "POINT";
+//    if ( polyMode == GL_LINE )
+//        msg_info("Visu") << "LINE";
+//    if ( polyMode == GL_FILL )
+//        msg_info("Visu") << "FILL";
+//}
 
 int main()
 {
@@ -41,6 +55,11 @@ int main()
     Node* node1 = root->addChild();
     Node* node2 = root->addChild();
 
+    typedef VisualOption::PolygonMode PolygonMode;
+
+    VisualOption visualOption;
+    visualOption.setPolygonMode(PolygonMode::LINE);
+
     ShaderProgram* shaderProgram = nullptr;
 
     shaderProgram = helper::CreateShaderProgram(ShaderProgram::PhongShading);
@@ -54,10 +73,14 @@ int main()
 
     // Node 1
     VisualModel visual1(mesh1);
+    visual1.transform().translate(10,0,0);
+    visual1.material() = Material::Bronze();
     node1->addVisual(&visual1);
+    node1->setVisualOption(&visualOption);
 
     // Node 2
     VisualModel visual2(mesh2);
+    visual2.material() = Material::Obsidian();
     node2->addVisual(&visual2);
 
     app->getScene()->fitCamera();

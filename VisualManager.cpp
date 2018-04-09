@@ -2,6 +2,7 @@
 
 #include "ShaderProgram.h"
 #include "VisualModel.h"
+#include "VisualOption.h"
 
 using namespace gl;
 
@@ -90,17 +91,35 @@ ShaderProgram* Node::shaderProgram() const
     return this->m_shaderProgram;
 }
 
+void Node::setVisualOption(VisualOption* visualOption)
+{
+    this->m_visualOption = visualOption;
+}
+
+void Node::removeVisualOption()
+{
+    this->m_visualOption= nullptr;
+}
+
+VisualOption* Node::visualOption() const
+{
+    return this->m_visualOption;
+}
+
 VisualManager::VisualManager() :
+    m_shaderStack(),
+    m_optionStack(),
     m_ubo(0)
 {
-    glm::mat4 identity;
+    size_t size = 2 * sizeof(glm::mat4) + sizeof(float);
+
     glGenBuffers(1, &m_ubo);
     glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), &identity, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     this->updateUniformBufferTransform(Transform());
-    //this->updateUniformBufferMaterial(Material());
+    this->updateUniformBufferMaterial(Material());
 
     // Bind l'uniform buffer object a l'index 1 dans la table de liaison d'OpenGL
     GLuint binding_ubo_point_index = 1;
@@ -120,13 +139,15 @@ void VisualManager::updateUniformBufferTransform(const Transform& transform)
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-//void VisualManager::updateUniformBufferMaterial(const Material& material)
-//{
-//    const glm::mat4& matrix = material.matrix();
-//    glBindBuffer(GL_UNIFORM_BUFFER, this->m_ubo);
-//    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(matrix));
-//    glBindBuffer(GL_UNIFORM_BUFFER, 0);
-//}
+void VisualManager::updateUniformBufferMaterial(const Material& material)
+{
+    const glm::mat4& matrix = material.matrix();
+    float shininess = material.shininess();
+    glBindBuffer(GL_UNIFORM_BUFFER, this->m_ubo);
+    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(matrix));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(float), &shininess);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
 
 void VisualManager::draw(Node *node)
 {
@@ -135,27 +156,40 @@ void VisualManager::draw(Node *node)
     if (shaderProgram != nullptr)
         m_shaderStack.push(shaderProgram);
 
-    ShaderProgram* top = nullptr;
+    ShaderProgram* topShader = nullptr;
 
     // get the current shader program
     if (!m_shaderStack.empty())
-        top = m_shaderStack.top();
+        topShader = m_shaderStack.top();
+
+//    // stack the node's VisualOption
+//    VisualOption* visualOption = node->visualOption();
+//    if (visualOption != nullptr)
+//        m_optionStack.push(visualOption);
+
+//    VisualOption* topOption = nullptr;
+
+//    // get the current visual option
+//    if (!m_optionStack.empty()) {
+//        topOption = m_optionStack.top();
+//        topOption->push();
+//    }
 
     // bind the current ShaderProgram
-    if (top != nullptr) {
-        top->bind();
-        top->updateDataIfDirty();
+    if (topShader != nullptr) {
+        topShader->bind();
+        topShader->updateDataIfDirty();
 
         // specifies what kind of primitives has to be drawn by the shader
-        PrimitiveMode primitiveMode = top->getPrimitiveMode();
+        PrimitiveMode primitiveMode = topShader->getPrimitiveMode();
 
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
             const VisualModel* visual = node->getVisual(i);
             const Transform& transform = visual->transform();
-            //const Material& material = visual->material();
+            const Material& material = visual->material();
             this->updateUniformBufferTransform(transform);
-            //this->updateUniformBufferMaterial(material);
+            this->updateUniformBufferMaterial(material);
             visual->draw(primitiveMode);
         }
     }
@@ -167,10 +201,18 @@ void VisualManager::draw(Node *node)
     }
 
     // unbind the current ShaderProgram
-    if (top != nullptr)
-        top->unbind();
+    if (topShader != nullptr)
+        topShader->unbind();
 
     // unstack the node's ShaderProgram
     if (shaderProgram != nullptr)
         m_shaderStack.pop();
+
+//    // pop the current visual option
+//    if (topOption != nullptr)
+//        topOption->pop();
+
+//    // unstack the node's visualOption
+//    if (visualOption != nullptr)
+//        m_optionStack.pop();
 }

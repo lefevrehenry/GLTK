@@ -63,7 +63,6 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 {
     typedef Shader::ShaderType ShaderType;
     typedef ShaderProgram::ShaderProgramType ShaderProgramType;
-    typedef gl::PolygonMode PolygonMode;
 
     ShaderProgram* shaderProgram = new ShaderProgram();
 
@@ -217,7 +216,6 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
         shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<glm::vec3>("color", glm::vec3(1.0,0.8,0.0));
-        shaderProgram->setPolygonMode(PolygonMode::LINE);
 
         break;
     case ShaderProgramType::Texturing:

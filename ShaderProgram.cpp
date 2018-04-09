@@ -1,6 +1,5 @@
 #include "ShaderProgram.h"
 
-//#include "GLFWApplication.h"
 #include "Mesh.h"
 #include "Message.h"
 #include "Scene.h"
@@ -8,8 +7,6 @@
 
 
 using namespace gl;
-
-//GLFWApplication* app = GLFWApplication::getInstance();
 
 ShaderProgram::ShaderProgram() :
     m_programId(0),
@@ -32,16 +29,6 @@ ShaderProgram::~ShaderProgram()
 GLuint ShaderProgram::getProgramID() const
 {
     return m_programId;
-}
-
-PolygonMode ShaderProgram::getPolygonMode() const
-{
-    return this->m_drawStyle.polygonMode;
-}
-
-void ShaderProgram::setPolygonMode(PolygonMode polygonMode)
-{
-    this->m_drawStyle.polygonMode = polygonMode;
 }
 
 PrimitiveMode ShaderProgram::getPrimitiveMode() const

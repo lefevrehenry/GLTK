@@ -19,13 +19,6 @@ namespace gl {
 class BaseData;
 class Shader;
 
-// Specifies how polygons are rendered
-enum PolygonMode {
-    POINT = GL_POINT,
-    LINE = GL_LINE,
-    FILL = GL_FILL
-};
-
 // Specifies what kind of primives has to be rendered
 enum PrimitiveMode {
     POINTS = GL_POINTS,
@@ -34,8 +27,9 @@ enum PrimitiveMode {
 };
 
 struct DrawStyle {
-    PolygonMode polygonMode = FILL;
+    //PolygonMode polygonMode = FILL;
     PrimitiveMode primitiveMode = TRIANGLES;
+    //unsigned int nbInstance = 1;
 };
 
 /**
@@ -68,9 +62,6 @@ public:
     GLuint getProgramID() const;
 
 public:
-
-    PolygonMode getPolygonMode() const;
-    void setPolygonMode(PolygonMode polygonMode);
 
     PrimitiveMode getPrimitiveMode() const;
     void setPrimitiveMode(PrimitiveMode primitiveMode);

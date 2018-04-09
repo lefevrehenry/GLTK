@@ -19,6 +19,7 @@ set(HEADER_FILES
     GLFWApplicationEvents.h
     Interface.h
     Helper.h
+    Material.h
     Mesh.h
     Message.h
     Program.h
@@ -29,6 +30,7 @@ set(HEADER_FILES
     Transform.h
     VisualManager.h
     VisualModel.h
+    VisualOption.h
 )
 
 set(SOURCE_FILES
@@ -40,6 +42,7 @@ set(SOURCE_FILES
     GLFWApplication.cpp
     GLFWApplicationEvents.cpp
     Interface.cpp
+    Material.cpp
     Mesh.cpp
     Message.cpp
     Program.cpp
@@ -50,6 +53,7 @@ set(SOURCE_FILES
     Transform.cpp
     VisualManager.cpp
     VisualModel.cpp
+    VisualOption.cpp
 )
 
 set(SHADER_FILES
