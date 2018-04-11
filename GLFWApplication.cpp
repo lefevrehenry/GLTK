@@ -1,6 +1,5 @@
 #include "GLFWApplication.h"
 
-#include "Camera.h"
 #include "GLFWApplicationEvents.h"
 #include "Helper.h"
 #include "Mesh.h"

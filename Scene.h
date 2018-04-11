@@ -24,6 +24,8 @@ public:
 
 public:
     Node* root();
+    const Node* root() const;
+
     Camera* camera();
 
 public:
@@ -35,6 +37,8 @@ public:
 //    void addMesh(const std::string& filename);
     void getBbox(glm::vec3& min, glm::vec3& max) const;
 //    void draw(gl::DrawStyle drawStyle);
+
+    void pickingObject(double sx, double sy) const;
 
 public:
     void fitCamera();

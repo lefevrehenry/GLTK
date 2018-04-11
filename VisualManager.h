@@ -15,6 +15,7 @@
 namespace gl {
 
 class ShaderProgram;
+class Visitor;
 class VisualModel;
 class VisualOption;
 
@@ -27,6 +28,12 @@ class Node
 public:
     Node();
     virtual ~Node();
+
+public:
+    void executeVisitor(Visitor* visitor) const;
+
+private:
+    void doExecuteVisitor(Visitor* visitor) const;
 
 public:
     Node* addChild();

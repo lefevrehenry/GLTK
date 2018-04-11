@@ -26,6 +26,11 @@ VisualModel::~VisualModel()
 
 }
 
+const Mesh* VisualModel::mesh() const
+{
+    return this->m_mesh;
+}
+
 Transform& VisualModel::transform()
 {
     return this->m_transform;

@@ -14,6 +14,7 @@
 
 class GLFWwindow;
 
+//#include "Message.h"
 namespace gl {
 
 /**
@@ -31,7 +32,7 @@ public:
 
     virtual void cursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
     {
-        if (mousePressed) {
+        if (this->mousePressed) {
             double dx = xpos - this->x;
             double dy = ypos - this->y;
             int width = 0;
@@ -42,6 +43,9 @@ public:
             float ry = (-dy / height) * pi;
             GLFWApplication* app = GLFWApplication::getInstance();
             app->getScene()->camera()->rotate(rx, ry);
+        } else {
+            GLFWApplication* app = GLFWApplication::getInstance();
+            app->getScene()->pickingObject(xpos, ypos);
         }
         this->x = xpos;
         this->y = ypos;

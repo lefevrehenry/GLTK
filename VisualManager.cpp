@@ -1,6 +1,7 @@
 #include "VisualManager.h"
 
 #include "ShaderProgram.h"
+#include "Visitor.h"
 #include "VisualModel.h"
 #include "VisualOption.h"
 
@@ -17,6 +18,22 @@ Node::Node() :
 Node::~Node()
 {
 
+}
+
+void Node::executeVisitor(Visitor* visitor) const
+{
+    visitor->init();
+    this->doExecuteVisitor(visitor);
+}
+
+void Node::doExecuteVisitor(Visitor* visitor) const
+{
+    visitor->processNode(this);
+
+    for (unsigned int i = 0; i < this->getNbChild(); ++i) {
+        Node* child = this->getChild(i);
+        child->doExecuteVisitor(visitor);
+    }
 }
 
 Node* Node::addChild()
@@ -188,8 +205,10 @@ void VisualManager::draw(Node *node)
             const VisualModel* visual = node->getVisual(i);
             const Transform& transform = visual->transform();
             const Material& material = visual->material();
+
             this->updateUniformBufferTransform(transform);
             this->updateUniformBufferMaterial(material);
+
             visual->draw(primitiveMode);
         }
     }

@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+#include "Visitor.h"
 #include "VisualModel.h"
 
 using namespace gl;
@@ -18,6 +19,11 @@ Scene::~Scene()
 }
 
 Node* Scene::root()
+{
+    return &m_rootNode;
+}
+
+const Node* Scene::root() const
 {
     return &m_rootNode;
 }
@@ -50,10 +56,13 @@ void Scene::draw()
 
 void Scene::getBbox(glm::vec3& min, glm::vec3& max) const
 {
-    float minf = std::numeric_limits<float>::lowest();
-    float maxf = std::numeric_limits<float>::max();
-    min = glm::vec3(maxf, maxf, maxf);
-    max = glm::vec3(minf, minf, minf);
+    BBoxVisitor boundingBoxVisitor;
+
+    const Node* rootNode = root();
+    rootNode->executeVisitor(&boundingBoxVisitor);
+
+    min = boundingBoxVisitor.getMin();
+    max = boundingBoxVisitor.getMax();
 
 //    // query each mesh
 //    for (const Mesh* mesh : this->m_meshes) {
@@ -70,7 +79,12 @@ void Scene::getBbox(glm::vec3& min, glm::vec3& max) const
 //        gmax[0] = (max[0] > gmax[0] ? max[0] : gmax[0]);
 //        gmax[1] = (max[1] > gmax[1] ? max[1] : gmax[1]);
 //        gmax[2] = (max[2] > gmax[2] ? max[2] : gmax[2]);
-//    }
+//      }
+}
+
+void Scene::pickingObject(double sx, double sy) const
+{
+
 }
 
 //void Scene::draw(DrawStyle drawStyle)
@@ -88,10 +102,9 @@ void Scene::getBbox(glm::vec3& min, glm::vec3& max) const
 
 void Scene::fitCamera()
 {
-    float d = 5;
-    glm::vec3 min(-d,-d,-d);
-    glm::vec3 max(d,d,d);
-    //this->getBbox(min, max);
+    glm::vec3 min;
+    glm::vec3 max;
+    this->getBbox(min, max);
 
     float diagonal = glm::length(max - min);
 

@@ -22,6 +22,9 @@ public:
     virtual ~VisualModel();
 
 public:
+    const Mesh* mesh() const;
+
+public:
     Transform& transform();
     const Transform& transform() const;
 
