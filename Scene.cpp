@@ -35,24 +35,16 @@ Camera* Scene::camera()
 
 void Scene::draw(Node* node)
 {
-    this->m_visualManager.draw(node);
+    this->m_visualManager.updateUniformBufferCamera(this->m_camera);
+
+    DrawVisitor drawVisitor(&m_visualManager);
+    node->executeVisitor(&drawVisitor);
 }
 
 void Scene::draw()
 {
     this->draw(root());
 }
-
-//void Scene::addMesh(const Mesh *mesh)
-//{
-//    this->m_meshes.push_back(mesh);
-//}
-
-//void Scene::addMesh(const std::string &filename)
-//{
-//    Mesh* mesh = Mesh::FromFile(filename);
-//    this->m_meshes.push_back(mesh);
-//}
 
 void Scene::getBbox(glm::vec3& min, glm::vec3& max) const
 {
@@ -63,23 +55,6 @@ void Scene::getBbox(glm::vec3& min, glm::vec3& max) const
 
     min = boundingBoxVisitor.getMin();
     max = boundingBoxVisitor.getMax();
-
-//    // query each mesh
-//    for (const Mesh* mesh : this->m_meshes) {
-//        glm::vec3 min;
-//        glm::vec3 max;
-
-//        mesh->getBbox(min, max);
-
-//        //update gmin
-//        gmin[0] = (min[0] < gmin[0] ? min[0] : gmin[0]);
-//        gmin[1] = (min[1] < gmin[1] ? min[1] : gmin[1]);
-//        gmin[2] = (min[2] < gmin[2] ? min[2] : gmin[2]);
-//        // update gmax
-//        gmax[0] = (max[0] > gmax[0] ? max[0] : gmax[0]);
-//        gmax[1] = (max[1] > gmax[1] ? max[1] : gmax[1]);
-//        gmax[2] = (max[2] > gmax[2] ? max[2] : gmax[2]);
-//      }
 }
 
 void Scene::pickingObject(double sx, double sy) const

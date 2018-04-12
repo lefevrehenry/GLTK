@@ -33,8 +33,6 @@ public:
     void draw();            // draw scene graph from the root
 
 public:
-//    void addMesh(const Mesh* mesh);
-//    void addMesh(const std::string& filename);
     void getBbox(glm::vec3& min, glm::vec3& max) const;
 //    void draw(gl::DrawStyle drawStyle);
 

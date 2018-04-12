@@ -44,18 +44,18 @@ void Transform::translate(float x, float y, float z)
     this->m_isDirty = true;
 }
 
-void Transform::translate(const glm::vec3 &translate)
+void Transform::translate(const glm::vec3& translate)
 {
     this->translate(translate.x, translate.y, translate.z);
 }
 
-void Transform::rotate(const glm::quat &quat)
+void Transform::rotate(const glm::quat& quat)
 {
     this->m_orientation = glm::normalize(quat * this->m_orientation);
     this->m_isDirty = true;
 }
 
-void Transform::rotate(float radian, const glm::vec3 &axis)
+void Transform::rotate(float radian, const glm::vec3& axis)
 {
     glm::quat q = glm::angleAxis(radian, axis);
     this->rotate(q);
@@ -69,7 +69,7 @@ void Transform::scale(float sx, float sy, float sz)
     this->m_isDirty = true;
 }
 
-void Transform::scale(const glm::vec3 &scale)
+void Transform::scale(const glm::vec3& scale)
 {
     this->scale(scale.x, scale.y, scale.z);
 }

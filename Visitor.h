@@ -4,10 +4,16 @@
 // Glm
 #include <glm/glm.hpp>
 
+// Standard Library
+#include <stack>
+
 
 namespace gl {
 
 class Node;
+class VisualManager;
+class ShaderProgram;
+class VisualOption;
 
 /**
  * @brief The Visitor class
@@ -16,8 +22,10 @@ class Visitor
 {
 
 public:
-    virtual void init() = 0;
+    virtual void init();
+    virtual void forwardNode(const Node* node);
     virtual void processNode(const Node* node) = 0;
+    virtual void backwardNode(const Node* node);
 
 };
 
@@ -28,12 +36,23 @@ class DrawVisitor : public Visitor
 {
 
 public:
-    DrawVisitor();
+    DrawVisitor(VisualManager* visualManager);
     virtual ~DrawVisitor();
 
 public:
     virtual void init();
+    virtual void forwardNode(const Node* node);
     virtual void processNode(const Node* node);
+    virtual void backwardNode(const Node* node);
+
+private:
+    VisualManager* m_visualManager;
+
+    std::stack<ShaderProgram*>  m_shaderStack;
+    std::stack<VisualOption*>   m_optionStack;
+
+    ShaderProgram*  m_currentShader;
+    VisualOption*   m_currentOption;
 
 };
 

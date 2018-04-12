@@ -6,7 +6,7 @@ layout(location = 1) in vec3 normal;
 
 layout(std140) uniform transform
 {
-    mat4 model;
+    mat4 ModelMatrix;
     vec4 ambientColor;
     vec4 diffuseColor;
     vec4 specularColor;
@@ -14,10 +14,13 @@ layout(std140) uniform transform
     float shininess;
 };
 
-// uniform input
-uniform mat4 view;
-uniform mat4 mvp;
-uniform mat3 normal_mat;
+layout(std140) uniform camera
+{
+    mat4 view;
+    mat4 projection;
+    mat4 ProjViewMatrix;
+    mat3 NormalMatrix;
+};
 
 // data to fragment shader
 out vec3 normalView;
@@ -25,8 +28,8 @@ out vec3 eyeView;
 
 void main()
 {
-    normalView = normal_mat * normal;
+    normalView = NormalMatrix * normal;
     eyeView = (view * vec4(position,1.0)).xyz;
 
-    gl_Position = mvp * model * vec4(position, 1.0);
+    gl_Position = ProjViewMatrix * ModelMatrix * vec4(position, 1.0);
 }

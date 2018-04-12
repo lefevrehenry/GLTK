@@ -155,7 +155,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
     GLFWApplication* app = GLFWApplication::getInstance();
     Camera* camera = app->getScene()->camera();
-    float normalScale = 4;
+    float normalScale = 2;
 
     glm::vec3 dir_light(-1,-1,-1);
     glm::vec3 color(1,0,0);
@@ -183,9 +183,9 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::FlatShading:
 
-        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
-        shaderProgram->addData<glm::vec3>("color", color);
+        shaderProgram->addUniformBlock("transform", 1);
+        shaderProgram->addUniformBlock("camera", 2);
 
         break;
     case ShaderProgramType::GouraudShading:
@@ -197,11 +197,9 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::PhongShading:
 
-        shaderProgram->addData<Camera, glm::mat4>("view", camera, &Camera::view);
-        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
-        shaderProgram->addData<Camera, glm::mat3>("normal_mat", camera, &Camera::normal);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addUniformBlock("transform", 1);
+        shaderProgram->addUniformBlock("camera", 2);
 
         break;
     case ShaderProgramType::Frame:

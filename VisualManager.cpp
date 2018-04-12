@@ -28,12 +28,15 @@ void Node::executeVisitor(Visitor* visitor) const
 
 void Node::doExecuteVisitor(Visitor* visitor) const
 {
+    visitor->forwardNode(this);
     visitor->processNode(this);
 
     for (unsigned int i = 0; i < this->getNbChild(); ++i) {
         Node* child = this->getChild(i);
         child->doExecuteVisitor(visitor);
     }
+
+    visitor->backwardNode(this);
 }
 
 Node* Node::addChild()
@@ -124,35 +127,47 @@ VisualOption* Node::visualOption() const
 }
 
 VisualManager::VisualManager() :
-    m_shaderStack(),
-    m_optionStack(),
-    m_ubo(0)
+    m_uboModel(0),
+    m_uboCamera(0)
 {
-    size_t size = 2 * sizeof(glm::mat4) + sizeof(float);
-
-    glGenBuffers(1, &m_ubo);
-    glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
-    glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_STATIC_DRAW);
+    // Uniform Buffer Object Model
+    glGenBuffers(1, &m_uboModel);
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboModel);
+    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + sizeof(float), nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     this->updateUniformBufferTransform(Transform());
     this->updateUniformBufferMaterial(Material());
 
     // Bind l'uniform buffer object a l'index 1 dans la table de liaison d'OpenGL
-    GLuint binding_ubo_point_index = 1;
-    glBindBufferBase(GL_UNIFORM_BUFFER, binding_ubo_point_index, m_ubo);
+    GLuint binding_uboModel_point_index = 1;
+    glBindBufferBase(GL_UNIFORM_BUFFER, binding_uboModel_point_index, m_uboModel);
+
+    // Uniform Buffer Object Camera
+    glGenBuffers(1, &m_uboCamera);
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboCamera);
+    glBufferData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    this->updateUniformBufferCamera(Camera(Camera::Perspective));
+
+    // Bind l'uniform buffer object a l'index 2 dans la table de liaison d'OpenGL
+    GLuint binding_uboCamera_point_index = 2;
+    glBindBufferBase(GL_UNIFORM_BUFFER, binding_uboCamera_point_index, m_uboCamera);
 }
 
 VisualManager::~VisualManager()
 {
-    glDeleteBuffers(1, &m_ubo);
+    glDeleteBuffers(1, &m_uboModel);
 }
 
 void VisualManager::updateUniformBufferTransform(const Transform& transform)
 {
     const glm::mat4& matrix = transform.matrix();
-    glBindBuffer(GL_UNIFORM_BUFFER, this->m_ubo);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, this->m_uboModel);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(matrix));
+
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
@@ -160,78 +175,26 @@ void VisualManager::updateUniformBufferMaterial(const Material& material)
 {
     const glm::mat4& matrix = material.matrix();
     float shininess = material.shininess();
-    glBindBuffer(GL_UNIFORM_BUFFER, this->m_ubo);
-    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(matrix));
+
+    glBindBuffer(GL_UNIFORM_BUFFER, this->m_uboModel);
+    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(matrix));
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(float), &shininess);
+
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void VisualManager::draw(Node *node)
+void VisualManager::updateUniformBufferCamera(const Camera& camera)
 {
-    // stack the node's ShaderProgram
-    ShaderProgram* shaderProgram = node->shaderProgram();
-    if (shaderProgram != nullptr)
-        m_shaderStack.push(shaderProgram);
+    const glm::mat4& view = camera.view();
+    const glm::mat4& projection = camera.projection();
+    const glm::mat4& ProjViewMatrix = camera.mvp();
+    const glm::mat4& NormalMatrix = glm::mat4(camera.normal());
 
-    ShaderProgram* topShader = nullptr;
+    glBindBuffer(GL_UNIFORM_BUFFER, this->m_uboCamera);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(ProjViewMatrix));
+    glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(NormalMatrix));
 
-    // get the current shader program
-    if (!m_shaderStack.empty())
-        topShader = m_shaderStack.top();
-
-//    // stack the node's VisualOption
-//    VisualOption* visualOption = node->visualOption();
-//    if (visualOption != nullptr)
-//        m_optionStack.push(visualOption);
-
-//    VisualOption* topOption = nullptr;
-
-//    // get the current visual option
-//    if (!m_optionStack.empty()) {
-//        topOption = m_optionStack.top();
-//        topOption->push();
-//    }
-
-    // bind the current ShaderProgram
-    if (topShader != nullptr) {
-        topShader->bind();
-        topShader->updateDataIfDirty();
-
-        // specifies what kind of primitives has to be drawn by the shader
-        PrimitiveMode primitiveMode = topShader->getPrimitiveMode();
-
-        // draw each mesh
-        for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
-            const VisualModel* visual = node->getVisual(i);
-            const Transform& transform = visual->transform();
-            const Material& material = visual->material();
-
-            this->updateUniformBufferTransform(transform);
-            this->updateUniformBufferMaterial(material);
-
-            visual->draw(primitiveMode);
-        }
-    }
-
-    // process each child
-    for (unsigned int i = 0; i < node->getNbChild(); ++i) {
-        Node* child = node->getChild(i);
-        this->draw(child);
-    }
-
-    // unbind the current ShaderProgram
-    if (topShader != nullptr)
-        topShader->unbind();
-
-    // unstack the node's ShaderProgram
-    if (shaderProgram != nullptr)
-        m_shaderStack.pop();
-
-//    // pop the current visual option
-//    if (topOption != nullptr)
-//        topOption->pop();
-
-//    // unstack the node's visualOption
-//    if (visualOption != nullptr)
-//        m_optionStack.pop();
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }

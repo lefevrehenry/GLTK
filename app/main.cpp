@@ -68,8 +68,8 @@ int main()
     shaderProgram = helper::CreateShaderProgram(ShaderProgram::FlatShading);
     node2->setShaderProgram(shaderProgram);
 
-    Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/dragon_low.obj");
-    Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/Armadillo_simplified.obj");
+    Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/dragon_low.obj");
+    Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/Armadillo_simplified.obj");
 
     // Node 1
     VisualModel visual1(mesh1);

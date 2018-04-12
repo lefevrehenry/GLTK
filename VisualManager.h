@@ -1,6 +1,7 @@
 #ifndef VISUALMANAGER_H
 #define VISUALMANAGER_H
 
+#include "Camera.h"
 #include "Material.h"
 #include "Transform.h"
 
@@ -86,13 +87,11 @@ public:
     void updateUniformBufferMaterial(const gl::Material& material);
 
 public:
-    void draw(Node* node);
+    void updateUniformBufferCamera(const gl::Camera& camera);
 
 private:
-    std::stack<ShaderProgram*>  m_shaderStack;
-    std::stack<VisualOption*>   m_optionStack;
-
-    GLuint m_ubo;
+    GLuint m_uboModel;
+    GLuint m_uboCamera;
 
 };
 
