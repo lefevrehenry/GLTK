@@ -66,10 +66,12 @@ int main()
     node1->setShaderProgram(shaderProgram);
 
     shaderProgram = helper::CreateShaderProgram(ShaderProgram::FlatShading);
+//    shaderProgram = helper::CreateShaderProgram(ShaderProgram::Texturing);
     node2->setShaderProgram(shaderProgram);
 
-    Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/dragon_low.obj");
     Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/Armadillo_simplified.obj");
+    Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/dragon_low.obj");
+//    Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/cube.obj");
 
     // Node 1
     VisualModel visual1(mesh1);
@@ -90,8 +92,8 @@ int main()
 
     GLFWApplication::Terminate();
 
-    delete mesh1; delete mesh2;
-    mesh1 = nullptr; mesh2 = nullptr;
+    /*delete mesh1;*/ delete mesh2;
+    /*mesh1 = nullptr;*/ mesh2 = nullptr;
 
     delete shaderProgram;
     shaderProgram = nullptr;

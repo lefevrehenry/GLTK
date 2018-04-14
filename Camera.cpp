@@ -4,12 +4,13 @@
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 
 using namespace gl;
 
-Camera::Camera(ProjectionType projectionType) :
-    m_projectionType(projectionType),
+Camera::Camera() :
+    m_projectionType(Perspective),
     m_model(),
     m_view(),
     m_proj(),

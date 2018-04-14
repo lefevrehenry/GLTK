@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 // Standard Library
+#include <list>
 #include <string>
 
 // OpenGL
@@ -17,32 +18,29 @@ class Texture
 {
 
 public:
-
-    Texture(unsigned int textureUnit);
+    Texture();
     virtual ~Texture();
 
 public:
-
     GLuint getTextureID() const;
-
     unsigned short getTextureUnit() const;
 
+public:
     bool isLoaded() const;
-
     void load(const std::string& filename);
 
 public:
-
     void bindTexture() const;
-
     void unbindTexture() const;
 
 private:
+//    static find_gap();
 
+    static std::list<unsigned short> ActiveTexture;
+
+private:
     GLuint m_textureId;
-
     unsigned short m_textureUnit;
-
     bool m_isLoaded;
 
 };

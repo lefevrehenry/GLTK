@@ -3,7 +3,6 @@
 
 // Glm
 #include <glm/glm.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 
 namespace gl
@@ -22,7 +21,7 @@ public:
         Orthograhic
     };
 
-    Camera(ProjectionType projectionType);
+    Camera();
     virtual ~Camera();
 
 public:

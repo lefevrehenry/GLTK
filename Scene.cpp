@@ -7,7 +7,7 @@ using namespace gl;
 
 Scene::Scene() :
     m_rootNode(),
-    m_camera(Camera::Perspective),
+    m_camera(),
     m_visualManager()
 {
 
@@ -61,19 +61,6 @@ void Scene::pickingObject(double sx, double sy) const
 {
 
 }
-
-//void Scene::draw(DrawStyle drawStyle)
-//{
-//    glPolygonMode(GL_FRONT_AND_BACK, drawStyle.polygonMode);
-
-//    for (const Mesh* mesh : this->m_meshes) {
-//        if (drawStyle.instanced > 1) {
-//            mesh->drawInstanced(drawStyle.primitiveMode, drawStyle.instanced);
-//        } else {
-//            mesh->draw(drawStyle.primitiveMode);
-//        }
-//    }
-//}
 
 void Scene::fitCamera()
 {

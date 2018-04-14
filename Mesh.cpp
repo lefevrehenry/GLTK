@@ -129,8 +129,10 @@ Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
         }
 
         // UV coordinates
-        if (mesh->GetNumUVChannels() == 2) {
-            unsigned int channel = mesh->GetNumUVChannels()-1;
+//        if (mesh->GetNumUVChannels() == 2) {
+//            unsigned int channel = mesh->GetNumUVChannels()-1;
+        if (mesh->HasTextureCoords(0)) {
+            unsigned int channel = 0;
             for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
                 m_uvcoord[i * 2] = mesh->mTextureCoords[channel][i].x;
                 m_uvcoord[i * 2 + 1] = mesh->mTextureCoords[channel][i].y;

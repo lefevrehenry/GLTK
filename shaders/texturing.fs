@@ -1,9 +1,29 @@
 #version 330 core
 
+layout(std140) uniform transform
+{
+    mat4 ModelMatrix;
+    vec4 ambientColor;
+    vec4 diffuseColor;
+    vec4 specularColor;
+    vec4 emptyColor;
+    float shininess;
+};
+
+layout(std140) uniform camera
+{
+    mat4 view;
+    mat4 projection;
+    mat4 ProjViewMatrix;
+    mat3 NormalMatrix;
+};
+
+// uniform input
 uniform vec3 dir_light;
 uniform sampler2D colorMap;
 uniform sampler2D normalMap;
 
+// data from vertex shader
 in vec3 o_tangent;
 in vec3 o_bitangent;
 in vec3 o_normal;
@@ -13,7 +33,7 @@ out vec4 outColor;
 
 void main()
 {
-    vec2 uv = 6 * o_uvcoord;
+    vec2 uv = o_uvcoord;
 
     // normalized vectors needed for shading
     vec3 l = normalize(dir_light);
@@ -28,8 +48,8 @@ void main()
     float diff = max(-dot(l,n),0.0);
 
     // final diffuse and specular colors
-    vec4 diffuseColor = 2 * diff * texture(colorMap,uv);
+    vec4 diffuseColor = diff * texture(colorMap,uv);
 
     // final color
-    outColor = diffuseColor;
+    outColor = texture(colorMap,uv);//diffuseColor;
 }

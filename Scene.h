@@ -34,8 +34,6 @@ public:
 
 public:
     void getBbox(glm::vec3& min, glm::vec3& max) const;
-//    void draw(gl::DrawStyle drawStyle);
-
     void pickingObject(double sx, double sy) const;
 
 public:

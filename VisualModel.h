@@ -3,6 +3,7 @@
 
 #include "Material.h"
 #include "ShaderProgram.h"
+#include "Texture.h"
 #include "Transform.h"
 
 
@@ -17,7 +18,6 @@ class VisualModel
 {
 
 public:
-    VisualModel();
     VisualModel(const Mesh* mesh);
     virtual ~VisualModel();
 
@@ -38,6 +38,28 @@ private:
     const Mesh* m_mesh;
     Transform m_transform;
     Material m_material;
+
+};
+
+/**
+ * @brief The TexturedVisualModel class
+ */
+class TexturedVisualModel : public VisualModel
+{
+
+public:
+    TexturedVisualModel(const Mesh* mesh, const Texture* texture);
+    virtual ~TexturedVisualModel();
+
+public:
+    const Texture* texture() const;
+
+//public:
+//    Texture& texture();
+//    const Texture& texture() const;
+
+private:
+    const Texture* m_texture;
 
 };
 

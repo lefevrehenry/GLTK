@@ -149,7 +149,7 @@ VisualManager::VisualManager() :
     glBufferData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    this->updateUniformBufferCamera(Camera(Camera::Perspective));
+    this->updateUniformBufferCamera(Camera());
 
     // Bind l'uniform buffer object a l'index 2 dans la table de liaison d'OpenGL
     GLuint binding_uboCamera_point_index = 2;

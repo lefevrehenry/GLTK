@@ -159,10 +159,10 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
     glm::vec3 dir_light(-1,-1,-1);
     glm::vec3 color(1,0,0);
-    static Texture colorMap(0);
+    static Texture colorMap;
     if (!colorMap.isLoaded())
         colorMap.load("/home/henry/dev/QtProject/OpenGL/share/textures/chesterfield-color.png");
-    static Texture normalMap(1);
+    static Texture normalMap;
     if (!normalMap.isLoaded())
         normalMap.load("/home/henry/dev/QtProject/OpenGL/share/textures/chesterfield-normal.png");
 
@@ -218,10 +218,11 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::Texturing:
 
-        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addData<Texture>("colorMap", colorMap);
         shaderProgram->addData<Texture>("normalMap", normalMap);
+        shaderProgram->addUniformBlock("transform", 1);
+        shaderProgram->addUniformBlock("camera", 2);
 
         break;
     case ShaderProgramType::TangentSpace:

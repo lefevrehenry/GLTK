@@ -93,7 +93,7 @@ protected:
 
     virtual void update()
     {
-        msg_error("Data") << "update function not specialized for given template";
+        msg_error("Data") << "update function not specialized for the given template";
     }
 
 protected:

@@ -6,20 +6,47 @@
 #include <QImage>
 #include <QGLWidget>
 
+// Standard Library
+#include <algorithm>
 
 using namespace gl;
 
-Texture::Texture(unsigned int textureUnit) :
+std::list<unsigned short> Texture::ActiveTexture;
+
+// find gap in a sequence of number (list must be sorted)
+template< typename T >
+unsigned short find_gap(const std::list<T>& list)
+{
+    T next = 0;
+
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        if (*it != next)
+            return next;
+        ++next;
+    }
+
+    return next;
+}
+
+Texture::Texture() :
     m_textureId(0),
-    m_textureUnit(textureUnit),
+    m_textureUnit(0),
     m_isLoaded(false)
 {
     glGenTextures(1, &m_textureId);
+
+    unsigned short unit = find_gap<unsigned short>(ActiveTexture);
+    auto it = std::upper_bound(ActiveTexture.begin(), ActiveTexture.end(), unit);
+    ActiveTexture.insert(it, unit);
+
+    msg_info("Debug") << "new texture at " << unit;
+    this->m_textureUnit = unit;
 }
 
 Texture::~Texture()
 {
     glDeleteTextures(1, &m_textureId);
+    // TODO: deactivate texture unit
 }
 
 GLuint Texture::getTextureID() const
@@ -82,7 +109,7 @@ void Texture::load(const std::string& filename)
 
 void Texture::bindTexture() const
 {
-    glBindTexture(GL_TEXTURE_2D, m_textureId);
+    glBindTexture(GL_TEXTURE_2D, this->m_textureId);
 }
 
 void Texture::unbindTexture() const

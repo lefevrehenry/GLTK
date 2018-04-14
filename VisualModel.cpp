@@ -5,13 +5,13 @@
 
 using namespace gl;
 
-VisualModel::VisualModel() :
-    m_mesh(nullptr),
-    m_transform(),
-    m_material()
-{
+//VisualModel::VisualModel() :
+//    m_mesh(nullptr),
+//    m_transform(),
+//    m_material()
+//{
 
-}
+//}
 
 VisualModel::VisualModel(const Mesh *mesh) :
     m_mesh(mesh),
@@ -56,3 +56,29 @@ void VisualModel::draw(PrimitiveMode primitiveMode) const
     if (this->m_mesh)
         this->m_mesh->draw(primitiveMode);
 }
+
+TexturedVisualModel::TexturedVisualModel(const Mesh* mesh, const Texture* texture) : VisualModel(mesh),
+    m_texture(texture)
+{
+
+}
+
+TexturedVisualModel::~TexturedVisualModel()
+{
+
+}
+
+const Texture* TexturedVisualModel::texture() const
+{
+    return this->m_texture;
+}
+
+//Texture& TexturedVisualModel::texture()
+//{
+//    return this->m_texture;
+//}
+
+//const Texture& TexturedVisualModel::texture() const
+//{
+//    return this->m_texture;
+//}
