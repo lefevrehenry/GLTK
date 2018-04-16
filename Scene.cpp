@@ -48,7 +48,7 @@ void Scene::draw()
 
 void Scene::getBbox(glm::vec3& min, glm::vec3& max) const
 {
-    BBoxVisitor boundingBoxVisitor;
+    BoundingBoxVisitor boundingBoxVisitor;
 
     const Node* rootNode = root();
     rootNode->executeVisitor(&boundingBoxVisitor);

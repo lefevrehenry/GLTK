@@ -118,6 +118,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::HighLight:
 
         getStringFromQrcFile(":/shaders/highLight.vs", vs);
+        getStringFromQrcFile(":/shaders/highLight.gs", gs);
         getStringFromQrcFile(":/shaders/highLight.fs", fs);
 
         break;
@@ -155,7 +156,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
     GLFWApplication* app = GLFWApplication::getInstance();
     Camera* camera = app->getScene()->camera();
-    float normalScale = 2;
+    float normalScale = 0.5;
 
     glm::vec3 dir_light(-1,-1,-1);
     glm::vec3 color(1,0,0);
@@ -177,8 +178,9 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::Normal:
 
-        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<float>("scale", normalScale);
+        shaderProgram->addUniformBlock("transform", 1);
+        shaderProgram->addUniformBlock("camera", 2);
 
         break;
     case ShaderProgramType::FlatShading:
@@ -212,8 +214,10 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::HighLight:
 
-        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
+//        shaderProgram->setPrimitiveMode(PrimitiveMode::TRIANGLES);
         shaderProgram->addData<glm::vec3>("color", glm::vec3(1.0,0.8,0.0));
+        shaderProgram->addUniformBlock("transform", 1);
+        shaderProgram->addUniformBlock("camera", 2);
 
         break;
     case ShaderProgramType::Texturing:
@@ -227,9 +231,10 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::TangentSpace:
 
-        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
-        shaderProgram->addData<float>("scale", normalScale);
         shaderProgram->setPrimitiveMode(PrimitiveMode::POINTS);
+        shaderProgram->addData<float>("scale", normalScale);
+        shaderProgram->addUniformBlock("transform", 1);
+        shaderProgram->addUniformBlock("camera", 2);
 
         break;
     }

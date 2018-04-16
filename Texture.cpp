@@ -39,7 +39,6 @@ Texture::Texture() :
     auto it = std::upper_bound(ActiveTexture.begin(), ActiveTexture.end(), unit);
     ActiveTexture.insert(it, unit);
 
-    msg_info("Debug") << "new texture at " << unit;
     this->m_textureUnit = unit;
 }
 

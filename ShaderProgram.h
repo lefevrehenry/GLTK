@@ -22,7 +22,7 @@ class Shader;
 // Specifies what kind of primives has to be rendered
 enum PrimitiveMode {
     POINTS = GL_POINTS,
-    EDGES = GL_LINES,
+    LINES = GL_LINES,
     TRIANGLES = GL_TRIANGLES
 };
 

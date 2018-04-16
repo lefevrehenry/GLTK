@@ -57,14 +57,14 @@ private:
 };
 
 /**
- * @brief The BBoxVisitor class
+ * @brief The BoundingBoxVisitor class
  */
-class BBoxVisitor : public Visitor
+class BoundingBoxVisitor : public Visitor
 {
 
 public:
-    BBoxVisitor();
-    virtual ~BBoxVisitor();
+    BoundingBoxVisitor();
+    virtual ~BoundingBoxVisitor();
 
 public:
     virtual void init();

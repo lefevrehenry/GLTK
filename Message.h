@@ -2,6 +2,7 @@
 #define MESSAGE_H
 
 // Standard Library
+#include <iomanip>
 #include <sstream>
 #include <string>
 
@@ -48,6 +49,30 @@ public:
     Message& operator<<(const glm::vec4& x)
     {
         m_message << "(" << x[0] << "," << x[1] << "," << x[2] << "," << x[3] << ")";
+        return *this;
+    }
+
+    Message& operator<<(const glm::mat3& m)
+    {
+        m_message << "Matrix 3" << std::setprecision(2);
+        for (unsigned int i = 0; i < 3; ++i) {
+            m_message << "\n";
+            for (unsigned int j = 0; j < 3; ++j) {
+                m_message << std::setw(5) << std::left << m[j][i];
+            }
+        }
+        return *this;
+    }
+
+    Message& operator<<(const glm::mat4& m)
+    {
+        m_message << "Matrix 4" << std::setprecision(2);
+        for (unsigned int i = 0; i < 4; ++i) {
+            m_message << "\n";
+            for (unsigned int j = 0; j < 4; ++j) {
+                m_message << std::setw(5) << std::left << m[j][i];
+            }
+        }
         return *this;
     }
 

@@ -11,6 +11,7 @@
         <file>shaders/gouraudShading.fs</file>
         <file>shaders/gouraudShading.vs</file>
         <file>shaders/highLight.fs</file>
+        <file>shaders/highLight.gs</file>
         <file>shaders/highLight.vs</file>
         <file>shaders/normal.fs</file>
         <file>shaders/normal.gs</file>

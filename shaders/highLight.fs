@@ -1,5 +1,6 @@
 #version 330 core
 
+// uniform input
 uniform vec3 color;
 
 out vec4 outColor;

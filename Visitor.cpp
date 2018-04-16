@@ -77,7 +77,7 @@ void DrawVisitor::processNode(const Node* node)
         m_currentShader->bind();
         m_currentShader->updateDataIfDirty();
 
-        // specifies what kind of primitives has to be drawn by the shader
+        // fetch what kind of primitives has to be drawn by the shader
         PrimitiveMode primitiveMode = m_currentShader->getPrimitiveMode();
 
         // draw each mesh
@@ -115,17 +115,17 @@ void DrawVisitor::backwardNode(const Node *node)
 //        m_optionStack.pop();
 }
 
-BBoxVisitor::BBoxVisitor()
+BoundingBoxVisitor::BoundingBoxVisitor()
 {
 
 }
 
-BBoxVisitor::~BBoxVisitor()
+BoundingBoxVisitor::~BoundingBoxVisitor()
 {
 
 }
 
-void BBoxVisitor::init()
+void BoundingBoxVisitor::init()
 {
     float minf = std::numeric_limits<float>::lowest();
     float maxf = std::numeric_limits<float>::max();
@@ -133,7 +133,7 @@ void BBoxVisitor::init()
     this->globalMax = glm::vec3(minf, minf, minf);
 }
 
-void BBoxVisitor::processNode(const Node* node)
+void BoundingBoxVisitor::processNode(const Node* node)
 {
     for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
         glm::vec3 min;
@@ -159,12 +159,12 @@ void BBoxVisitor::processNode(const Node* node)
     }
 }
 
-glm::vec3 BBoxVisitor::getMin() const
+glm::vec3 BoundingBoxVisitor::getMin() const
 {
     return this->globalMin;
 }
 
-glm::vec3 BBoxVisitor::getMax() const
+glm::vec3 BoundingBoxVisitor::getMax() const
 {
     return this->globalMax;
 }

@@ -26,12 +26,10 @@ public:
     virtual ~VisualOption();
 
 public:
-
     void push() const;
     void pop() const;
 
 public:
-
     PolygonMode getPolygonMode() const;
     void setPolygonMode(PolygonMode polygonMode);
 

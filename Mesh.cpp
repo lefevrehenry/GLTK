@@ -210,24 +210,23 @@ void Mesh::MeshEntry::draw(PrimitiveMode primitiveMode) const
         primitiveType = GL_POINTS;
         count = m_numVertices;
         offset = 0;
-        glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
         break;
-    case PrimitiveMode::EDGES:
+    case PrimitiveMode::LINES:
         primitiveType = GL_LINES;
         count = 2 * m_numEdges;
         offset = m_numVertices;
-        glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
         break;
     case PrimitiveMode::TRIANGLES:
         primitiveType = GL_TRIANGLES;
         count = 3 * m_numTriangles;
         offset = m_numVertices + (2 * m_numEdges);
-        glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
         break;
     }
+
+    glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
     glBindVertexArray(0);
 }

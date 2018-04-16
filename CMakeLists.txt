@@ -15,7 +15,7 @@ set(HEADER_FILES
     Data.h
     FileRepository.h
 #    Framebuffer.h
-	GLFWApplication.h
+    GLFWApplication.h
     GLFWApplicationEvents.h
     Interface.h
     Helper.h
@@ -70,6 +70,7 @@ set(SHADER_FILES
     shaders/gouraudShading.vs
     shaders/gouraudShading.fs
     shaders/highLight.vs
+    shaders/highLight.gs
     shaders/highLight.fs
     shaders/normal.vs
     shaders/normal.gs
