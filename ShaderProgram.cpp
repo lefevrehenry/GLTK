@@ -19,7 +19,8 @@ ShaderProgram::ShaderProgram() :
 
 ShaderProgram::~ShaderProgram()
 {
-    for (BaseData* baseData : m_dataList) {
+    for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
+        BaseData* baseData = it->second;
         delete baseData;
         baseData = nullptr;
     }
@@ -103,7 +104,8 @@ void ShaderProgram::unbind() const
 
 void ShaderProgram::updateDataIfDirty()
 {
-    for (BaseData* baseData : m_dataList) {
+    for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
+        BaseData* baseData = it->second;
         baseData->updateIfDirty();
     }
 }

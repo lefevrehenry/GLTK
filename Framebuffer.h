@@ -25,18 +25,22 @@ public:
 
 public:
 
-    void attachTexture(unsigned int n);
+    void bind() const;
+    void unbind() const;
 
+public:
+
+    void attachTexture();
     void attachDepthTexture();
 
 private:
-
     GLuint m_framebufferId;
+
+    Texture* m_renderTexture;
+    Texture* m_depthTexture;
+
     unsigned int m_width;
     unsigned int m_height;
-
-    std::vector<Texture*> m_renderTextures;
-    Texture* m_depthTexture;
 
 };
 

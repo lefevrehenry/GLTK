@@ -57,6 +57,28 @@ private:
 };
 
 /**
+ * @brief The PickingVisitor class
+ */
+class PickingVisitor : public Visitor
+{
+
+public:
+    PickingVisitor();
+    virtual ~PickingVisitor();
+
+public:
+    virtual void init();
+    //virtual void forwardNode(const Node* node);
+    virtual void processNode(const Node* node);
+    //virtual void backwardNode(const Node* node);
+
+private:
+    ShaderProgram* m_shaderProgram;
+    unsigned int m_id;
+
+};
+
+/**
  * @brief The BoundingBoxVisitor class
  */
 class BoundingBoxVisitor : public Visitor

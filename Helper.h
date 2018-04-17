@@ -135,6 +135,12 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         getStringFromQrcFile(":/shaders/tangentSpace.fs", fs);
 
         break;
+    case ShaderProgramType::Picking:
+
+        getStringFromQrcFile(":/shaders/picking.vs", vs);
+        getStringFromQrcFile(":/shaders/picking.fs", fs);
+
+        break;
     }
 
     if (vs != "") {
@@ -235,6 +241,13 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         shaderProgram->addData<float>("scale", normalScale);
         shaderProgram->addUniformBlock("transform", 1);
         shaderProgram->addUniformBlock("camera", 2);
+
+        break;
+    case ShaderProgramType::Picking:
+
+        shaderProgram->addData<glm::mat4>("transform", glm::mat4());
+        shaderProgram->addData<glm::mat4>("camera", glm::mat4());
+        shaderProgram->addData<unsigned int>("id", 0);
 
         break;
     }

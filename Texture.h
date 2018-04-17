@@ -30,12 +30,10 @@ public:
     void load(const std::string& filename);
 
 public:
-    void bindTexture() const;
-    void unbindTexture() const;
+    void bind() const;
+    void unbind() const;
 
 private:
-//    static find_gap();
-
     static std::list<unsigned short> ActiveTexture;
 
 private:

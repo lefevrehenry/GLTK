@@ -8,7 +8,8 @@ using namespace gl;
 Scene::Scene() :
     m_rootNode(),
     m_camera(),
-    m_visualManager()
+    m_visualManager(),
+    m_framebuffer(1,1)
 {
 
 }
@@ -59,7 +60,23 @@ void Scene::getBbox(glm::vec3& min, glm::vec3& max) const
 
 void Scene::pickingObject(double sx, double sy) const
 {
+    //msg_info("a") << sx << ", " << s
 
+    this->m_framebuffer.bind();
+
+    // stack viewport
+    GLint bound[4];
+    glGetIntegerv(GL_VIEWPORT, &bound[0]);
+
+    glViewport(0,0,1,1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+//    PickingVisitor visitor(&m_visualManager);
+
+    // restore default viewport
+    glViewport(bound[0],bound[1],bound[2],bound[3]);
+
+    this->m_framebuffer.unbind();
 }
 
 void Scene::fitCamera()

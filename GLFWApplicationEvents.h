@@ -28,6 +28,13 @@ public:
     virtual void mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)
     {
         this->mousePressed = (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS);
+
+        if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+            double xpos, ypos;
+            glfwGetCursorPos(handle, &xpos, &ypos);
+            GLFWApplication* app = GLFWApplication::getInstance();
+            app->getScene()->pickingObject(xpos, ypos);
+        }
     }
 
     virtual void cursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
@@ -43,9 +50,6 @@ public:
             float ry = (-dy / height) * pi;
             GLFWApplication* app = GLFWApplication::getInstance();
             app->getScene()->camera()->rotate(rx, ry);
-        } else {
-            GLFWApplication* app = GLFWApplication::getInstance();
-            app->getScene()->pickingObject(xpos, ypos);
         }
         this->x = xpos;
         this->y = ypos;

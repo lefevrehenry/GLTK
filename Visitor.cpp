@@ -1,11 +1,13 @@
 #include "Visitor.h"
 
+#include "Helper.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Transform.h"
 #include "VisualManager.h"
 #include "VisualModel.h"
 #include "VisualOption.h"
+
 
 using namespace gl;
 
@@ -113,6 +115,55 @@ void DrawVisitor::backwardNode(const Node *node)
 //    // unstack the node's visualOption
 //    if (visualOption != nullptr)
 //        m_optionStack.pop();
+}
+
+PickingVisitor::PickingVisitor() :
+    m_shaderProgram(0),
+    m_id(0)
+{
+    // create shader here
+    this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::Picking);
+}
+
+PickingVisitor::~PickingVisitor()
+{
+    delete m_shaderProgram;
+    m_shaderProgram = nullptr;
+}
+
+void PickingVisitor::init()
+{
+    this->m_id = 1;
+
+    m_shaderProgram->bind();
+
+    // send camera here
+    Data<glm::mat4>* camera = this->m_shaderProgram->getDataByName<glm::mat4>("camera");
+    camera->setValue(glm::mat4());
+
+    m_shaderProgram->updateDataIfDirty();
+}
+
+void PickingVisitor::processNode(const Node* node)
+{
+    if (this->m_shaderProgram != nullptr) {
+
+        // fetch what kind of primitives has to be drawn by the shader
+        PrimitiveMode primitiveMode = m_shaderProgram->getPrimitiveMode();
+
+        // draw each mesh
+        for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
+            const VisualModel* visual = node->getVisual(i);
+            const Transform& transform = visual->transform();
+
+            // update transform
+            // update id
+
+            visual->draw(primitiveMode);
+
+            this->m_id += 1;
+        }
+    }
 }
 
 BoundingBoxVisitor::BoundingBoxVisitor()

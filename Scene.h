@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include "Camera.h"
+#include "Framebuffer.h"
 #include "VisualManager.h"
 
 // Glm
@@ -44,6 +45,8 @@ private:
     Camera  m_camera;
 
     VisualManager m_visualManager;
+
+    Framebuffer m_framebuffer;
 
 };
 

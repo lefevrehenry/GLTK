@@ -37,25 +37,36 @@ int main()
 
     msg_info("OpenGL") << "Congrat's ! You're running OpenGL " << glMajor << "." << glMinor;
 
+//    GLint bound[4];
+
+//    glViewport(3,5,20,30);
+//    glGetIntegerv(GL_VIEWPORT, &bound[0]);
+//    msg_info("Viewport") << bound[0] << ", " << bound[1] << " | " << bound[2] << ", " << bound[3];
+
+//    glPushAttrib(GL_VIEWPORT_BIT);
+
+//    glViewport(9,3,10,10);
+//    glGetIntegerv(GL_VIEWPORT, &bound[0]);
+//    msg_info("Viewport") << bound[0] << ", " << bound[1] << " | " << bound[2] << ", " << bound[3];
+
+//    glPopAttrib();
+
+//    glGetIntegerv(GL_VIEWPORT, &bound[0]);
+//    msg_info("Viewport") << bound[0] << ", " << bound[1] << " | " << bound[2] << ", " << bound[3];
+
     /* Create your scene here */
     Node* root = app->getScene()->root();
     Node* node1 = root->addChild();
     Node* node2 = root->addChild();
 
-//    typedef VisualOption::PolygonMode PolygonMode;
-//    VisualOption visualOption;
-//    visualOption.setPolygonMode(PolygonMode::LINE);
-
     ShaderProgram* shaderProgram[2];
 
 //    shaderProgram[0] = helper::CreateShaderProgram(ShaderProgram::FlatShading);
-    shaderProgram[1] = helper::CreateShaderProgram(ShaderProgram::PhongShading);
-//    shaderProgram = helper::CreateShaderProgram(ShaderProgram::Texturing);
-    shaderProgram[0] = helper::CreateShaderProgram(ShaderProgram::HighLight);
+    shaderProgram[0] = helper::CreateShaderProgram(ShaderProgram::PhongShading);
+//    shaderProgram[1] = helper::CreateShaderProgram(ShaderProgram::Texturing);
+//    shaderProgram[1] = helper::CreateShaderProgram(ShaderProgram::HighLight);
 
-//    root->setShaderProgram(shaderProgram);
-    node1->setShaderProgram(shaderProgram[0]);
-    node2->setShaderProgram(shaderProgram[1]);
+    root->setShaderProgram(shaderProgram[0]);
 
 
 //    Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/Armadillo_simplified.obj");
@@ -64,16 +75,13 @@ int main()
     Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/sphere.obj");
 
     // Node 1
-    VisualModel visual1(mesh1);
-    visual1.material() = Material::Bronze();
+    VisualModel visual1(mesh1, Material::Bronze());
     visual1.transform().translate(-40,0,0);
     visual1.transform().scale(10,10,10);
     node1->addVisual(&visual1);
 
     // Node 2
-    VisualModel visual2(mesh2);
-//    visual2.transform().translate(2,0,0);
-    visual2.material() = Material::Obsidian();
+    VisualModel visual2(mesh2, Material::Obsidian());
     node2->addVisual(&visual2);
 
     app->getScene()->fitCamera();
@@ -83,10 +91,10 @@ int main()
 
     GLFWApplication::Terminate();
 
-    delete mesh1;
-    delete mesh2;
-    delete shaderProgram[0];
-    delete shaderProgram[1];
+//    delete mesh1;
+//    delete mesh2;
+//    delete shaderProgram[0];
+//    delete shaderProgram[1];
 
 	return 0;
 }

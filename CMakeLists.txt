@@ -14,7 +14,7 @@ set(HEADER_FILES
     Camera.h
     Data.h
     FileRepository.h
-#    Framebuffer.h
+    Framebuffer.h
     GLFWApplication.h
     GLFWApplicationEvents.h
     Interface.h
@@ -39,7 +39,7 @@ set(SOURCE_FILES
     Camera.cpp
     Data.cpp
     FileRepository.cpp
-#    Framebuffer.cpp
+    Framebuffer.cpp
     GLFWApplication.cpp
     GLFWApplicationEvents.cpp
     Interface.cpp
@@ -77,6 +77,8 @@ set(SHADER_FILES
     shaders/normal.fs
     shaders/phongShading.vs
     shaders/phongShading.fs
+    shaders/picking.vs
+    shaders/picking.fs
     shaders/tangentSpace.vs
     shaders/tangentSpace.gs
     shaders/tangentSpace.fs

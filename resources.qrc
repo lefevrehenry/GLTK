@@ -18,6 +18,8 @@
         <file>shaders/normal.vs</file>
         <file>shaders/phongShading.fs</file>
         <file>shaders/phongShading.vs</file>
+        <file>shaders/picking.fs</file>
+        <file>shaders/picking.vs</file>
         <file>shaders/tangentSpace.fs</file>
         <file>shaders/tangentSpace.gs</file>
         <file>shaders/tangentSpace.vs</file>

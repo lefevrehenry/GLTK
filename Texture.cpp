@@ -40,6 +40,7 @@ Texture::Texture() :
     ActiveTexture.insert(it, unit);
 
     this->m_textureUnit = unit;
+    glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
 }
 
 Texture::~Texture()
@@ -89,7 +90,6 @@ void Texture::load(const std::string& filename)
         return;
     }
 
-    glActiveTexture(GL_TEXTURE0 + m_textureUnit);
     glBindTexture(GL_TEXTURE_2D, this->m_textureId);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
@@ -101,17 +101,15 @@ void Texture::load(const std::string& filename)
 
     glGenerateMipmap(GL_TEXTURE_2D);
 
-//    glBindTexture(GL_TEXTURE_2D, 0);
-
     this->m_isLoaded = true;
 }
 
-void Texture::bindTexture() const
+void Texture::bind() const
 {
     glBindTexture(GL_TEXTURE_2D, this->m_textureId);
 }
 
-void Texture::unbindTexture() const
+void Texture::unbind() const
 {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
