@@ -10,6 +10,7 @@
 
 namespace gl {
 
+//class Data;
 class Node;
 class VisualManager;
 class ShaderProgram;
@@ -67,6 +68,9 @@ public:
     virtual ~PickingVisitor();
 
 public:
+    void setCamera(const glm::mat4& matrix);
+
+public:
     virtual void init();
     //virtual void forwardNode(const Node* node);
     virtual void processNode(const Node* node);
@@ -74,7 +78,13 @@ public:
 
 private:
     ShaderProgram* m_shaderProgram;
+
+    glm::mat4 m_camera;
     unsigned int m_id;
+
+//    Data<glm::mat4>* m_dataTransform;
+//    Data<glm::mat4>* m_dataCamera;
+//    Data<unsigned int>* m_dataId;
 
 };
 

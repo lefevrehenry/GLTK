@@ -1,6 +1,8 @@
 #include "Framebuffer.h"
 
-#include "Message.h"
+#include "Mesh.h"
+#include "Helper.h"
+//#include "Message.h"
 
 using namespace gl;
 
@@ -9,13 +11,23 @@ Framebuffer::Framebuffer(unsigned int width, unsigned int height) :
     m_renderTexture(0),
     m_depthTexture(0),
     m_width(width),
-    m_height(height)
+    m_height(height),
+    m_vaoQuad(0),
+    m_shaderProgram(0)
 {
     glGenFramebuffers(1, &m_framebufferId);
+
+    this->m_vaoQuad = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/vaoQuad.obj");
 }
 
 Framebuffer::~Framebuffer()
 {
+    delete m_vaoQuad;
+    m_vaoQuad = nullptr;
+
+    delete m_shaderProgram;
+    m_shaderProgram = nullptr;
+
     delete m_renderTexture;
     m_renderTexture = nullptr;
 
@@ -56,7 +68,7 @@ void Framebuffer::attachTexture()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_renderTexture->getTextureID(), 0);
 
 //    // ???
-//    GLuint tab[] = {GL_COLOR_ATTACHMENT0};
+//    GLenum tab[] = {GL_COLOR_ATTACHMENT0};
 //    glDrawBuffers(1, tab);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -83,4 +95,29 @@ void Framebuffer::attachDepthTexture()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture->getTextureID(), 0);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Framebuffer::draw(float bounds[4])
+{
+    if (this->m_shaderProgram == nullptr)
+        this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::VaoQuad);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    float x = bounds[0];
+    float y = bounds[1];
+    float width = bounds[2];
+    float height = bounds[3];
+
+    // set the viewport to draw
+    glViewport(x, y, width, height);
+
+    // bind vaoQuad shader
+    this->m_shaderProgram->bind();
+
+    //this->m_renderTexture->bind();
+    glUniform1i(glGetUniformLocation(this->m_shaderProgram->getProgramID(), "textureColor"), 1);
+
+    // draw the vaoQuad
+    this->m_vaoQuad->draw(PrimitiveMode::TRIANGLES);
 }

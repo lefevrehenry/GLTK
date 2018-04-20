@@ -56,6 +56,9 @@ public:
 
     void orthographic(float left, float right, float bottom, float top, float zNear, float zFar);
 
+public:
+    glm::mat4 projectionROI(float bounds[4]) const;
+
 private:
 
     bool isMvpDirty() const;
@@ -66,6 +69,15 @@ private:
 
 private:
     ProjectionType m_projectionType;
+
+    double m_orthoLeft;
+    double m_orthoRight;
+    double m_orthoBottom;
+    double m_orthoTop;
+    double m_fovy;
+    double m_aspectRatio;
+    double m_zNear;
+    double m_zFar;
 
     glm::mat4 m_model;
     glm::mat4 m_view;

@@ -119,10 +119,10 @@ void DrawVisitor::backwardNode(const Node *node)
 
 PickingVisitor::PickingVisitor() :
     m_shaderProgram(0),
+    m_camera(),
     m_id(0)
 {
-    // create shader here
-    this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::Picking);
+
 }
 
 PickingVisitor::~PickingVisitor()
@@ -131,17 +131,26 @@ PickingVisitor::~PickingVisitor()
     m_shaderProgram = nullptr;
 }
 
+void PickingVisitor::setCamera(const glm::mat4& matrix)
+{
+    this->m_camera = glm::mat4(matrix);
+}
+
 void PickingVisitor::init()
 {
     this->m_id = 1;
 
+    // create shader here
+    if (this->m_shaderProgram == nullptr)
+        this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::HighLight);
+
     m_shaderProgram->bind();
 
-    // send camera here
-    Data<glm::mat4>* camera = this->m_shaderProgram->getDataByName<glm::mat4>("camera");
-    camera->setValue(glm::mat4());
+//    // send camera here
+//    Data<glm::mat4>* camera = this->m_shaderProgram->getDataByName<glm::mat4>("camera");
+//    camera->setValue(this->m_camera);
 
-    m_shaderProgram->updateDataIfDirty();
+//    m_shaderProgram->updateDataIfDirty();
 }
 
 void PickingVisitor::processNode(const Node* node)
@@ -154,10 +163,10 @@ void PickingVisitor::processNode(const Node* node)
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
             const VisualModel* visual = node->getVisual(i);
-            const Transform& transform = visual->transform();
+            //const Transform& transform = visual->transform();
 
-            // update transform
-            // update id
+            //this->m_shaderProgram->setUniformValue("transform", transform.matrix());
+            //this->m_shaderProgram->setUniformValue("id", this->m_id);
 
             visual->draw(primitiveMode);
 

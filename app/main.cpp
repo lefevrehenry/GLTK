@@ -69,15 +69,15 @@ int main()
     root->setShaderProgram(shaderProgram[0]);
 
 
-//    Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/Armadillo_simplified.obj");
-//    Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/dragon_low.obj");
-    Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/cube.obj");
-    Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/sphere.obj");
+    Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/Armadillo_simplified.obj");
+    Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/dragon_low.obj");
+//    Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/cube.obj");
+//    Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/sphere.obj");
 
     // Node 1
     VisualModel visual1(mesh1, Material::Bronze());
-    visual1.transform().translate(-40,0,0);
-    visual1.transform().scale(10,10,10);
+//    visual1.transform().translate(-40,0,0);
+//    visual1.transform().scale(10,10,10);
     node1->addVisual(&visual1);
 
     // Node 2

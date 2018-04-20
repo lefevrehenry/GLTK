@@ -51,7 +51,8 @@ public:
         HighLight,
         Texturing,
         TangentSpace,
-        Picking
+        Picking,
+        VaoQuad
     };
 
 public:
@@ -111,7 +112,7 @@ public:
         if (!m_isLinked)
             return false;
 
-        int dataLocation = glGetUniformLocation(m_programId, name);
+        int dataLocation = glGetUniformLocation(this->m_programId, name);
 
         if (dataLocation == -1) {
             msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Data not added";

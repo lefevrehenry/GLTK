@@ -141,6 +141,12 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         getStringFromQrcFile(":/shaders/picking.fs", fs);
 
         break;
+    case ShaderProgramType::VaoQuad:
+
+        getStringFromQrcFile(":/shaders/vaoQuad.vs", vs);
+        getStringFromQrcFile(":/shaders/vaoQuad.fs", fs);
+
+        break;
     }
 
     if (vs != "") {
@@ -248,6 +254,9 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         shaderProgram->addData<glm::mat4>("transform", glm::mat4());
         shaderProgram->addData<glm::mat4>("camera", glm::mat4());
         shaderProgram->addData<unsigned int>("id", 0);
+
+        break;
+    case ShaderProgramType::VaoQuad:
 
         break;
     }

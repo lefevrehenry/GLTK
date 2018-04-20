@@ -3,6 +3,7 @@
 
 #include "Camera.h"
 #include "Framebuffer.h"
+#include "Visitor.h"
 #include "VisualManager.h"
 
 // Glm
@@ -35,7 +36,7 @@ public:
 
 public:
     void getBbox(glm::vec3& min, glm::vec3& max) const;
-    void pickingObject(double sx, double sy) const;
+    void pickingObject(int sx, int sy) const;
 
 public:
     void fitCamera();
@@ -47,6 +48,7 @@ private:
     VisualManager m_visualManager;
 
     Framebuffer m_framebuffer;
+    mutable PickingVisitor m_pickingVisitor;
 
 };
 

@@ -204,8 +204,6 @@ void GLFWApplication::loop()
 
 void GLFWApplication::draw()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     this->m_scene->draw();
 
 //    GLuint nbPixelsQuery;

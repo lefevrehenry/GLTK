@@ -9,9 +9,11 @@ Scene::Scene() :
     m_rootNode(),
     m_camera(),
     m_visualManager(),
-    m_framebuffer(1,1)
+    m_framebuffer(640,480),
+    m_pickingVisitor()
 {
-
+    this->m_framebuffer.attachTexture();
+    this->m_framebuffer.attachDepthTexture();
 }
 
 Scene::~Scene()
@@ -44,7 +46,32 @@ void Scene::draw(Node* node)
 
 void Scene::draw()
 {
+    glViewport(0, 0, 640, 480);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     this->draw(root());
+
+    // draw into the framebuffer
+    this->m_framebuffer.bind();
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    //glEnable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    this->m_visualManager.updateUniformBufferCamera(this->m_camera);
+
+    Node* node = root();
+    DrawVisitor drawVisitor(&m_visualManager);
+    node->executeVisitor(&drawVisitor);
+
+//    node->executeVisitor(&m_pickingVisitor);
+
+    // draw the framebuffer
+    float bounds[] = {320, 240, 320, 240};
+    this->m_framebuffer.draw(bounds);
 }
 
 void Scene::getBbox(glm::vec3& min, glm::vec3& max) const
@@ -58,25 +85,45 @@ void Scene::getBbox(glm::vec3& min, glm::vec3& max) const
     max = boundingBoxVisitor.getMax();
 }
 
-void Scene::pickingObject(double sx, double sy) const
+void Scene::pickingObject(int sx, int sy) const
 {
-    //msg_info("a") << sx << ", " << s
+    sy = 480 - sy;
 
-    this->m_framebuffer.bind();
+//    float bounds[4];
+//    bounds[0] = sx / 640.0;
+//    bounds[1] = (sx + 1) / 640.0;
+//    bounds[2] = sy / 480.0;
+//    bounds[3] = (sy + 1) / 480.0;
 
-    // stack viewport
-    GLint bound[4];
-    glGetIntegerv(GL_VIEWPORT, &bound[0]);
+//    const glm::mat4& view = this->m_camera.view();
+//    const glm::mat4& projection = this->m_camera.projectionROI(bounds);
 
-    glViewport(0,0,1,1);
-    glClear(GL_COLOR_BUFFER_BIT);
+//    glm::mat4 ViewProjMatrix = projection * view;
+//    //const glm::mat4 mvp = this->m_camera.mvp();
+//    this->m_pickingVisitor.setCamera(ViewProjMatrix);
 
-//    PickingVisitor visitor(&m_visualManager);
+//    this->m_framebuffer.bind();
 
-    // restore default viewport
-    glViewport(bound[0],bound[1],bound[2],bound[3]);
+//    // stack viewport
+//    GLint bound[4];
+//    glGetIntegerv(GL_VIEWPORT, &bound[0]);
 
-    this->m_framebuffer.unbind();
+//    glViewport(0,0,1,1);
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+//    const Node* node = root();
+//    node->executeVisitor(&m_pickingVisitor);
+
+//    // restore default viewport
+//    glViewport(bound[0],bound[1],bound[2],bound[3]);
+
+//    // read pixel
+//    std::array<unsigned char, 4> indexComponents;
+//    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, indexComponents.data());
+
+//    msg_info("Debug") << +indexComponents[0] << "," << indexComponents[1] << "," << indexComponents[2] << "," << indexComponents[3];
+
+//    this->m_framebuffer.unbind();
 }
 
 void Scene::fitCamera()

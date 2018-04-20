@@ -12,6 +12,9 @@
 
 namespace gl {
 
+class Mesh;
+class ShaderProgram;
+
 /**
  * @brief The Framebuffer class
  */
@@ -33,6 +36,9 @@ public:
     void attachTexture();
     void attachDepthTexture();
 
+public:
+    void draw(float bounds[4]);
+
 private:
     GLuint m_framebufferId;
 
@@ -42,6 +48,8 @@ private:
     unsigned int m_width;
     unsigned int m_height;
 
+    Mesh* m_vaoQuad;
+    ShaderProgram* m_shaderProgram;
 };
 
 }   // namespace gl

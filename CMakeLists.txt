@@ -84,6 +84,8 @@ set(SHADER_FILES
     shaders/tangentSpace.fs
     shaders/texturing.vs
     shaders/texturing.fs
+    shaders/vaoQuad.vs
+    shaders/vaoQuad.fs
 )
 
 set(QRC_FILES
