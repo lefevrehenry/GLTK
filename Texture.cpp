@@ -40,13 +40,16 @@ Texture::Texture() :
     ActiveTexture.insert(it, unit);
 
     this->m_textureUnit = unit;
-    glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
 }
 
 Texture::~Texture()
 {
+    auto it = std::find(Texture::ActiveTexture.begin(), Texture::ActiveTexture.end(), this->m_textureUnit);
+    if (it != Texture::ActiveTexture.end())
+        Texture::ActiveTexture.erase(it);
+
     glDeleteTextures(1, &m_textureId);
-    // TODO: deactivate texture unit
+    glActiveTexture(GL_TEXTURE0);
 }
 
 GLuint Texture::getTextureID() const
@@ -90,6 +93,7 @@ void Texture::load(const std::string& filename)
         return;
     }
 
+    glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
     glBindTexture(GL_TEXTURE_2D, this->m_textureId);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
@@ -106,10 +110,12 @@ void Texture::load(const std::string& filename)
 
 void Texture::bind() const
 {
+    glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
     glBindTexture(GL_TEXTURE_2D, this->m_textureId);
 }
 
 void Texture::unbind() const
 {
+    glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
     glBindTexture(GL_TEXTURE_2D, 0);
 }

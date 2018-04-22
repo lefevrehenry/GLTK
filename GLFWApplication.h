@@ -10,9 +10,8 @@ namespace gl {
 
 class GLFWApplicationEvents;
 class Interface;
-class Mesh;
-class Program;
 class Scene;
+class Viewer;
 
 /**
  * @brief The GLFWApplication class
@@ -38,30 +37,27 @@ protected:
     virtual ~GLFWApplication();
 
 public:
-
     virtual void init();
-
     virtual void loop();
 
-private:
-
-    void draw();
-
 public:
-
     GLFWwindow* getWindow() const;
-
     void setWindow(GLFWwindow* newHandle);
 
 public:
-
     Interface* getInterface() const;
-
-    void setInterface(Interface* newInterface);
+    void setInterface(Interface* interface);
 
 public:
-
     Scene* getScene();
+    Viewer* getViewer();
+
+public:
+    static const unsigned int ScreenWidth;
+    static const unsigned int ScreenHeight;
+
+private:
+    static GLFWApplication* OurInstance;
 
 private:
 
@@ -70,6 +66,8 @@ private:
     Interface* m_interface;
 
     Scene* m_scene;
+
+    Viewer* m_viewer;
 
 };
 

@@ -122,7 +122,7 @@ PickingVisitor::PickingVisitor() :
     m_camera(),
     m_id(0)
 {
-
+    this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::HighLight);
 }
 
 PickingVisitor::~PickingVisitor()
@@ -140,9 +140,8 @@ void PickingVisitor::init()
 {
     this->m_id = 1;
 
-    // create shader here
-    if (this->m_shaderProgram == nullptr)
-        this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::HighLight);
+//    // create shader here
+//    if (this->m_shaderProgram == nullptr)
 
     m_shaderProgram->bind();
 

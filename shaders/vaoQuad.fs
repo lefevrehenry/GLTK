@@ -15,5 +15,6 @@ void main()
     //vec3 bufferColor = texture2D(textureNormal, texCoord).xyz;
     //float bufferColor = texture2D(textureDepth, texCoord).x;
 
-    color = vec4(bufferColor.x, bufferColor.x, bufferColor.x, 1.0);
+    //color = vec4(bufferColor.x, bufferColor.x, bufferColor.x, 1.0);
+    color = vec4(bufferColor, 1.0);
 }

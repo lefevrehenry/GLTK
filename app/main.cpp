@@ -84,7 +84,7 @@ int main()
     VisualModel visual2(mesh2, Material::Obsidian());
     node2->addVisual(&visual2);
 
-    app->getScene()->fitCamera();
+    app->getViewer()->fitCamera();
 
     /* Throws the main loop */
     app->loop();

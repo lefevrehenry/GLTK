@@ -17,6 +17,7 @@ Framebuffer::Framebuffer(unsigned int width, unsigned int height) :
 {
     glGenFramebuffers(1, &m_framebufferId);
 
+    // could be static ?
     this->m_vaoQuad = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/vaoQuad.obj");
 }
 
@@ -59,7 +60,8 @@ void Framebuffer::attachTexture()
     this->m_renderTexture = new Texture();
     this->m_renderTexture->bind();
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, nullptr);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -86,7 +88,8 @@ void Framebuffer::attachDepthTexture()
     this->m_depthTexture = new Texture();
     this->m_depthTexture->bind();
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -115,8 +118,8 @@ void Framebuffer::draw(float bounds[4])
     // bind vaoQuad shader
     this->m_shaderProgram->bind();
 
-    //this->m_renderTexture->bind();
-    glUniform1i(glGetUniformLocation(this->m_shaderProgram->getProgramID(), "textureColor"), 1);
+    int location = glGetUniformLocation(this->m_shaderProgram->getProgramID(), "textureColor");
+    glUniform1i(location, m_renderTexture->getTextureUnit());   // i = texture unit to use
 
     // draw the vaoQuad
     this->m_vaoQuad->draw(PrimitiveMode::TRIANGLES);
