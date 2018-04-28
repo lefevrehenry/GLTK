@@ -21,9 +21,6 @@ namespace gl {
  */
 class Mesh
 {
-
-public:
-
     typedef std::vector<float> floatVector;
     typedef std::vector<unsigned int> uintVector;
 
@@ -34,6 +31,8 @@ public:
     void draw(gl::PrimitiveMode primitiveMode) const;
 
     void getBbox(glm::vec3 &min, glm::vec3 &max) const;
+
+    std::string name() const;
 
     virtual ~Mesh();
 
@@ -81,6 +80,7 @@ protected:
 protected:
 
     std::vector<const MeshEntry*> m_meshEntries;
+    std::string m_name;
 
 };
 

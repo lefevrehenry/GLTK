@@ -22,17 +22,18 @@ class Framebuffer
 {
 
 public:
-
     Framebuffer(unsigned int width, unsigned int height);
     virtual ~Framebuffer();
 
 public:
+    Texture* renderTexture();
+    Texture* depthTexture();
 
+public:
     void bind() const;
     void unbind() const;
 
 public:
-
     void attachTexture();
     void attachDepthTexture();
 

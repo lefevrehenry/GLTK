@@ -15,13 +15,15 @@
 using namespace gl;
 
 Mesh::Mesh() :
-    m_meshEntries(0)
+    m_meshEntries(0),
+    m_name("")
 {
 
 }
 
 Mesh::Mesh(const std::string& filename) :
-    m_meshEntries(0)
+    m_meshEntries(0),
+    m_name("")
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(filename, aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
@@ -36,6 +38,7 @@ Mesh::Mesh(const std::string& filename) :
     for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
         aiMesh* aimesh = scene->mMeshes[i];
         const MeshEntry* meshEntry = new MeshEntry(aimesh);
+        this->m_name = aimesh->mName.data;
         this->m_meshEntries[i] = meshEntry;
     }
 }
@@ -92,9 +95,14 @@ void Mesh::getBbox(glm::vec3 &min, glm::vec3 &max) const
     }
 }
 
+std::string Mesh::name() const
+{
+    return this->m_name;
+}
+
 Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
 {
-    msg_info("MeshLoader") << mesh->mName.data << " imported";
+    //msg_info("MeshLoader") << mesh->mName.data << " imported";
 
     m_vertices.resize(mesh->mNumVertices * 3);
     m_normals.resize(mesh->mNumVertices * 3);

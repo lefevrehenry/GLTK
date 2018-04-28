@@ -6,6 +6,7 @@
 
 namespace gl {
 
+class Visitor;
 class VisualModel;
 
 /**
@@ -23,7 +24,7 @@ public:
     const Node* root() const;
 
 public:
-    void pickObject(int sx, int sy) const;
+    void executeVisitor(Visitor* visitor) const;
 
 private:
     Node m_rootNode;

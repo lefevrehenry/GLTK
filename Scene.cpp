@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+#include "Visitor.h"
 
 using namespace gl;
 
@@ -24,8 +25,9 @@ const Node* Scene::root() const
     return &m_rootNode;
 }
 
-void Scene::pickObject(int sx, int sy) const
+void Scene::executeVisitor(Visitor* visitor) const
 {
-
+    const Node* node = root();
+    node->executeVisitor(visitor);
 }
 

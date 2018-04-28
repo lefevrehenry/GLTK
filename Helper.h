@@ -252,9 +252,9 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::Picking:
 
-        shaderProgram->addData<glm::mat4>("transform", glm::mat4());
-        shaderProgram->addData<glm::mat4>("camera", glm::mat4());
-        shaderProgram->addData<unsigned int>("id", 0);
+        //shaderProgram->addData<glm::vec4>("index", glm::vec4());
+        shaderProgram->addUniformBlock("transform", 1);
+        shaderProgram->addUniformBlock("camera", 2);
 
         break;
     case ShaderProgramType::VaoQuad:
@@ -268,37 +268,5 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 }   // namespace helper
 
 }   // namespace gl
-
-//glm::vec4 packIndex(unsigned int n)
-//{
-//    float r = ((n & 0xFF000000) >> 24) / 255.0;
-//    float g = ((n & 0x00FF0000) >> 16) / 255.0;
-//    float b = ((n & 0x0000FF00) >>  8) / 255.0;
-//    float a = ((n & 0x000000FF) >>  0) / 255.0;
-//
-//    return glm::vec4(r,g,b,a);
-//}
-//
-//unsigned int unpackIndex(const glm::vec4& color)
-//{
-//    int r = color.r * 255;
-//    int g = color.g * 255;
-//    int b = color.b * 255;
-//    int a = color.a * 255;
-//    return (r << 24 | g << 16 | b << 8 | a);
-//}
-//
-//void print_uint(unsigned int n)
-//{
-//    std::cout << std::setw(10) << std::right << n << " : ";
-//    //std::cout << std::bitset<32>(n) << std::endl;
-//
-//    for (size_t i = 0; i < 4; ++i) {
-//        std::cout << std::bitset<8>(n >> (3-i)*8);
-//        if (i != 3)
-//            std::cout << " ";
-//    }
-//    std::cout << std::endl;
-//}
 
 #endif

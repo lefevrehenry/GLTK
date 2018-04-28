@@ -40,6 +40,16 @@ Framebuffer::~Framebuffer()
     glDeleteFramebuffers(1, &m_framebufferId);
 }
 
+Texture* Framebuffer::renderTexture()
+{
+    return this->m_renderTexture;
+}
+
+Texture* Framebuffer::depthTexture()
+{
+    return this->m_depthTexture;
+}
+
 void Framebuffer::bind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebufferId);
@@ -104,7 +114,9 @@ void Framebuffer::attachDepthTexture()
 
 void Framebuffer::draw(float bounds[4])
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    // stack the viewport
+    GLint initialViewport[4];
+    glGetIntegerv(GL_VIEWPORT, &initialViewport[0]);
 
     float x = bounds[0];
     float y = bounds[1];
@@ -122,4 +134,7 @@ void Framebuffer::draw(float bounds[4])
 
     // draw the vaoQuad
     this->m_vaoQuad->draw(PrimitiveMode::TRIANGLES);
+
+    // restore default viewport
+    glViewport(initialViewport[0],initialViewport[1],initialViewport[2],initialViewport[3]);
 }

@@ -5,14 +5,14 @@
 #include <glm/glm.hpp>
 
 // Standard Library
+#include <deque>
 #include <list>
 #include <stack>
 
 namespace gl {
 
-//class Data;
+class Framebuffer;
 class Node;
-//class VisualManager;
 class ShaderProgram;
 class VisualModel;
 class VisualOption;
@@ -24,7 +24,8 @@ class Visitor
 {
 
 public:
-    virtual void init();
+    virtual void start();
+    virtual void end();
     virtual void forwardNode(const Node* node);
     virtual void processNode(const Node* node) = 0;
     virtual void backwardNode(const Node* node);
@@ -42,7 +43,7 @@ public:
     virtual ~DrawVisitor();
 
 public:
-    virtual void init();
+    virtual void start();
     virtual void forwardNode(const Node* node);
     virtual void processNode(const Node* node);
     virtual void backwardNode(const Node* node);
@@ -63,27 +64,26 @@ class PickingVisitor : public Visitor
 {
 
 public:
-    PickingVisitor();
+    PickingVisitor(unsigned int x, unsigned int y);
     virtual ~PickingVisitor();
 
 public:
-    void setCamera(const glm::mat4& matrix);
-
-public:
-    virtual void init();
+    virtual void start();
+    virtual void end();
     //virtual void forwardNode(const Node* node);
     virtual void processNode(const Node* node);
     //virtual void backwardNode(const Node* node);
 
 private:
+    unsigned int m_x;
+    unsigned int m_y;
+
+    Framebuffer* m_pickingFramebuffer;
     ShaderProgram* m_shaderProgram;
 
-    glm::mat4 m_camera;
     unsigned int m_id;
 
-//    Data<glm::mat4>* m_dataTransform;
-//    Data<glm::mat4>* m_dataCamera;
-//    Data<unsigned int>* m_dataId;
+    std::deque<const VisualModel*> m_visualModels;
 
 };
 
@@ -98,7 +98,7 @@ public:
     virtual ~BoundingBoxVisitor();
 
 public:
-    virtual void init();
+    virtual void start();
     virtual void processNode(const Node* node);
 
 public:
@@ -119,7 +119,7 @@ public:
     virtual ~FetchVisualModelVisitor();
 
 public:
-    virtual void init();
+    virtual void start();
     virtual void processNode(const Node* node);
 
 public:

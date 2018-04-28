@@ -1,5 +1,6 @@
 #include "Visitor.h"
 
+#include "Framebuffer.h"
 #include "Helper.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
@@ -11,7 +12,12 @@
 
 using namespace gl;
 
-void Visitor::init()
+void Visitor::start()
+{
+
+}
+
+void Visitor::end()
 {
 
 }
@@ -40,11 +46,12 @@ DrawVisitor::~DrawVisitor()
 
 }
 
-void DrawVisitor::init()
+void DrawVisitor::start()
 {
     this->m_currentShader = nullptr;
     this->m_currentOption = nullptr;
 }
+
 void DrawVisitor::forwardNode(const Node *node)
 {
     ShaderProgram* shaderProgram = node->shaderProgram();
@@ -116,33 +123,122 @@ void DrawVisitor::backwardNode(const Node *node)
 //        m_optionStack.pop();
 }
 
-PickingVisitor::PickingVisitor() :
-    m_shaderProgram(0),
-    m_camera(),
-    m_id(0)
+glm::vec4 packIndex(unsigned int n)
 {
+    float r = ((n & 0x000000FF) >>  0) / 255.0;
+    float g = ((n & 0x0000FF00) >>  8) / 255.0;
+    float b = ((n & 0x00FF0000) >> 16) / 255.0;
+    float a = ((n & 0xFF000000) >> 24) / 255.0;
+
+    return glm::vec4(r,g,b,a);
+}
+
+unsigned int unpackIndex(const glm::vec4& color)
+{
+    unsigned int r = color.r * 255;
+    unsigned int g = color.g * 255;
+    unsigned int b = color.b * 255;
+    unsigned int a = color.a * 255;
+
+    return (a << 24 | b << 16 | g << 8 | r);
+}
+
+PickingVisitor::PickingVisitor(unsigned int x, unsigned int y) :
+    m_x(x),
+    m_y(y),
+    m_pickingFramebuffer(0),
+    m_shaderProgram(0),
+    m_id(0),
+    m_visualModels(0)
+{
+    unsigned int width = GLFWApplication::ScreenWidth;
+    unsigned int height = GLFWApplication::ScreenHeight;
+
+    this->m_pickingFramebuffer = new Framebuffer(width, height);
+    this->m_pickingFramebuffer->attachTexture();
+    this->m_pickingFramebuffer->attachDepthTexture();
+
     this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::Picking);
 }
 
 PickingVisitor::~PickingVisitor()
-{
+{    
+    delete m_pickingFramebuffer;
+    m_pickingFramebuffer = nullptr;
+
     delete m_shaderProgram;
     m_shaderProgram = nullptr;
 }
 
-void PickingVisitor::setCamera(const glm::mat4& matrix)
+void PickingVisitor::start()
 {
-    this->m_camera = glm::mat4(matrix);
-}
+    this->m_pickingFramebuffer->bind();
 
-void PickingVisitor::init()
-{
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    this->m_shaderProgram->bind();
+    this->m_shaderProgram->updateDataIfDirty();
+
     this->m_id = 1;
 
-    m_shaderProgram->bind();
+    this->m_visualModels.clear();
+    this->m_visualModels.push_back(nullptr);
+}
 
-    // send camera
-    this->m_shaderProgram->setUniformValue("camera", this->m_camera);
+#include <array>
+#include <iostream>
+#include <iomanip>
+
+void PickingVisitor::end()
+{
+//    unsigned int width = GLFWApplication::ScreenWidth;
+//    unsigned int height = GLFWApplication::ScreenHeight;
+
+//    size_t n = 4 * sizeof(unsigned char) * width * height;
+//    unsigned char indexComponents[n];
+//    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, &indexComponents);
+
+    //unsigned char indexComponents[4];
+    //glReadPixels(this->m_x, this->m_y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &indexComponents[0]);
+    float indexComponents[4];
+    glReadPixels(this->m_x, this->m_y, 1, 1, GL_RGBA, GL_FLOAT, &indexComponents[0]);
+
+//    float z = 1.0;
+//    glReadPixels(0, 0, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
+
+//    for (unsigned int i = 0; i < height; ++i) {
+//        for (unsigned int j = 0; j < width; ++j) {
+//            for (unsigned int c = 0; c < 4; ++c) {
+//                unsigned int offset = c + ((i * width) + j) * 4;
+//                if (indexComponents[offset] != 0) {
+//                    msg_warning("Debug") << "!= 0";
+//                }
+//            }
+//        }
+//    }
+
+    unsigned int offset = 0; //((this->m_y * width) + this->m_x) * 4;
+//    for (unsigned int c = 0; c < 4; ++c) {
+//        std::cout << std::setw(3) << indexComponents[offset + c] << " ";
+//    }
+//    std::cout << std::endl;
+
+    glm::vec4 color;
+    color.r = indexComponents[offset + 0];
+    color.g = indexComponents[offset + 1];
+    color.b = indexComponents[offset + 2];
+    color.a = indexComponents[offset + 3];
+
+    unsigned int index = unpackIndex(color);
+
+    if (index > 0 && index < this->m_visualModels.size()) {
+        const VisualModel* visual = this->m_visualModels[index];
+        msg_info("Debug") << visual->mesh()->name();
+    }
+
+    this->m_pickingFramebuffer->unbind();
+    this->m_shaderProgram->unbind();
 }
 
 void PickingVisitor::processNode(const Node* node)
@@ -150,15 +246,17 @@ void PickingVisitor::processNode(const Node* node)
     if (this->m_shaderProgram != nullptr) {
 
         // fetch what kind of primitives has to be drawn by the shader
-        PrimitiveMode primitiveMode = m_shaderProgram->getPrimitiveMode();
+        PrimitiveMode primitiveMode = this->m_shaderProgram->getPrimitiveMode();
 
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
             const VisualModel* visual = node->getVisual(i);
             const Transform& transform = visual->transform();
 
-            this->m_shaderProgram->setUniformValue("transform", transform.matrix());
-            //this->m_shaderProgram->setUniformValue("id", this->m_id);
+            VisualManager::UpdateUniformBufferTransform(transform);
+
+            this->m_shaderProgram->setUniformValue("index", packIndex(this->m_id));
+            this->m_visualModels.push_back(visual);
 
             visual->draw(primitiveMode);
 
@@ -177,7 +275,7 @@ BoundingBoxVisitor::~BoundingBoxVisitor()
 
 }
 
-void BoundingBoxVisitor::init()
+void BoundingBoxVisitor::start()
 {
     float minf = std::numeric_limits<float>::lowest();
     float maxf = std::numeric_limits<float>::max();
@@ -232,7 +330,7 @@ FetchVisualModelVisitor::~FetchVisualModelVisitor()
 
 }
 
-void FetchVisualModelVisitor::init()
+void FetchVisualModelVisitor::start()
 {
     this->m_visualModels.clear();
 }
@@ -249,3 +347,16 @@ std::list<const VisualModel*> FetchVisualModelVisitor::getVisualModels() const
 {
     return this->m_visualModels;
 }
+
+//void print_uint(unsigned int n)
+//{
+//    std::cout << std::setw(10) << std::right << n << " : ";
+//    //std::cout << std::bitset<32>(n) << std::endl;
+
+//    for (size_t i = 0; i < 4; ++i) {
+//        std::cout << std::bitset<8>(n >> (3-i)*8);
+//        if (i != 3)
+//            std::cout << " ";
+//    }
+//    std::cout << std::endl;
+//}

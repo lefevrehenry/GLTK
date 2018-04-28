@@ -22,8 +22,9 @@ Node::~Node()
 
 void Node::executeVisitor(Visitor* visitor) const
 {
-    visitor->init();
+    visitor->start();
     this->doExecuteVisitor(visitor);
+    visitor->end();
 }
 
 void Node::doExecuteVisitor(Visitor* visitor) const

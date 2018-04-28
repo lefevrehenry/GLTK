@@ -47,8 +47,8 @@ public:
 private:
     Camera m_camera;
 
-    Framebuffer m_framebuffer;
-    mutable PickingVisitor m_pickingVisitor;
+    //Framebuffer m_pickingFramebuffer;
+    //PickingVisitor m_pickingVisitor;
 
     Scene* m_scene;
 
