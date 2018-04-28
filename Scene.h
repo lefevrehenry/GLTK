@@ -22,6 +22,9 @@ public:
     Node* root();
     const Node* root() const;
 
+public:
+    void pickObject(int sx, int sy) const;
+
 private:
     Node m_rootNode;
 

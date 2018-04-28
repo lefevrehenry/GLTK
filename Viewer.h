@@ -36,7 +36,7 @@ public:
 
 public:
     void getBbox(glm::vec3& min, glm::vec3& max) const;
-    void pickingObject(int sx, int sy) const;
+    void pickingObject(int sx, int sy);
 
 public:
     void fitCamera();
@@ -46,8 +46,6 @@ public:
 
 private:
     Camera m_camera;
-
-    VisualManager m_visualManager;
 
     Framebuffer m_framebuffer;
     mutable PickingVisitor m_pickingVisitor;

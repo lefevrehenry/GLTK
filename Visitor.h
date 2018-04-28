@@ -5,15 +5,16 @@
 #include <glm/glm.hpp>
 
 // Standard Library
+#include <list>
 #include <stack>
-
 
 namespace gl {
 
 //class Data;
 class Node;
-class VisualManager;
+//class VisualManager;
 class ShaderProgram;
+class VisualModel;
 class VisualOption;
 
 /**
@@ -37,7 +38,7 @@ class DrawVisitor : public Visitor
 {
 
 public:
-    DrawVisitor(VisualManager* visualManager);
+    DrawVisitor();
     virtual ~DrawVisitor();
 
 public:
@@ -47,8 +48,6 @@ public:
     virtual void backwardNode(const Node* node);
 
 private:
-    VisualManager* m_visualManager;
-
     std::stack<ShaderProgram*>  m_shaderStack;
     std::stack<VisualOption*>   m_optionStack;
 
@@ -109,6 +108,25 @@ public:
 private:
     glm::vec3 globalMin;
     glm::vec3 globalMax;
+
+};
+
+class FetchVisualModelVisitor : public Visitor
+{
+
+public:
+    FetchVisualModelVisitor();
+    virtual ~FetchVisualModelVisitor();
+
+public:
+    virtual void init();
+    virtual void processNode(const Node* node);
+
+public:
+    std::list<const VisualModel*> getVisualModels() const;
+
+private:
+    std::list<const VisualModel*> m_visualModels;
 
 };
 

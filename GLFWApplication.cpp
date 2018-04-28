@@ -72,6 +72,8 @@ GLFWApplication* GLFWApplication::CreateWindow()
     GLFWApplication* app = new GLFWApplication();
     app->setWindow(windowHandle);
 
+    VisualManager::Init();
+
     // Specifies background color
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     // Enable depth test
@@ -97,6 +99,7 @@ GLFWApplication* GLFWApplication::CreateWindow()
 void GLFWApplication::Terminate()
 {
     static GLFWApplication* app = GLFWApplication::getInstance();
+    VisualManager::Clean();
 
     if (!app->windowHandle) {
         glfwDestroyWindow(app->windowHandle);

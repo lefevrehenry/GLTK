@@ -24,3 +24,8 @@ const Node* Scene::root() const
     return &m_rootNode;
 }
 
+void Scene::pickObject(int sx, int sy) const
+{
+
+}
+

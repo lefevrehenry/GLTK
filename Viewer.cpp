@@ -1,12 +1,12 @@
 #include "Viewer.h"
 
+#include "Message.h"
 #include "Scene.h"
 
 using namespace gl;
 
 Viewer::Viewer(Scene* scene) :
     m_camera(),
-    m_visualManager(),
     m_framebuffer(640,480),
     m_pickingVisitor(),
     m_scene(scene)
@@ -27,9 +27,9 @@ Camera* Viewer::camera()
 
 void Viewer::draw(Node* node)
 {
-    this->m_visualManager.updateUniformBufferCamera(this->m_camera);
+    VisualManager::UpdateUniformBufferCamera(this->m_camera);
 
-    DrawVisitor drawVisitor(&m_visualManager);
+    DrawVisitor drawVisitor;
     node->executeVisitor(&drawVisitor);
 }
 
@@ -44,19 +44,18 @@ void Viewer::draw()
     Node* node = this->m_scene->root();
     this->draw(node);
 
-    // draw into the framebuffer
+//    pickingObject(0,0);
+//    // draw into the framebuffer
     this->m_framebuffer.bind();
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    DrawVisitor drawVisitor(&m_visualManager);
+    DrawVisitor drawVisitor;
     node->executeVisitor(&drawVisitor);
 
     // draw the framebuffer
-    float bounds[] = {320, 240, 320, 240};
+    float bounds[] = {0, 0, 320, 240};
     this->m_framebuffer.draw(bounds);
-
-
 
 //    GLuint nbPixelsQuery;
 //    int nbPixel = -1;
@@ -84,8 +83,9 @@ void Viewer::getBbox(glm::vec3& min, glm::vec3& max) const
     max = boundingBoxVisitor.getMax();
 }
 
-void Viewer::pickingObject(int sx, int sy) const
+void Viewer::pickingObject(int sx, int sy)
 {
+//    msg_warning("Debug") << "abc";
     sy = 480 - sy;
 
 //    float bounds[4];
@@ -94,14 +94,22 @@ void Viewer::pickingObject(int sx, int sy) const
 //    bounds[2] = sy / 480.0;
 //    bounds[3] = (sy + 1) / 480.0;
 
-//    const glm::mat4& view = this->m_camera.view();
-//    const glm::mat4& projection = this->m_camera.projectionROI(bounds);
+    //const glm::mat4& view = this->m_camera.view();
+    //const glm::mat4& projection = this->m_camera.projection();//this->m_camera.projectionROI(bounds);
 
-//    glm::mat4 ViewProjMatrix = projection * view;
-//    //const glm::mat4 mvp = this->m_camera.mvp();
-//    this->m_pickingVisitor.setCamera(ViewProjMatrix);
+    //glm::mat4 ViewProjMatrix = projection * view;
+    //glm::mat4 ViewProjMatrix = this->m_camera.mvp();
+    //this->m_pickingVisitor.setCamera(ViewProjMatrix);
 
-//    this->m_framebuffer.bind();
+    this->m_framebuffer.bind();
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    DrawVisitor drawVisitor;
+
+    Node* node = this->m_scene->root();
+    node->executeVisitor(&drawVisitor);
+    //this->draw(node);
 
 //    // stack viewport
 //    GLint bound[4];
@@ -110,7 +118,7 @@ void Viewer::pickingObject(int sx, int sy) const
 //    glViewport(0,0,1,1);
 //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-//    const Node* node = root();
+//    const Node* node = this->m_scene->root();
 //    node->executeVisitor(&m_pickingVisitor);
 
 //    // restore default viewport
@@ -122,7 +130,7 @@ void Viewer::pickingObject(int sx, int sy) const
 
 //    msg_info("Debug") << +indexComponents[0] << "," << indexComponents[1] << "," << indexComponents[2] << "," << indexComponents[3];
 
-//    this->m_framebuffer.unbind();
+    this->m_framebuffer.unbind();
 }
 
 void Viewer::fitCamera()

@@ -79,19 +79,17 @@ class VisualManager
 {
 
 public:
-    VisualManager();
-    virtual ~VisualManager();
+    static void Init();
+    static void Clean();
 
 public:
-    void updateUniformBufferTransform(const gl::Transform& transform);
-    void updateUniformBufferMaterial(const gl::Material& material);
-
-public:
-    void updateUniformBufferCamera(const gl::Camera& camera);
+    static void UpdateUniformBufferTransform(const gl::Transform& transform);
+    static void UpdateUniformBufferMaterial(const gl::Material& material);
+    static void UpdateUniformBufferCamera(const gl::Camera& camera);
 
 private:
-    GLuint m_uboModel;
-    GLuint m_uboCamera;
+    static GLuint m_uboModel;
+    static GLuint m_uboCamera;
 
 };
 

@@ -19,6 +19,8 @@ Framebuffer::Framebuffer(unsigned int width, unsigned int height) :
 
     // could be static ?
     this->m_vaoQuad = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/vaoQuad.obj");
+
+    this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::VaoQuad);
 }
 
 Framebuffer::~Framebuffer()
@@ -102,9 +104,6 @@ void Framebuffer::attachDepthTexture()
 
 void Framebuffer::draw(float bounds[4])
 {
-    if (this->m_shaderProgram == nullptr)
-        this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::VaoQuad);
-
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     float x = bounds[0];

@@ -1,7 +1,7 @@
 #version 330 core
 
 // uniform input
-uniform uint id;
+//uniform uint id;
 
 layout(location = 0) out vec4 outColor;
 

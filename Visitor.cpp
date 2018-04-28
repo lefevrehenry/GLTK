@@ -26,8 +26,7 @@ void Visitor::backwardNode(const Node* node)
 
 }
 
-DrawVisitor::DrawVisitor(VisualManager* visualManager) :
-    m_visualManager(visualManager),
+DrawVisitor::DrawVisitor() :
     m_shaderStack(),
     m_optionStack(),
     m_currentShader(nullptr),
@@ -88,8 +87,8 @@ void DrawVisitor::processNode(const Node* node)
             const Transform& transform = visual->transform();
             const Material& material = visual->material();
 
-            this->m_visualManager->updateUniformBufferTransform(transform);
-            this->m_visualManager->updateUniformBufferMaterial(material);
+            VisualManager::UpdateUniformBufferTransform(transform);
+            VisualManager::UpdateUniformBufferMaterial(material);
 
             visual->draw(primitiveMode);
         }
@@ -122,7 +121,7 @@ PickingVisitor::PickingVisitor() :
     m_camera(),
     m_id(0)
 {
-    this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::HighLight);
+    this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::Picking);
 }
 
 PickingVisitor::~PickingVisitor()
@@ -140,16 +139,10 @@ void PickingVisitor::init()
 {
     this->m_id = 1;
 
-//    // create shader here
-//    if (this->m_shaderProgram == nullptr)
-
     m_shaderProgram->bind();
 
-//    // send camera here
-//    Data<glm::mat4>* camera = this->m_shaderProgram->getDataByName<glm::mat4>("camera");
-//    camera->setValue(this->m_camera);
-
-//    m_shaderProgram->updateDataIfDirty();
+    // send camera
+    this->m_shaderProgram->setUniformValue("camera", this->m_camera);
 }
 
 void PickingVisitor::processNode(const Node* node)
@@ -162,9 +155,9 @@ void PickingVisitor::processNode(const Node* node)
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
             const VisualModel* visual = node->getVisual(i);
-            //const Transform& transform = visual->transform();
+            const Transform& transform = visual->transform();
 
-            //this->m_shaderProgram->setUniformValue("transform", transform.matrix());
+            this->m_shaderProgram->setUniformValue("transform", transform.matrix());
             //this->m_shaderProgram->setUniformValue("id", this->m_id);
 
             visual->draw(primitiveMode);
@@ -226,4 +219,33 @@ glm::vec3 BoundingBoxVisitor::getMin() const
 glm::vec3 BoundingBoxVisitor::getMax() const
 {
     return this->globalMax;
+}
+
+FetchVisualModelVisitor::FetchVisualModelVisitor() :
+    m_visualModels()
+{
+
+}
+
+FetchVisualModelVisitor::~FetchVisualModelVisitor()
+{
+
+}
+
+void FetchVisualModelVisitor::init()
+{
+    this->m_visualModels.clear();
+}
+
+void FetchVisualModelVisitor::processNode(const Node *node)
+{
+    for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
+        const VisualModel* visual = node->getVisual(i);
+        this->m_visualModels.push_front(visual);
+    }
+}
+
+std::list<const VisualModel*> FetchVisualModelVisitor::getVisualModels() const
+{
+    return this->m_visualModels;
 }

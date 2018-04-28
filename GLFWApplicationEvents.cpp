@@ -32,8 +32,8 @@ void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, 
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
         double xpos, ypos;
         glfwGetCursorPos(handle, &xpos, &ypos);
-        GLFWApplication* app = GLFWApplication::getInstance();
-        app->getViewer()->pickingObject(xpos, ypos);
+        //GLFWApplication* app = GLFWApplication::getInstance();
+        //app->getViewer()->pickingObject(xpos, ypos);
     }
 }
 
