@@ -2,6 +2,7 @@
 
 #include "Message.h"
 #include "Scene.h"
+#include "Selectable.h"
 
 using namespace gl;
 
@@ -72,6 +73,9 @@ void Viewer::getBbox(glm::vec3& min, glm::vec3& max) const
     max = boundingBoxVisitor.getMax();
 }
 
+#include "VisualModel.h"
+#include "Mesh.h"
+
 void Viewer::pickingObject(int sx, int sy)
 {
     sy = 480 - sy;
@@ -94,6 +98,10 @@ void Viewer::pickingObject(int sx, int sy)
 
     Node* node = this->m_scene->root();
     node->executeVisitor(&pickingVisitor);
+
+    const Selectable* selectable = pickingVisitor.selectable();
+    if (selectable != nullptr)
+        msg_info("Debug") << selectable->visualModel()->mesh()->name();
 
 //        // stack viewport
 //        GLint bound[4];

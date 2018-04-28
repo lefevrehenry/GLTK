@@ -148,8 +148,9 @@ PickingVisitor::PickingVisitor(unsigned int x, unsigned int y) :
     m_y(y),
     m_pickingFramebuffer(0),
     m_shaderProgram(0),
-    m_id(0),
-    m_visualModels(0)
+    m_visualModels(0),
+    m_selectable(),
+    m_id(0)
 {
     unsigned int width = GLFWApplication::ScreenWidth;
     unsigned int height = GLFWApplication::ScreenHeight;
@@ -170,6 +171,14 @@ PickingVisitor::~PickingVisitor()
     m_shaderProgram = nullptr;
 }
 
+const Selectable* PickingVisitor::selectable() const
+{
+    if (this->m_selectable.visualModel() == nullptr)
+        return nullptr;
+
+    return &m_selectable;
+}
+
 void PickingVisitor::start()
 {
     this->m_pickingFramebuffer->bind();
@@ -180,10 +189,13 @@ void PickingVisitor::start()
     this->m_shaderProgram->bind();
     this->m_shaderProgram->updateDataIfDirty();
 
-    this->m_id = 1;
-
     this->m_visualModels.clear();
     this->m_visualModels.push_back(nullptr);
+
+    this->m_selectable.setVisualModel(nullptr);
+    this->m_selectable.setPosition(glm::vec4(0,0,0,-1));
+
+    this->m_id = 1;
 }
 
 #include <array>
@@ -203,9 +215,6 @@ void PickingVisitor::end()
     //glReadPixels(this->m_x, this->m_y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &indexComponents[0]);
     float indexComponents[4];
     glReadPixels(this->m_x, this->m_y, 1, 1, GL_RGBA, GL_FLOAT, &indexComponents[0]);
-
-//    float z = 1.0;
-//    glReadPixels(0, 0, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
 
 //    for (unsigned int i = 0; i < height; ++i) {
 //        for (unsigned int j = 0; j < width; ++j) {
@@ -234,7 +243,12 @@ void PickingVisitor::end()
 
     if (index > 0 && index < this->m_visualModels.size()) {
         const VisualModel* visual = this->m_visualModels[index];
-        msg_info("Debug") << visual->mesh()->name();
+
+        float z = 1.0;
+        glReadPixels(this->m_x, this->m_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
+
+        // todo set position of selectable
+        this->m_selectable.setVisualModel(visual);
     }
 
     this->m_pickingFramebuffer->unbind();

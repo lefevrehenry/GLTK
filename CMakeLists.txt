@@ -24,6 +24,7 @@ set(HEADER_FILES
     Message.h
     Program.h
     Scene.h
+    Selectable.h
     Shader.h
     ShaderProgram.h
     Texture.h
@@ -49,6 +50,7 @@ set(SOURCE_FILES
     Message.cpp
     Program.cpp
     Scene.cpp
+    Selectable.cpp
     Shader.cpp
     ShaderProgram.cpp
     Texture.cpp
