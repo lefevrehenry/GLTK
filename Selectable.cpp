@@ -6,12 +6,18 @@ Selectable::Selectable() :
     m_visualModel(nullptr),
     m_position()
 {
-
+    clear();
 }
 
 Selectable::~Selectable()
 {
 
+}
+
+void Selectable::clear()
+{
+    this->m_visualModel = nullptr;
+    this->m_position = glm::vec4(0,0,0,-1);
 }
 
 const VisualModel* Selectable::visualModel() const

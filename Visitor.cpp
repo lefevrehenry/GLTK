@@ -3,6 +3,7 @@
 #include "Framebuffer.h"
 #include "Helper.h"
 #include "Mesh.h"
+#include "Selectable.h"
 #include "ShaderProgram.h"
 #include "Transform.h"
 #include "VisualManager.h"
@@ -146,10 +147,10 @@ unsigned int unpackIndex(const glm::vec4& color)
 PickingVisitor::PickingVisitor(unsigned int x, unsigned int y) :
     m_x(x),
     m_y(y),
-    m_pickingFramebuffer(0),
-    m_shaderProgram(0),
+    m_pickingFramebuffer(nullptr),
+    m_shaderProgram(nullptr),
+    m_selectable(nullptr),
     m_visualModels(0),
-    m_selectable(),
     m_id(0)
 {
     unsigned int width = GLFWApplication::ScreenWidth;
@@ -169,14 +170,17 @@ PickingVisitor::~PickingVisitor()
 
     delete m_shaderProgram;
     m_shaderProgram = nullptr;
+
+    delete m_selectable;
+    m_selectable = nullptr;
 }
 
-const Selectable* PickingVisitor::selectable() const
+Selectable* PickingVisitor::selectable()
 {
-    if (this->m_selectable.visualModel() == nullptr)
-        return nullptr;
+//    if (this->m_selectable.visualModel() == nullptr)
+//        return nullptr;
 
-    return &m_selectable;
+    return this->m_selectable;
 }
 
 void PickingVisitor::start()
@@ -192,15 +196,11 @@ void PickingVisitor::start()
     this->m_visualModels.clear();
     this->m_visualModels.push_back(nullptr);
 
-    this->m_selectable.setVisualModel(nullptr);
-    this->m_selectable.setPosition(glm::vec4(0,0,0,-1));
+    if (this->m_selectable != nullptr)
+        this->m_selectable->clear();
 
     this->m_id = 1;
 }
-
-#include <array>
-#include <iostream>
-#include <iomanip>
 
 void PickingVisitor::end()
 {
@@ -248,7 +248,8 @@ void PickingVisitor::end()
         glReadPixels(this->m_x, this->m_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
 
         // todo set position of selectable
-        this->m_selectable.setVisualModel(visual);
+        this->m_selectable = new Selectable();
+        this->m_selectable->setVisualModel(visual);
     }
 
     this->m_pickingFramebuffer->unbind();

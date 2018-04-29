@@ -1,7 +1,12 @@
 #include "GLFWApplicationEvents.h"
 
 #include "GLFWApplication.h"
+#include "Selectable.h"
 #include "Viewer.h"
+
+#include "VisualModel.h"
+#include "Mesh.h"
+#include "Message.h"
 
 // GLFW
 #include <GLFW/glfw3.h>
@@ -33,7 +38,9 @@ void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, 
         double xpos, ypos;
         glfwGetCursorPos(handle, &xpos, &ypos);
         GLFWApplication* app = GLFWApplication::getInstance();
-        app->getViewer()->pickingObject(xpos, ypos);
+        Selectable* selectable = app->getViewer()->pickingObject(xpos, ypos);
+        if (selectable != nullptr)
+            msg_info("Debug") << selectable->visualModel()->mesh()->name();
     }
 }
 

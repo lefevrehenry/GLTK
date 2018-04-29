@@ -1,8 +1,11 @@
 #include "Viewer.h"
 
+#include "Framebuffer.h"
 #include "Message.h"
 #include "Scene.h"
 #include "Selectable.h"
+#include "Visitor.h"
+
 
 using namespace gl;
 
@@ -22,6 +25,16 @@ Viewer::~Viewer()
 Camera* Viewer::camera()
 {
     return &m_camera;
+}
+
+Scene* Viewer::scene() const
+{
+    return this->m_scene;
+}
+
+void Viewer::setScene(Scene *scene)
+{
+    this->m_scene = scene;
 }
 
 void Viewer::draw(Node* node)
@@ -73,56 +86,6 @@ void Viewer::getBbox(glm::vec3& min, glm::vec3& max) const
     max = boundingBoxVisitor.getMax();
 }
 
-#include "VisualModel.h"
-#include "Mesh.h"
-
-void Viewer::pickingObject(int sx, int sy)
-{
-    sy = 480 - sy;
-
-//    float bounds[4];
-//    bounds[0] = sx / 640.0;
-//    bounds[1] = (sx + 1) / 640.0;
-//    bounds[2] = sy / 480.0;
-//    bounds[3] = (sy + 1) / 480.0;
-
-    //const glm::mat4& view = this->m_camera.view();
-    //const glm::mat4& projection = this->m_camera.projection();
-    //this->m_camera.projectionROI(bounds);
-
-    //glm::mat4 ViewProjMatrix = projection * view;
-    //glm::mat4 ViewProjMatrix = this->m_camera.mvp();
-    //this->m_pickingVisitor.setCamera(ViewProjMatrix);
-
-    PickingVisitor pickingVisitor(sx, sy);
-
-    Node* node = this->m_scene->root();
-    node->executeVisitor(&pickingVisitor);
-
-    const Selectable* selectable = pickingVisitor.selectable();
-    if (selectable != nullptr)
-        msg_info("Debug") << selectable->visualModel()->mesh()->name();
-
-//        // stack viewport
-//        GLint bound[4];
-//        glGetIntegerv(GL_VIEWPORT, &bound[0]);
-
-//        glViewport(0,0,1,1);
-//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-//        const Node* node = this->m_scene->root();
-//        node->executeVisitor(&m_pickingVisitor);
-
-//        // restore default viewport
-//        glViewport(bound[0],bound[1],bound[2],bound[3]);
-
-//        // read pixel
-//        std::array<unsigned char, 4> indexComponents;
-//        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, indexComponents.data());
-
-//        msg_info("Debug") << +indexComponents[0] << "," << indexComponents[1] << "," << indexComponents[2] << "," << indexComponents[3];
-}
-
 void Viewer::fitCamera()
 {
     glm::vec3 min;
@@ -145,7 +108,49 @@ void Viewer::fitCamera()
     this->m_camera.perspective(fovy, aspect, zNear, zFar);
 }
 
-void Viewer::setScene(Scene *scene)
+Selectable* Viewer::pickingObject(int sx, int sy)
 {
-    this->m_scene = scene;
+    sy = 480 - sy;
+
+//    float bounds[4];
+//    bounds[0] = sx / 640.0;
+//    bounds[1] = (sx + 1) / 640.0;
+//    bounds[2] = sy / 480.0;
+//    bounds[3] = (sy + 1) / 480.0;
+
+    //const glm::mat4& view = this->m_camera.view();
+    //const glm::mat4& projection = this->m_camera.projection();
+    //this->m_camera.projectionROI(bounds);
+
+    //glm::mat4 ViewProjMatrix = projection * view;
+    //glm::mat4 ViewProjMatrix = this->m_camera.mvp();
+    //this->m_pickingVisitor.setCamera(ViewProjMatrix);
+
+    PickingVisitor pickingVisitor(sx, sy);
+
+    Node* node = this->m_scene->root();
+    node->executeVisitor(&pickingVisitor);
+
+    Selectable* selectable = pickingVisitor.selectable();
+
+    return selectable;
+
+//        // stack viewport
+//        GLint bound[4];
+//        glGetIntegerv(GL_VIEWPORT, &bound[0]);
+
+//        glViewport(0,0,1,1);
+//        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+//        const Node* node = this->m_scene->root();
+//        node->executeVisitor(&m_pickingVisitor);
+
+//        // restore default viewport
+//        glViewport(bound[0],bound[1],bound[2],bound[3]);
+
+//        // read pixel
+//        std::array<unsigned char, 4> indexComponents;
+//        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, indexComponents.data());
+
+//        msg_info("Debug") << +indexComponents[0] << "," << indexComponents[1] << "," << indexComponents[2] << "," << indexComponents[3];
 }

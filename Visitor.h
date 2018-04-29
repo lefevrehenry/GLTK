@@ -1,8 +1,6 @@
 #ifndef VISITOR_H
 #define VISITOR_H
 
-#include "Selectable.h"
-
 // Glm
 #include <glm/glm.hpp>
 
@@ -15,6 +13,7 @@ namespace gl {
 
 class Framebuffer;
 class Node;
+class Selectable;
 class ShaderProgram;
 class VisualModel;
 class VisualOption;
@@ -70,7 +69,7 @@ public:
     virtual ~PickingVisitor();
 
 public:
-    const Selectable* selectable() const;
+    Selectable* selectable();
 
 public:
     virtual void start();
@@ -81,11 +80,10 @@ private:
     unsigned int m_x;
     unsigned int m_y;
 
-    Framebuffer* m_pickingFramebuffer;
-    ShaderProgram* m_shaderProgram;
-
+    Framebuffer*    m_pickingFramebuffer;
+    ShaderProgram*  m_shaderProgram;
+    Selectable*     m_selectable;
     std::deque<const VisualModel*> m_visualModels;
-    Selectable m_selectable;
 
     unsigned int m_id;
 

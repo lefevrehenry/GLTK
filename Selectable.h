@@ -20,6 +20,9 @@ public:
     virtual ~Selectable();
 
 public:
+    void clear();
+
+public:
     const VisualModel* visualModel() const;
     void setVisualModel(const VisualModel* visualModel);
 
