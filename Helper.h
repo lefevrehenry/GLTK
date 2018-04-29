@@ -9,6 +9,7 @@
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
+#include "Viewer.h"
 
 // Standard Library
 #include <fstream>
@@ -135,6 +136,18 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         getStringFromQrcFile(":/shaders/tangentSpace.fs", fs);
 
         break;
+    case ShaderProgramType::Picking:
+
+        getStringFromQrcFile(":/shaders/picking.vs", vs);
+        getStringFromQrcFile(":/shaders/picking.fs", fs);
+
+        break;
+    case ShaderProgramType::VaoQuad:
+
+        getStringFromQrcFile(":/shaders/vaoQuad.vs", vs);
+        getStringFromQrcFile(":/shaders/vaoQuad.fs", fs);
+
+        break;
     }
 
     if (vs != "") {
@@ -155,7 +168,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     shaderProgram->link();
 
     GLFWApplication* app = GLFWApplication::getInstance();
-    Camera* camera = app->getScene()->camera();
+    Camera* camera = app->getViewer()->camera();
     float normalScale = 0.5;
 
     glm::vec3 dir_light(-1,-1,-1);
@@ -235,6 +248,16 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         shaderProgram->addData<float>("scale", normalScale);
         shaderProgram->addUniformBlock("transform", 1);
         shaderProgram->addUniformBlock("camera", 2);
+
+        break;
+    case ShaderProgramType::Picking:
+
+        //shaderProgram->addData<glm::vec4>("index", glm::vec4());
+        shaderProgram->addUniformBlock("transform", 1);
+        shaderProgram->addUniformBlock("camera", 2);
+
+        break;
+    case ShaderProgramType::VaoQuad:
 
         break;
     }

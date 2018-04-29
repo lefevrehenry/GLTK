@@ -1,13 +1,9 @@
 #include "GLFWApplication.h"
 
 #include "GLFWApplicationEvents.h"
-#include "Helper.h"
-#include "Mesh.h"
 #include "Message.h"
-#include "Program.h"
 #include "Scene.h"
-#include "Shader.h"
-#include "ShaderProgram.h"
+#include "Viewer.h"
 
 // OpenGL
 #include <GL/glew.h>
@@ -23,15 +19,23 @@
 
 using namespace gl;
 
+const unsigned int GLFWApplication::ScreenWidth = 640;
+const unsigned int GLFWApplication::ScreenHeight = 480;
+
+GLFWApplication* GLFWApplication::OurInstance = nullptr;
+
 GLFWApplication* GLFWApplication::getInstance()
 {
-    static GLFWApplication window;   // instantiated on first use only
-
-    return &window;
+    return OurInstance;
 }
 
 GLFWApplication* GLFWApplication::CreateWindow()
 {
+    if (OurInstance != nullptr) {
+        msg_error("GLFWApplication") << "Cannot create a second GLFWApplication. Singleton pattern is used";
+        return nullptr;
+    }
+
     /* GLFW initialization */
     if (!glfwInit())
         return nullptr;
@@ -40,8 +44,11 @@ GLFWApplication* GLFWApplication::CreateWindow()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    unsigned int width = GLFWApplication::ScreenWidth;
+    unsigned int height = GLFWApplication::ScreenHeight;
+
     /* Create a windowed mode window and its OpenGL context */
-    GLFWwindow* windowHandle = glfwCreateWindow(640, 480, "OpenGL", nullptr, nullptr);
+    GLFWwindow* windowHandle = glfwCreateWindow(width, height, "OpenGL", nullptr, nullptr);
 
     if (!windowHandle)
     {
@@ -62,8 +69,10 @@ GLFWApplication* GLFWApplication::CreateWindow()
         return nullptr;
     }
 
-    GLFWApplication* app = GLFWApplication::getInstance();
+    GLFWApplication* app = new GLFWApplication();
     app->setWindow(windowHandle);
+
+    VisualManager::Init();
 
     // Specifies background color
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -90,6 +99,7 @@ GLFWApplication* GLFWApplication::CreateWindow()
 void GLFWApplication::Terminate()
 {
     static GLFWApplication* app = GLFWApplication::getInstance();
+    VisualManager::Clean();
 
     if (!app->windowHandle) {
         glfwDestroyWindow(app->windowHandle);
@@ -143,23 +153,26 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 GLFWApplication::GLFWApplication() : Application(),
     windowHandle(0),
     m_interface(0),
-    m_scene(0)
+    m_scene(0),
+    m_viewer(0)
 {
-    // interface
+    OurInstance = this;
+
+    // create interface
     this->m_interface = new GLFWApplicationEvents();
-    // scene
+    // create scene
     this->m_scene = new Scene();
+    // create viewer
+    this->m_viewer = new Viewer(this->m_scene);
 }
 
 GLFWApplication::~GLFWApplication()
 {
-    if (this->m_interface) {
-        delete this->m_interface;
-        this->m_interface = nullptr;
-    }
+    delete m_scene;
+    m_scene = nullptr;
 
-    delete this->m_scene;
-    this->m_scene = nullptr;
+    delete m_viewer;
+    m_viewer = nullptr;
 }
 
 void GLFWApplication::init()
@@ -192,7 +205,7 @@ void GLFWApplication::loop()
 //        }
 
         /* Call to drawing function */
-        this->draw();
+        this->m_viewer->draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(this->windowHandle);
@@ -200,27 +213,6 @@ void GLFWApplication::loop()
         /* Poll for and process events */
         glfwPollEvents();
     }
-}
-
-void GLFWApplication::draw()
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    this->m_scene->draw();
-
-//    GLuint nbPixelsQuery;
-//    int nbPixel = -1;
-
-//    glGenQueries(1, &nbPixelsQuery);
-//    glBeginQuery(GL_SAMPLES_PASSED, nbPixelsQuery);
-
-//    this->m_mesh->draw();
-
-//    glEndQuery(GL_SAMPLES_PASSED);
-//    glGetQueryObjectiv(nbPixelsQuery, GL_QUERY_RESULT, &nbPixel);
-//    glDeleteQueries(1, &nbPixelsQuery);
-
-//    msg_info("Draw") << nbPixel << " passed";
 }
 
 GLFWwindow* GLFWApplication::getWindow() const
@@ -260,12 +252,17 @@ Interface* GLFWApplication::getInterface() const
     return this->m_interface;
 }
 
-void GLFWApplication::setInterface(Interface* newInterface)
+void GLFWApplication::setInterface(Interface* interface)
 {
-    this->m_interface = newInterface;
+    this->m_interface = interface;
 }
 
-Scene *GLFWApplication::getScene()
+Scene* GLFWApplication::getScene()
 {
     return this->m_scene;
+}
+
+Viewer* GLFWApplication::getViewer()
+{
+    return this->m_viewer;
 }

@@ -19,7 +19,8 @@ ShaderProgram::ShaderProgram() :
 
 ShaderProgram::~ShaderProgram()
 {
-    for (BaseData* baseData : m_dataList) {
+    for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
+        BaseData* baseData = it->second;
         delete baseData;
         baseData = nullptr;
     }
@@ -103,7 +104,8 @@ void ShaderProgram::unbind() const
 
 void ShaderProgram::updateDataIfDirty()
 {
-    for (BaseData* baseData : m_dataList) {
+    for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
+        BaseData* baseData = it->second;
         baseData->updateIfDirty();
     }
 }
@@ -122,10 +124,129 @@ bool ShaderProgram::addUniformBlock(const char* name, unsigned int binding_index
     return true;
 }
 
-int ShaderProgram::attributLocation(const char *name) const
+int ShaderProgram::attributLocation(const char* name) const
 {
     if (!m_isLinked)
         return -1;
 
     return glGetUniformLocation(this->m_programId, name);
+}
+
+void ShaderProgram::setUniformValue(const char* name, float x)
+{
+    int location = attributLocation(name);
+
+    if (location == -1) {
+        msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Uniform value not setted";
+        return;
+    }
+
+    setUniformValue(location, x);
+}
+
+void ShaderProgram::setUniformValue(int attributLocation, float x)
+{
+    glUniform1f(attributLocation, x);
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::vec2& v)
+{
+    int location = attributLocation(name);
+
+    if (location == -1) {
+        msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Uniform value not setted";
+        return;
+    }
+
+    setUniformValue(location, v);
+}
+
+void ShaderProgram::setUniformValue(int attributLocation, const glm::vec2& v)
+{
+    glUniform2fv(attributLocation, 1, glm::value_ptr(v));
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::vec3& v)
+{
+    int location = attributLocation(name);
+
+    if (location == -1) {
+        msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Uniform value not setted";
+        return;
+    }
+
+    setUniformValue(location, v);
+}
+
+void ShaderProgram::setUniformValue(int attributLocation, const glm::vec3& v)
+{
+    glUniform3fv(attributLocation, 1, glm::value_ptr(v));
+}
+
+void ShaderProgram::setUniformValue(const char *name, const glm::vec4 &v)
+{
+    int location = attributLocation(name);
+
+    if (location == -1) {
+        msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Uniform value not setted";
+        return;
+    }
+
+    setUniformValue(location, v);
+}
+
+void ShaderProgram::setUniformValue(int attributLocation, const glm::vec4& v)
+{
+    glUniform4fv(attributLocation, 1, glm::value_ptr(v));
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::mat2& m)
+{
+    int location = attributLocation(name);
+
+    if (location == -1) {
+        msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Uniform value not setted";
+        return;
+    }
+
+    setUniformValue(location, m);
+}
+
+void ShaderProgram::setUniformValue(int attributLocation, const glm::mat2& m)
+{
+    glUniformMatrix2fv(attributLocation, 1, GL_FALSE, glm::value_ptr(m));
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::mat3& m)
+{
+    int location = attributLocation(name);
+
+    if (location == -1) {
+        msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Uniform value not setted";
+        return;
+    }
+
+    setUniformValue(location, m);
+}
+
+void ShaderProgram::setUniformValue(int attributLocation, const glm::mat3& m)
+{
+    glUniformMatrix3fv(attributLocation, 1, GL_FALSE, glm::value_ptr(m));
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::mat4& m)
+{
+    int location = attributLocation(name);
+
+    if (location == -1) {
+        msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Uniform value not setted";
+        return;
+    }
+
+    setUniformValue(location, m);
+}
+
+void ShaderProgram::setUniformValue(int attributLocation, const glm::mat4& m)
+{
+    glUniformMatrix4fv(attributLocation, 1, GL_FALSE, glm::value_ptr(m));
 }

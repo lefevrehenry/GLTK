@@ -1,75 +1,140 @@
 #include "Framebuffer.h"
 
-#include "Message.h"
+#include "Mesh.h"
+#include "Helper.h"
+//#include "Message.h"
 
 using namespace gl;
 
 Framebuffer::Framebuffer(unsigned int width, unsigned int height) :
     m_framebufferId(0),
+    m_renderTexture(0),
+    m_depthTexture(0),
     m_width(width),
     m_height(height),
-    m_renderTextures(0),
-    m_depthTexture(0)
+    m_vaoQuad(0),
+    m_shaderProgram(0)
 {
     glGenFramebuffers(1, &m_framebufferId);
+
+    // could be static ?
+    this->m_vaoQuad = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/vaoQuad.obj");
+
+    this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::VaoQuad);
 }
 
 Framebuffer::~Framebuffer()
 {
-    for (Texture* texture : m_renderTextures) {
-        delete texture;
-        texture = nullptr;
-    }
-    m_renderTextures.clear();
+    delete m_vaoQuad;
+    m_vaoQuad = nullptr;
+
+    delete m_shaderProgram;
+    m_shaderProgram = nullptr;
+
+    delete m_renderTexture;
+    m_renderTexture = nullptr;
+
     delete m_depthTexture;
     m_depthTexture = nullptr;
+
     glDeleteFramebuffers(1, &m_framebufferId);
 }
 
-void Framebuffer::attachTexture(unsigned int n)
+Texture* Framebuffer::renderTexture()
 {
-    if (m_renderTextures.size() > 0) {
-        msg_warning("Framebuffer") << "Textures have been already set, no modifications performed";
+    return this->m_renderTexture;
+}
+
+Texture* Framebuffer::depthTexture()
+{
+    return this->m_depthTexture;
+}
+
+void Framebuffer::bind() const
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, m_framebufferId);
+}
+
+void Framebuffer::unbind() const
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Framebuffer::attachTexture()
+{
+    if (m_renderTexture != nullptr) {
+        msg_warning("Framebuffer") << "Texture attachement has already been set, no modifications performed";
         return;
-    }
-
-    m_renderTextures.resize(n);
-
-    for (unsigned int i = 0; i < n; ++i) {
-        Texture* texture = new Texture(i);
-        m_renderTextures.push_back(texture);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebufferId);
 
-    glGenTextures(n, &m_renderTextures);
+    this->m_renderTexture = new Texture();
+    this->m_renderTexture->bind();
 
-    glBindTexture(GL_TEXTURE_2D, m_renderTextures);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, nullptr);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_renderTextures, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_renderTexture->getTextureID(), 0);
+
+//    // ???
+//    GLenum tab[] = {GL_COLOR_ATTACHMENT0};
+//    glDrawBuffers(1, tab);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Framebuffer::attachDepthTexture()
 {
+    if (m_depthTexture != nullptr) {
+        msg_warning("Framebuffer") << "Depth attachement has already been set, no modifications performed";
+        return;
+    }
+
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebufferId);
 
-    glGenTextures(1, &m_depthTexture);
-    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+    this->m_depthTexture = new Texture();
+    this->m_depthTexture->bind();
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture->getTextureID(), 0);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Framebuffer::draw(float bounds[4])
+{
+    // stack the viewport
+    GLint initialViewport[4];
+    glGetIntegerv(GL_VIEWPORT, &initialViewport[0]);
+
+    float x = bounds[0];
+    float y = bounds[1];
+    float width = bounds[2];
+    float height = bounds[3];
+
+    // set the viewport to draw
+    glViewport(x, y, width, height);
+
+    // bind vaoQuad shader
+    this->m_shaderProgram->bind();
+
+    int location = glGetUniformLocation(this->m_shaderProgram->getProgramID(), "textureColor");
+    glUniform1i(location, m_renderTexture->getTextureUnit());   // i = texture unit to use
+
+    // draw the vaoQuad
+    this->m_vaoQuad->draw(PrimitiveMode::TRIANGLES);
+
+    // restore default viewport
+    glViewport(initialViewport[0],initialViewport[1],initialViewport[2],initialViewport[3]);
 }

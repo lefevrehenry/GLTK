@@ -15,6 +15,8 @@ class Material
 
 public:
 
+    static Material DefaultMaterial();
+
     // http://devernay.free.fr/cours/opengl/materials.html
     static Material Emerald();
     static Material Jade();

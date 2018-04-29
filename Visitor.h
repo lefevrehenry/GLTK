@@ -1,18 +1,22 @@
 #ifndef VISITOR_H
 #define VISITOR_H
 
+#include "Selectable.h"
+
 // Glm
 #include <glm/glm.hpp>
 
 // Standard Library
+#include <deque>
+#include <list>
 #include <stack>
-
 
 namespace gl {
 
+class Framebuffer;
 class Node;
-class VisualManager;
 class ShaderProgram;
+class VisualModel;
 class VisualOption;
 
 /**
@@ -22,7 +26,8 @@ class Visitor
 {
 
 public:
-    virtual void init();
+    virtual void start();
+    virtual void end();
     virtual void forwardNode(const Node* node);
     virtual void processNode(const Node* node) = 0;
     virtual void backwardNode(const Node* node);
@@ -36,23 +41,53 @@ class DrawVisitor : public Visitor
 {
 
 public:
-    DrawVisitor(VisualManager* visualManager);
+    DrawVisitor();
     virtual ~DrawVisitor();
 
 public:
-    virtual void init();
+    virtual void start();
     virtual void forwardNode(const Node* node);
     virtual void processNode(const Node* node);
     virtual void backwardNode(const Node* node);
 
 private:
-    VisualManager* m_visualManager;
-
     std::stack<ShaderProgram*>  m_shaderStack;
     std::stack<VisualOption*>   m_optionStack;
 
     ShaderProgram*  m_currentShader;
     VisualOption*   m_currentOption;
+
+};
+
+/**
+ * @brief The PickingVisitor class
+ */
+class PickingVisitor : public Visitor
+{
+
+public:
+    PickingVisitor(unsigned int x, unsigned int y);
+    virtual ~PickingVisitor();
+
+public:
+    const Selectable* selectable() const;
+
+public:
+    virtual void start();
+    virtual void end();
+    virtual void processNode(const Node* node);
+
+private:
+    unsigned int m_x;
+    unsigned int m_y;
+
+    Framebuffer* m_pickingFramebuffer;
+    ShaderProgram* m_shaderProgram;
+
+    std::deque<const VisualModel*> m_visualModels;
+    Selectable m_selectable;
+
+    unsigned int m_id;
 
 };
 
@@ -67,7 +102,7 @@ public:
     virtual ~BoundingBoxVisitor();
 
 public:
-    virtual void init();
+    virtual void start();
     virtual void processNode(const Node* node);
 
 public:
@@ -77,6 +112,25 @@ public:
 private:
     glm::vec3 globalMin;
     glm::vec3 globalMax;
+
+};
+
+class FetchVisualModelVisitor : public Visitor
+{
+
+public:
+    FetchVisualModelVisitor();
+    virtual ~FetchVisualModelVisitor();
+
+public:
+    virtual void start();
+    virtual void processNode(const Node* node);
+
+public:
+    std::list<const VisualModel*> getVisualModels() const;
+
+private:
+    std::list<const VisualModel*> m_visualModels;
 
 };
 

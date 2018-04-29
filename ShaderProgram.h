@@ -6,6 +6,7 @@
 
 // Standard Library
 #include <vector>
+#include <map>
 
 // OpenGL
 #include <GL/glew.h>
@@ -49,7 +50,9 @@ public:
         Frame,
         HighLight,
         Texturing,
-        TangentSpace
+        TangentSpace,
+        Picking,
+        VaoQuad
     };
 
 public:
@@ -98,7 +101,7 @@ public:
         }
 
         Data<T>* data = new Data<T>(value, dataLocation);
-        m_dataList.push_back(data);
+        m_dataList.insert({name, data});
 
         return true;
     }
@@ -109,7 +112,7 @@ public:
         if (!m_isLinked)
             return false;
 
-        int dataLocation = glGetUniformLocation(m_programId, name);
+        int dataLocation = glGetUniformLocation(this->m_programId, name);
 
         if (dataLocation == -1) {
             msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Data not added";
@@ -117,7 +120,7 @@ public:
         }
 
         Data<T>* data = new Data<T>(value, dataLocation);
-        m_dataList.push_back(data);
+        m_dataList.insert({name, data});
 
         return true;
     }
@@ -136,9 +139,23 @@ public:
         }
 
         DataTracker<C, T>* data = new DataTracker<C, T>(instance, callback, dataLocation);
-        m_dataList.push_back(data);
+        m_dataList.insert({name, data});
 
         return true;
+    }
+
+public:
+
+    template < typename T >
+    Data<T>* getDataByName(const char* name)
+    {
+        for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
+            if (it->first == name) {
+                return static_cast< Data<T>* >(it->second);
+            }
+        }
+
+        return nullptr;
     }
 
 public:
@@ -185,7 +202,7 @@ private:
 
     std::vector< const Shader* > m_shaderList;
 
-    std::vector< BaseData* > m_dataList;
+    std::map< const char*, BaseData* > m_dataList;
 
     DrawStyle m_drawStyle;
 

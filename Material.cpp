@@ -6,6 +6,16 @@
 
 using namespace gl;
 
+Material Material::DefaultMaterial()
+{
+    Material material;
+    material.setAmbientColor(0.3, 0.3, 0.2);
+    material.setDiffuseColor(0.3, 0.5, 0.8);
+    material.setSpecularColor(0.8, 0.8, 0.8);
+    material.setShininess(50.0);
+    return material;
+}
+
 Material Material::Emerald()
 {
     Material material;

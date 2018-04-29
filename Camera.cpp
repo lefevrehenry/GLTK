@@ -11,6 +11,14 @@ using namespace gl;
 
 Camera::Camera() :
     m_projectionType(Perspective),
+    m_orthoLeft(0),
+    m_orthoRight(0),
+    m_orthoBottom(0),
+    m_orthoTop(0),
+    m_fovy(0),
+    m_aspectRatio(0),
+    m_zNear(0),
+    m_zFar(0),
     m_model(),
     m_view(),
     m_proj(),
@@ -117,15 +125,56 @@ void Camera::lookAt(const glm::vec3 &eye, const glm::vec3 &target, const glm::ve
 void Camera::perspective(float fovy, float aspect, float zNear, float zFar)
 {
     this->m_projectionType = Perspective;
+    this->m_fovy = fovy;
+    this->m_aspectRatio = aspect;
+    this->m_zNear = zNear;
+    this->m_zFar = zFar;
+
     this->m_proj = glm::perspective(fovy, aspect, zNear, zFar);
+
     setMvpDirty(true);
 }
 
 void Camera::orthographic(float left, float right, float bottom, float top, float zNear, float zFar)
 {
     this->m_projectionType = Orthograhic;
+    this->m_orthoLeft = left;
+    this->m_orthoRight = right;
+    this->m_orthoBottom = bottom;
+    this->m_orthoTop = top;
+    this->m_zNear = zNear;
+    this->m_zFar = zFar;
+
     this->m_proj = glm::ortho(left, right, bottom, top, zNear, zFar);
+
     setMvpDirty(true);
+}
+
+glm::mat4 Camera::projectionROI(float bounds[4]) const
+{
+    glm::mat4 projection;
+
+    if (this->m_projectionType == Orthograhic) {
+        float l = m_orthoLeft   + (m_orthoRight - m_orthoLeft) * bounds[0];
+        float r = m_orthoLeft   + (m_orthoRight - m_orthoLeft) * bounds[1];
+        float b = m_orthoBottom + (m_orthoTop - m_orthoBottom) * bounds[2];
+        float t = m_orthoBottom + (m_orthoTop - m_orthoBottom) * bounds[3];
+        float n = m_zNear;
+        float f = m_zFar;
+        projection = glm::ortho(l, r, b, t, n, f);
+    } else {
+        float ymax = m_zNear * glm::atan(this->m_fovy / 2.0);
+        float xmax = ymax * this->m_aspectRatio;
+        float l = -xmax + (2.0 * xmax) * bounds[0];
+        float r = -xmax + (2.0 * xmax) * bounds[1];
+        float b = -ymax + (2.0 * ymax) * bounds[2];
+        float t = -ymax + (2.0 * ymax) * bounds[3];
+        float n = m_zNear;
+        float f = m_zFar;
+        projection = glm::frustum(l, r, b, t, n, f);
+    }
+
+    return projection;
 }
 
 bool Camera::isMvpDirty() const
