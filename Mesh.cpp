@@ -102,7 +102,7 @@ std::string Mesh::name() const
 
 Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
 {
-    msg_info("MeshLoader") << mesh->mName.data << " imported";
+    //msg_info("MeshLoader") << mesh->mName.data << " imported";
 
     m_vertices.resize(mesh->mNumVertices * 3);
     m_normals.resize(mesh->mNumVertices * 3);

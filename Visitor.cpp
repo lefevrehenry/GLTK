@@ -168,8 +168,8 @@ void DrawVisitorWithSelection::forwardNode(const Node* node)
                 // deactivate depth buffer test
                 glDisable(GL_DEPTH_TEST);
                 // set the stencil buffer to write a 1 in every time a pixel is written to the screen
-                glStencilFunc( GL_ALWAYS, 1, 0xFFFF );
-                glStencilOp( GL_KEEP, GL_KEEP, GL_REPLACE );
+                glStencilFunc(GL_ALWAYS, 1, 0xFFFFFFFF);
+                glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
                 // disable color buffer
                 glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 
@@ -196,31 +196,39 @@ void DrawVisitorWithSelection::forwardNode(const Node* node)
 void DrawVisitorWithSelection::backwardNode(const Node* node)
 {
     if (this->m_selected != nullptr) {
-        m_outlineShader->bind();
-        m_outlineShader->updateDataIfDirty();
+        for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
+            const VisualModel* visual = node->getVisual(i);
 
-        // activate stencil buffer test
-        glEnable(GL_STENCIL_TEST);
-        // set the stencil buffer to only allow writing
-        // to the screen when the value of the
-        // stencil buffer is not 1
-        glStencilFunc(GL_NOTEQUAL, 1, 0xFFFF);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE );
-        // draw the object with thick lines
-        glLineWidth(5.0f);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            if (visual == this->m_selected) {
+                m_outlineShader->bind();
+                m_outlineShader->updateDataIfDirty();
 
-        const Transform& transform = this->m_selected->transform();
-        VisualManager::UpdateUniformBufferTransform(transform);
+                // draw the object with thick lines
+                glLineWidth(3.0f);
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-        this->m_selected->draw(TRIANGLES);
+                // activate stencil buffer test
+                glEnable(GL_STENCIL_TEST);
+                // set the stencil buffer to only allow writing
+                // to the screen when the value of the
+                // stencil buffer is not 1
+                glStencilFunc(GL_NOTEQUAL, 1, 0xFFFFFFFF);
+                glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-        glLineWidth(1.0f);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        // deactivate stencil buffer test
-        glDisable(GL_STENCIL_TEST);
+                const Transform& transform = visual->transform();
+                VisualManager::UpdateUniformBufferTransform(transform);
 
-        m_outlineShader->unbind();
+                visual->draw(TRIANGLES);
+
+                // deactivate stencil buffer test
+                glDisable(GL_STENCIL_TEST);
+
+                glLineWidth(1.0f);
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+                m_outlineShader->unbind();
+            }
+        }
     }
 
     DrawVisitor::backwardNode(node);
