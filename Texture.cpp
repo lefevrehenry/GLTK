@@ -1,5 +1,6 @@
 #include "Texture.h"
 
+#include "FileRepository.h"
 #include "Message.h"
 
 // Qt
@@ -70,16 +71,23 @@ bool Texture::isLoaded() const
 void Texture::load(const std::string& filename)
 {
     if (this->m_isLoaded) {
-        msg_warning("Texture") << "texture already loaded";
+        msg_warning("Texture") << "Texture already loaded";
         return;
     }
 
     if (this->m_textureUnit >= GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS) {
-        msg_error("Texture") << "max texture unit exceed range of " << GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
+        msg_error("Texture") << "Max texture unit exceed range of " << GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
         return;
     }
 
-    QImage bufferImage = QImage(filename.c_str());
+    std::string path(filename);
+
+    if (!helper::DataRepository.findFile(path)) {
+        msg_error("Texture") << "File " << filename << " not found";
+        return;
+    }
+
+    QImage bufferImage = QImage(path.c_str());
 
     if (bufferImage.isNull()) {
         msg_error("Texture") << "Unable to load " << filename << " (does file exist ?)";

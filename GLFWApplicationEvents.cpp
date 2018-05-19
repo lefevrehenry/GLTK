@@ -42,9 +42,9 @@ void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, 
         GLFWApplication* app = GLFWApplication::getInstance();
         Selectable* selectable = app->getViewer()->pickingObject(xpos, ypos);
 
-        if (selectable != nullptr) {
-            msg_info("Debug") << selectable->visualModel()->mesh()->name();
-        }
+//        if (selectable != nullptr) {
+//            msg_info("Debug") << selectable->visualModel()->mesh()->name();
+//        }
 
         app->setSelected(selectable);
     }

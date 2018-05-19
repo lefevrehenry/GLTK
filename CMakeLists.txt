@@ -5,10 +5,6 @@ set(CMAKE_BUILD_TYPE RELEASE)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-#file(GLOB_RECURSE HEADER_FILES include/*.hpp)
-#file(GLOB_RECURSE SOURCE_FILES src/*.cpp src/*.tpp)
-#file(GLOB_RECURSE SHADER_FILES shaders/*.glsl)
-
 set(HEADER_FILES
     Application.h
     Camera.h
@@ -98,7 +94,19 @@ set(QRC_FILES
     resources.qrc
 )
 
-# set(SHARE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/share")
+set(ARCHIVE_OUTPUT_DIRECTORY lib)
+set(LIBRARY_OUTPUT_DIRECTORY lib)
+set(RUNTIME_OUTPUT_DIRECTORY bin)
+
+## Set the output directories globally
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ARCHIVE_OUTPUT_DIRECTORY})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${LIBRARY_OUTPUT_DIRECTORY})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${RUNTIME_OUTPUT_DIRECTORY})
+
+# Create etc/config.ini: it contains the paths to share/
+# In the build directory, it points to the source tree
+set(SHARE_DIR "${CMAKE_SOURCE_DIR}/share")
+configure_file(${CMAKE_SOURCE_DIR}/etc/config.ini.in "${CMAKE_BINARY_DIR}/etc/config.ini")
 
 # Required packages
 find_package(OpenGL REQUIRED)
@@ -110,76 +118,49 @@ qt5_add_resources(RESOURCE_FILES ${QRC_FILES})
 
 add_subdirectory(app)
 
-#========== Creation of the library ==========#
-#add_executable(${PROJECT_NAME} main.cpp ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES} ${QRC_FILES} ${RESOURCE_FILES})
 
+#========== Creation of the library ==========#
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES} ${QRC_FILES} ${RESOURCE_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})# ${GLEW_INCLUDE_DIRS} ${GLUT_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} Qt5::Core Qt5::Gui Qt5::OpenGL)# ${GLEW_LIBRARIES} ${GLUT_LIBRARIES})
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE USE_GLUT)
 
-#========= Linking with local Glew =========#
-set(GLEW_PATH ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/glew)
+#========= Linking with local library =========#
+macro(link_with_local_lib LOCAL_PATH NAME)
+    set(${NAME}_PATH ${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_PATH})
 
-find_library(GLEW_LIBRARY
-    NAME GLEW
-    NO_DEFAULT_PATH
-    PATHS ${GLEW_PATH}/lib
-)
+    find_library(${NAME}_LIBRARY
+        NAME ${NAME}
+        NO_DEFAULT_PATH
+        PATHS ${NAME}_PATH/lib
+    )
 
-if(GLEW_LIBRARY-NOTFOUND)
-    message(FATAL_ERROR "GLFW_LIBRARY library not found !")
-else()
-    target_include_directories(${PROJECT_NAME} PUBLIC ${GLEW_PATH}/include)
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${GLEW_LIBRARY})
-endif()
+    if(${NAME}_LIBRARY-NOTFOUND)
+        message(FATAL_ERROR "${NAME}_LIBRARY library not found !")
+    else()
+        target_include_directories(${PROJECT_NAME} PUBLIC ${${NAME}_PATH}/include)
+        target_link_libraries(${PROJECT_NAME} PUBLIC ${${NAME}_LIBRARY})
+    endif()
+endmacro()
 
-#========= Linking with local GLFW =========#
-set(GLFW_PATH ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/GLFW)
-
-find_library(GLFW_LIBRARY
-    NAME glfw
-    NO_DEFAULT_PATH
-    PATHS ${GLFW_PATH}/lib
-)
-
-if(GLFW_LIBRARY-NOTFOUND)
-    message(FATAL_ERROR "GLFW_LIBRARY library not found !")
-else()
-    target_include_directories(${PROJECT_NAME} PUBLIC ${GLFW_PATH}/include)
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW_LIBRARY})
-endif()
+link_with_local_lib(extlibs/glew GLEW)
+link_with_local_lib(extlibs/GLFW GLFW)
+#link_with_local_lib(extlibs/freeglut GLUT)  # not working ?
+link_with_local_lib(extlibs/assimp ASSIMP)
 
 #======== Linking with local Freeglut ========#
-set(FREEGLUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/freeglut)
+#set(FREEGLUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/freeglut)
 
-find_library(FREEGLUT_LIBRARY
-    NAME glut
-    NO_DEFAULT_PATH
-    PATHS ${FREEGLUT_PATH}/lib
-)
+#find_library(FREEGLUT_LIBRARY
+#    NAME glut
+#    NO_DEFAULT_PATH
+#    PATHS ${FREEGLUT_PATH}/lib
+#)
 
-if(FREEGLUT_LIBRARY-NOTFOUND)
-    message(FATAL_ERROR "Freeglut library not found !")
-else()
-    target_include_directories(${PROJECT_NAME} PUBLIC ${FREEGLUT_PATH}/include)
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${FREEGLUT_LIBRARY})
-endif()
-
-#========= Linking with local Assimp =========#
-set(ASSIMP_PATH ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/assimp)
-
-find_library(ASSIMP_LIBRARY
-    NAME assimp
-    NO_DEFAULT_PATH
-    PATHS ${ASSIMP_PATH}/lib
-)
-
-if(ASSIMP_LIBRARY-NOTFOUND)
-    message(FATAL_ERROR "Assimp library not found !")
-else()
-    target_include_directories(${PROJECT_NAME} PUBLIC ${ASSIMP_PATH}/include)
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${ASSIMP_LIBRARY})
-endif()
+#if(FREEGLUT_LIBRARY-NOTFOUND)
+#    message(FATAL_ERROR "Freeglut library not found !")
+#else()
+#    target_include_directories(${PROJECT_NAME} PUBLIC ${FREEGLUT_PATH}/include)
+#    target_link_libraries(${PROJECT_NAME} PUBLIC ${FREEGLUT_LIBRARY})
+#endif()

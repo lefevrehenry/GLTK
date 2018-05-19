@@ -13,22 +13,45 @@
 
 // Standard Library
 #include <fstream>
+#include <map>
 #include <string>
 
 // Qt
 #include <QFile>
 #include <QString>
 
-
 namespace gl {
 
 namespace helper {
 
-static bool getStringFromFile(const std::string& filename, std::string& dest) {
+static std::map<std::string, std::string> getMapFromIniFile(const std::string& filename)
+{
+    std::map<std::string, std::string> map;
+
+    std::ifstream iniFile(filename.c_str());
+    if (!iniFile.is_open()) {
+        msg_error("Helper") << "Cannot read ini file " << filename;
+    }
+
+    std::string line;
+    while (std::getline(iniFile, line)) {
+        size_t equalPos = line.find_first_of('=');
+        if (equalPos != std::string::npos) {
+            const std::string key = line.substr(0, equalPos);
+            const std::string value = line.substr(equalPos + 1, std::string::npos);
+            map[key] = value;
+        }
+    }
+
+    return map;
+}
+
+static bool getStringFromFile(const std::string& filename, std::string& dest)
+{
     std::ifstream filestream(filename, std::ios::in);
 
     if(!filestream.is_open()) {
-        msg_error("Error") << "File not found: " << filename;
+        msg_error("Helper") << "File " << filename << " not found";
         return false;
     }
 
@@ -44,12 +67,13 @@ static bool getStringFromFile(const std::string& filename, std::string& dest) {
     return true;
 }
 
-static bool getStringFromQrcFile(const std::string& filename, std::string& dest) {
+static bool getStringFromQrcFile(const std::string& filename, std::string& dest)
+{
     QFile file(QString::fromStdString(filename));
     file.open(QIODevice::ReadOnly);
 
     if (!file.isOpen()) {
-        msg_error("Error") << "Could not open file " << filename;
+        msg_error("Helper") << "Could not open file " << filename;
         return false;
     }
 
@@ -181,10 +205,10 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     glm::vec3 color(1,0,0);
     static Texture colorMap;
     if (!colorMap.isLoaded())
-        colorMap.load("/home/henry/dev/QtProject/OpenGL/share/textures/chesterfield-color.png");
+        colorMap.load("textures/chesterfield-color.png");
     static Texture normalMap;
     if (!normalMap.isLoaded())
-        normalMap.load("/home/henry/dev/QtProject/OpenGL/share/textures/chesterfield-normal.png");
+        normalMap.load("textures/chesterfield-normal.png");
 
     switch (shaderProgramType)
     {

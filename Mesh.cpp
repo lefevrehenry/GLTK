@@ -1,5 +1,6 @@
 #include "Mesh.h"
 
+#include "FileRepository.h"
 #include "Message.h"
 
 // Assimp
@@ -54,9 +55,14 @@ Mesh::~Mesh()
 
 Mesh* Mesh::FromFile(const std::string& filename)
 {
-    // TODO: check if file exist
-    // msg_error if not and return new Mesh()
-    Mesh* mesh = new Mesh(filename);
+    std::string path(filename);
+
+    if (!helper::DataRepository.findFile(path)) {
+        msg_error("Mesh") << "File " << filename << " not found";
+        return nullptr;
+    }
+
+    Mesh* mesh = new Mesh(path);
     return mesh;
 }
 

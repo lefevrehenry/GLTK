@@ -18,7 +18,7 @@ Framebuffer::Framebuffer(unsigned int width, unsigned int height) :
     glGenFramebuffers(1, &m_framebufferId);
 
     // could be static ?
-    this->m_vaoQuad = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/vaoQuad.obj");
+    this->m_vaoQuad = Mesh::FromFile("models/vaoQuad.obj");
 
     this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::VaoQuad);
 }

@@ -14,6 +14,7 @@
 // OpenGL
 #include <GL/gl.h>
 
+#include <FileRepository.h>
 
 using namespace gl;
 
@@ -24,11 +25,6 @@ int main()
 
     if (!app)
         return -1;
-
-//    helper::DataRepository.addFirstPath("/home/henry/");
-//    helper::DataRepository.addFirstPath("/home/henry/dev");
-//    helper::DataRepository.addLastPath("/test");
-//    helper::DataRepository.print();
 
     int glMajor;
     int glMinor;
@@ -69,23 +65,18 @@ int main()
     root->setShaderProgram(shaderProgram[0]);
 
 
-    Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/Armadillo_simplified.obj");
-    Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/dragon_low.obj");
-//    Mesh* mesh1 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/cube.obj");
-//    Mesh* mesh2 = Mesh::FromFile("/home/henry/dev/QtProject/OpenGL/share/models/sphere.obj");
+    Mesh* mesh1 = Mesh::FromFile("models/Armadillo_simplified.obj");
+    Mesh* mesh2 = Mesh::FromFile("models/dragon_low.obj");
+//    Mesh* mesh1 = Mesh::FromFile("share/models/cube.obj");
+//    Mesh* mesh2 = Mesh::FromFile("share/models/sphere.obj");
 
     // Node 1
     VisualModel visual1(mesh1, Material::Bronze());
-//    visual1.transform().translate(-40,0,0);
-//    visual1.transform().scale(10,10,10);
     node1->addVisual(&visual1);
 
     // Node 2
     VisualModel visual2(mesh2, Material::Obsidian());
     node2->addVisual(&visual2);
-//    VisualOption option;
-//    option.setPolygonMode(VisualOption::LINE);
-//    node2->setVisualOption(&option);
 
     app->getViewer()->fitCamera();
 

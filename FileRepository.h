@@ -21,21 +21,15 @@ public:
     virtual ~FileRepository();
 
 public:
-
     void addFirstPath(const std::string& path);
-
     void addLastPath(const std::string& path);
-
     void removePath(const std::string& path);
 
 public:
-
     bool findFile(std::string& filename);
-
     void print();
 
 private:
-
     std::list< std::string > m_paths;
 
 };
