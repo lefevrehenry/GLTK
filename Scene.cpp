@@ -30,4 +30,3 @@ void Scene::executeVisitor(Visitor* visitor) const
     const Node* node = root();
     node->executeVisitor(visitor);
 }
-

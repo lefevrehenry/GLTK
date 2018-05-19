@@ -83,6 +83,9 @@ int main()
     // Node 2
     VisualModel visual2(mesh2, Material::Obsidian());
     node2->addVisual(&visual2);
+//    VisualOption option;
+//    option.setPolygonMode(VisualOption::LINE);
+//    node2->setVisualOption(&option);
 
     app->getViewer()->fitCamera();
 

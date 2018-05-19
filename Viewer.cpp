@@ -41,7 +41,7 @@ void Viewer::draw(Node* node)
 {
     VisualManager::UpdateUniformBufferCamera(this->m_camera);
 
-    DrawVisitor drawVisitor;
+    DrawVisitorWithSelection drawVisitor;
     node->executeVisitor(&drawVisitor);
 }
 
@@ -110,6 +110,8 @@ void Viewer::fitCamera()
 
 Selectable* Viewer::pickingObject(int sx, int sy)
 {
+    Selectable* selectable = nullptr;
+
     sy = 480 - sy;
 
 //    float bounds[4];
@@ -131,7 +133,11 @@ Selectable* Viewer::pickingObject(int sx, int sy)
     Node* node = this->m_scene->root();
     node->executeVisitor(&pickingVisitor);
 
-    Selectable* selectable = pickingVisitor.selectable();
+    const VisualModel* visual = pickingVisitor.selectedVisualModel();
+    if (visual != nullptr) {
+        selectable = new Selectable();
+        selectable->setVisualModel(visual);
+    }
 
     return selectable;
 

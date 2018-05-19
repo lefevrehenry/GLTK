@@ -52,6 +52,7 @@ public:
         Texturing,
         TangentSpace,
         Picking,
+        OutLine,
         VaoQuad
     };
 

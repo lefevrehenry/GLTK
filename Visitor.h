@@ -59,6 +59,27 @@ private:
 };
 
 /**
+ * @brief The DrawVisitorWithSelection class
+ */
+class DrawVisitorWithSelection : public DrawVisitor
+{
+
+public:
+    DrawVisitorWithSelection();
+    ~DrawVisitorWithSelection();
+
+public:
+    virtual void start();
+    virtual void forwardNode(const Node* node);
+    virtual void backwardNode(const Node* node);
+
+private:
+    ShaderProgram*      m_outlineShader;
+    const VisualModel*  m_selected;
+
+};
+
+/**
  * @brief The PickingVisitor class
  */
 class PickingVisitor : public Visitor
@@ -69,7 +90,8 @@ public:
     virtual ~PickingVisitor();
 
 public:
-    Selectable* selectable();
+    const VisualModel* selectedVisualModel() const;
+    glm::vec3 selectedPosition() const;
 
 public:
     virtual void start();
@@ -82,8 +104,11 @@ private:
 
     Framebuffer*    m_pickingFramebuffer;
     ShaderProgram*  m_shaderProgram;
-    Selectable*     m_selectable;
-    std::deque<const VisualModel*> m_visualModels;
+
+    std::deque<const VisualModel*>  m_visualModels;
+
+    const VisualModel*  m_selectedVisualModel;
+    glm::vec3           m_selectedPosition;
 
     unsigned int m_id;
 

@@ -13,6 +13,7 @@
 
 // Glm
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
 
 
 using namespace gl;
@@ -37,10 +38,15 @@ void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, 
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
         double xpos, ypos;
         glfwGetCursorPos(handle, &xpos, &ypos);
+
         GLFWApplication* app = GLFWApplication::getInstance();
         Selectable* selectable = app->getViewer()->pickingObject(xpos, ypos);
-        if (selectable != nullptr)
+
+        if (selectable != nullptr) {
             msg_info("Debug") << selectable->visualModel()->mesh()->name();
+        }
+
+        app->setSelected(selectable);
     }
 }
 

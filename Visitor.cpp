@@ -53,7 +53,7 @@ void DrawVisitor::start()
     this->m_currentOption = nullptr;
 }
 
-void DrawVisitor::forwardNode(const Node *node)
+void DrawVisitor::forwardNode(const Node* node)
 {
     ShaderProgram* shaderProgram = node->shaderProgram();
 
@@ -103,7 +103,7 @@ void DrawVisitor::processNode(const Node* node)
     }
 }
 
-void DrawVisitor::backwardNode(const Node *node)
+void DrawVisitor::backwardNode(const Node* node)
 {
     ShaderProgram* shaderProgram = node->shaderProgram();
 
@@ -122,6 +122,108 @@ void DrawVisitor::backwardNode(const Node *node)
 //    // unstack the node's visualOption
 //    if (visualOption != nullptr)
 //        m_optionStack.pop();
+}
+
+DrawVisitorWithSelection::DrawVisitorWithSelection() : DrawVisitor(),
+    m_outlineShader(0),
+    m_selected(0)
+{
+    this->m_outlineShader = helper::CreateShaderProgram(ShaderProgram::OutLine);
+
+    Selectable* selected = GLFWApplication::getInstance()->selected();
+    if (selected != nullptr) {
+        this->m_selected = selected->visualModel();
+    }
+}
+
+DrawVisitorWithSelection::~DrawVisitorWithSelection()
+{
+    delete m_outlineShader;
+    m_outlineShader = nullptr;
+}
+
+void DrawVisitorWithSelection::start()
+{
+    glClearStencil(0);
+    glClear(GL_STENCIL_BUFFER_BIT);
+
+    DrawVisitor::start();
+}
+
+void DrawVisitorWithSelection::forwardNode(const Node* node)
+{
+    if (this->m_selected != nullptr) {
+        for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
+            const VisualModel* visual = node->getVisual(i);
+
+            if (visual == this->m_selected) {
+                m_outlineShader->bind();
+                m_outlineShader->updateDataIfDirty();
+
+                // draw the object with filled primitives
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+                // activate stencil buffer test
+                glEnable(GL_STENCIL_TEST);
+                // deactivate depth buffer test
+                glDisable(GL_DEPTH_TEST);
+                // set the stencil buffer to write a 1 in every time a pixel is written to the screen
+                glStencilFunc( GL_ALWAYS, 1, 0xFFFF );
+                glStencilOp( GL_KEEP, GL_KEEP, GL_REPLACE );
+                // disable color buffer
+                glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+
+                const Transform& transform = visual->transform();
+                VisualManager::UpdateUniformBufferTransform(transform);
+
+                visual->draw(TRIANGLES);
+
+                // enable color buffer
+                glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+                // activate depth buffer test
+                glEnable(GL_DEPTH_TEST);
+                // deactivate stencil buffer test
+                glDisable(GL_STENCIL_TEST);
+
+                m_outlineShader->unbind();
+            }
+        }
+    }
+
+    DrawVisitor::forwardNode(node);
+}
+
+void DrawVisitorWithSelection::backwardNode(const Node* node)
+{
+    if (this->m_selected != nullptr) {
+        m_outlineShader->bind();
+        m_outlineShader->updateDataIfDirty();
+
+        // activate stencil buffer test
+        glEnable(GL_STENCIL_TEST);
+        // set the stencil buffer to only allow writing
+        // to the screen when the value of the
+        // stencil buffer is not 1
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFFFF);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE );
+        // draw the object with thick lines
+        glLineWidth(5.0f);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        const Transform& transform = this->m_selected->transform();
+        VisualManager::UpdateUniformBufferTransform(transform);
+
+        this->m_selected->draw(TRIANGLES);
+
+        glLineWidth(1.0f);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        // deactivate stencil buffer test
+        glDisable(GL_STENCIL_TEST);
+
+        m_outlineShader->unbind();
+    }
+
+    DrawVisitor::backwardNode(node);
 }
 
 glm::vec4 packIndex(unsigned int n)
@@ -149,8 +251,9 @@ PickingVisitor::PickingVisitor(unsigned int x, unsigned int y) :
     m_y(y),
     m_pickingFramebuffer(nullptr),
     m_shaderProgram(nullptr),
-    m_selectable(nullptr),
     m_visualModels(0),
+    m_selectedVisualModel(0),
+    m_selectedPosition(),
     m_id(0)
 {
     unsigned int width = GLFWApplication::ScreenWidth;
@@ -164,23 +267,23 @@ PickingVisitor::PickingVisitor(unsigned int x, unsigned int y) :
 }
 
 PickingVisitor::~PickingVisitor()
-{    
+{
     delete m_pickingFramebuffer;
     m_pickingFramebuffer = nullptr;
 
     delete m_shaderProgram;
     m_shaderProgram = nullptr;
 
-    delete m_selectable;
-    m_selectable = nullptr;
 }
 
-Selectable* PickingVisitor::selectable()
+const VisualModel* PickingVisitor::selectedVisualModel() const
 {
-//    if (this->m_selectable.visualModel() == nullptr)
-//        return nullptr;
+    return this->m_selectedVisualModel;
+}
 
-    return this->m_selectable;
+glm::vec3 PickingVisitor::selectedPosition() const
+{
+    return this->m_selectedPosition;
 }
 
 void PickingVisitor::start()
@@ -196,8 +299,8 @@ void PickingVisitor::start()
     this->m_visualModels.clear();
     this->m_visualModels.push_back(nullptr);
 
-    if (this->m_selectable != nullptr)
-        this->m_selectable->clear();
+    this->m_selectedVisualModel = nullptr;
+    this->m_selectedPosition = glm::vec3(0,0,0);
 
     this->m_id = 1;
 }
@@ -247,9 +350,9 @@ void PickingVisitor::end()
         float z = 1.0;
         glReadPixels(this->m_x, this->m_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
 
-        // todo set position of selectable
-        this->m_selectable = new Selectable();
-        this->m_selectable->setVisualModel(visual);
+        // todo: set position of selected visual
+        this->m_selectedVisualModel = visual;
+        this->m_selectedPosition = glm::vec3(0,0,0);
     }
 
     this->m_pickingFramebuffer->unbind();
@@ -350,7 +453,7 @@ void FetchVisualModelVisitor::start()
     this->m_visualModels.clear();
 }
 
-void FetchVisualModelVisitor::processNode(const Node *node)
+void FetchVisualModelVisitor::processNode(const Node* node)
 {
     for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
         const VisualModel* visual = node->getVisual(i);

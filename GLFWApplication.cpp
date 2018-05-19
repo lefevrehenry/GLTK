@@ -3,6 +3,7 @@
 #include "GLFWApplicationEvents.h"
 #include "Message.h"
 #include "Scene.h"
+#include "Selectable.h"
 #include "Viewer.h"
 
 // OpenGL
@@ -76,7 +77,7 @@ GLFWApplication* GLFWApplication::CreateWindow()
 
     // Specifies background color
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    // Enable depth test
+    // Enable depth buffer test
     glEnable(GL_DEPTH_TEST);
     // Enable eliminaton of hidden faces
     glEnable(GL_CULL_FACE);
@@ -153,6 +154,7 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 GLFWApplication::GLFWApplication() : Application(),
     windowHandle(0),
     m_interface(0),
+    m_selectable(0),
     m_scene(0),
     m_viewer(0)
 {
@@ -168,6 +170,9 @@ GLFWApplication::GLFWApplication() : Application(),
 
 GLFWApplication::~GLFWApplication()
 {
+    delete m_selectable;
+    m_selectable = nullptr;
+
     delete m_scene;
     m_scene = nullptr;
 
@@ -255,6 +260,21 @@ Interface* GLFWApplication::getInterface() const
 void GLFWApplication::setInterface(Interface* interface)
 {
     this->m_interface = interface;
+}
+
+Selectable* GLFWApplication::selected() const
+{
+    return this->m_selectable;
+}
+
+void GLFWApplication::setSelected(Selectable* selectable)
+{
+    if (this->m_selectable != nullptr) {
+        delete m_selectable;
+        this->m_selectable = nullptr;
+    }
+
+    this->m_selectable = selectable;
 }
 
 Scene* GLFWApplication::getScene()

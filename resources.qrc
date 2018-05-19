@@ -27,5 +27,7 @@
         <file>shaders/texturing.vs</file>
         <file>shaders/vaoQuad.fs</file>
         <file>shaders/vaoQuad.vs</file>
+        <file>shaders/outline.fs</file>
+        <file>shaders/outline.vs</file>
     </qresource>
 </RCC>

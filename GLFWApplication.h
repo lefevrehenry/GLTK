@@ -11,6 +11,7 @@ namespace gl {
 class GLFWApplicationEvents;
 class Interface;
 class Scene;
+class Selectable;
 class Viewer;
 
 /**
@@ -48,6 +49,9 @@ public:
     Interface* getInterface() const;
     void setInterface(Interface* interface);
 
+    Selectable* selected() const;
+    void setSelected(Selectable* selectable);
+
 public:
     Scene* getScene();
     Viewer* getViewer();
@@ -64,6 +68,8 @@ private:
     GLFWwindow* windowHandle;
 
     Interface* m_interface;
+
+    Selectable* m_selectable;
 
     Scene* m_scene;
 

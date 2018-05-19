@@ -142,6 +142,12 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         getStringFromQrcFile(":/shaders/picking.fs", fs);
 
         break;
+    case ShaderProgramType::OutLine:
+
+        getStringFromQrcFile(":/shaders/outline.vs", vs);
+        getStringFromQrcFile(":/shaders/outline.fs", fs);
+
+        break;
     case ShaderProgramType::VaoQuad:
 
         getStringFromQrcFile(":/shaders/vaoQuad.vs", vs);
@@ -253,6 +259,12 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::Picking:
 
         //shaderProgram->addData<glm::vec4>("index", glm::vec4());
+        shaderProgram->addUniformBlock("transform", 1);
+        shaderProgram->addUniformBlock("camera", 2);
+
+        break;
+    case ShaderProgramType::OutLine:
+
         shaderProgram->addUniformBlock("transform", 1);
         shaderProgram->addUniformBlock("camera", 2);
 

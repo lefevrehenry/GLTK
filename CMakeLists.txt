@@ -79,6 +79,8 @@ set(SHADER_FILES
     shaders/normal.vs
     shaders/normal.gs
     shaders/normal.fs
+    shaders/outline.vs
+    shaders/outline.fs
     shaders/phongShading.vs
     shaders/phongShading.fs
     shaders/picking.vs
