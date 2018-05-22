@@ -133,7 +133,7 @@ macro(link_with_local_lib LOCAL_PATH NAME)
     find_library(${NAME}_LIBRARY
         NAME ${NAME}
         NO_DEFAULT_PATH
-        PATHS ${NAME}_PATH/lib
+        PATHS ${${NAME}_PATH}/lib
     )
 
     if(${NAME}_LIBRARY-NOTFOUND)
@@ -145,22 +145,5 @@ macro(link_with_local_lib LOCAL_PATH NAME)
 endmacro()
 
 link_with_local_lib(extlibs/glew GLEW)
-link_with_local_lib(extlibs/GLFW GLFW)
-#link_with_local_lib(extlibs/freeglut GLUT)  # not working ?
-link_with_local_lib(extlibs/assimp ASSIMP)
-
-#======== Linking with local Freeglut ========#
-#set(FREEGLUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/extlibs/freeglut)
-
-#find_library(FREEGLUT_LIBRARY
-#    NAME glut
-#    NO_DEFAULT_PATH
-#    PATHS ${FREEGLUT_PATH}/lib
-#)
-
-#if(FREEGLUT_LIBRARY-NOTFOUND)
-#    message(FATAL_ERROR "Freeglut library not found !")
-#else()
-#    target_include_directories(${PROJECT_NAME} PUBLIC ${FREEGLUT_PATH}/include)
-#    target_link_libraries(${PROJECT_NAME} PUBLIC ${FREEGLUT_LIBRARY})
-#endif()
+link_with_local_lib(extlibs/GLFW glfw)
+link_with_local_lib(extlibs/assimp assimp)
