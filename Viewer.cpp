@@ -2,10 +2,11 @@
 
 #include "Framebuffer.h"
 #include "Message.h"
+#include "Node.h"
 #include "Scene.h"
 #include "Selectable.h"
 #include "Visitor.h"
-
+#include "VisualManager.h"
 
 using namespace gl;
 

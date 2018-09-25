@@ -18,6 +18,7 @@ set(HEADER_FILES
     Material.h
     Mesh.h
     Message.h
+    Node.h
     Program.h
     Scene.h
     Selectable.h
@@ -44,6 +45,7 @@ set(SOURCE_FILES
     Material.cpp
     Mesh.cpp
     Message.cpp
+    Node.cpp
     Program.cpp
     Scene.cpp
     Selectable.cpp

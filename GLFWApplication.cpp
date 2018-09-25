@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Selectable.h"
 #include "Viewer.h"
+#include "VisualManager.h"
 
 // OpenGL
 #include <GL/glew.h>

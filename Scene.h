@@ -1,13 +1,11 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "VisualManager.h"
-
 
 namespace gl {
 
+class Node;
 class Visitor;
-class VisualModel;
 
 /**
  * @brief The Scene class
@@ -27,7 +25,7 @@ public:
     void executeVisitor(Visitor* visitor) const;
 
 private:
-    Node m_rootNode;
+    Node* m_rootNode;
 
 };
 

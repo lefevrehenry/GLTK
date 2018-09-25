@@ -3,6 +3,7 @@
 #include "Framebuffer.h"
 #include "Helper.h"
 #include "Mesh.h"
+#include "Node.h"
 #include "Selectable.h"
 #include "ShaderProgram.h"
 #include "Transform.h"
