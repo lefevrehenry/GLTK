@@ -37,4 +37,4 @@ Makefile*
 CMakeLists.txt.user
 
 # Personnal build
-build/*
+build*
