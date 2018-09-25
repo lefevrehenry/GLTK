@@ -277,7 +277,7 @@ void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVect
     glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize + uvcoordsBufferSize, tangentsBufferSize, tangents.data());
     glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize + uvcoordsBufferSize + tangentsBufferSize, bitangentsBufferSize, bitangents.data());
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) nullptr);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize));
     glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*) (verticesBufferSize + normalsBufferSize));
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize + normalsBufferSize + uvcoordsBufferSize));

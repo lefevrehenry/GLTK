@@ -163,12 +163,12 @@ glm::mat4 Camera::projectionROI(float bounds[4]) const
         float f = m_zFar;
         projection = glm::ortho(l, r, b, t, n, f);
     } else {
-        float ymax = m_zNear * glm::atan(this->m_fovy / 2.0);
+        float ymax = m_zNear * glm::atan(this->m_fovy / 2.0f);
         float xmax = ymax * this->m_aspectRatio;
-        float l = -xmax + (2.0 * xmax) * bounds[0];
-        float r = -xmax + (2.0 * xmax) * bounds[1];
-        float b = -ymax + (2.0 * ymax) * bounds[2];
-        float t = -ymax + (2.0 * ymax) * bounds[3];
+        float l = -xmax + (2.0f * xmax) * bounds[0];
+        float r = -xmax + (2.0f * xmax) * bounds[1];
+        float b = -ymax + (2.0f * ymax) * bounds[2];
+        float t = -ymax + (2.0f * ymax) * bounds[3];
         float n = m_zNear;
         float f = m_zFar;
         projection = glm::frustum(l, r, b, t, n, f);

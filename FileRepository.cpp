@@ -60,7 +60,7 @@ void FileRepository::addLastPath(const std::string& path)
     this->m_paths.insert(m_paths.end(), normpath);
 }
 
-void FileRepository::removePath(const std::string& path)
+void FileRepository::removePath(const std::string&)
 {
     // not implemented yet
     assert(false);

@@ -75,7 +75,7 @@ void ShaderProgram::link()
     if (!linked)
     {
         GLchar infoLog[512];
-        glGetProgramInfoLog(m_programId, 512, NULL, infoLog);
+        glGetProgramInfoLog(m_programId, 512, nullptr, infoLog);
         msg_error("ShaderProgram") << "Linkage failed: " << infoLog;
     }
 

@@ -110,7 +110,7 @@ void GLFWApplication::Terminate()
     glfwTerminate();
 }
 
-void GLFWApplication::FramebufferSizeCallback(GLFWwindow* handle, int width, int height)
+void GLFWApplication::FramebufferSizeCallback(GLFWwindow*, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
@@ -152,11 +152,11 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 }
 
 GLFWApplication::GLFWApplication() : Application(),
-    windowHandle(0),
-    m_interface(0),
-    m_selectable(0),
-    m_scene(0),
-    m_viewer(0)
+    windowHandle(nullptr),
+    m_interface(nullptr),
+    m_selectable(nullptr),
+    m_scene(nullptr),
+    m_viewer(nullptr)
 {
     OurInstance = this;
 
@@ -229,7 +229,7 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
 {
     GLFWwindow* oldHandle = this->windowHandle;
 
-    typedef void (*cursorPosCallback) (GLFWwindow*, double, double);
+    //typedef void (*cursorPosCallback) (GLFWwindow*, double, double);
 
     /* Remove callbacks set to the old handle */
     if (oldHandle != nullptr) {

@@ -39,14 +39,14 @@ void Shader::compileSourceCode(const std::string& sourceCode)
 
     m_sourceCode = sourceCode.c_str();
 
-    glShaderSource(m_shaderId, 1, &m_sourceCode, NULL);
+    glShaderSource(m_shaderId, 1, &m_sourceCode, nullptr);
     glCompileShader(m_shaderId);
 
     glGetShaderiv(m_shaderId, GL_COMPILE_STATUS, &compiled);
     if (!compiled)
     {
         GLchar infoLog[512];
-        glGetShaderInfoLog(m_shaderId, 512, NULL, infoLog);
+        glGetShaderInfoLog(m_shaderId, 512, nullptr, infoLog);
         msg_error("Shader") << "Compilation failed: " << infoLog;
     }
 

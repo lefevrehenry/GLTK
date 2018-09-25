@@ -25,6 +25,9 @@ class Visitor
 {
 
 public:
+    virtual ~Visitor();
+
+public:
     virtual void start();
     virtual void end();
     virtual void forwardNode(const Node* node);
@@ -86,7 +89,7 @@ class PickingVisitor : public Visitor
 {
 
 public:
-    PickingVisitor(unsigned int x, unsigned int y);
+    PickingVisitor(int x, int y);
     virtual ~PickingVisitor();
 
 public:
@@ -99,8 +102,8 @@ public:
     virtual void processNode(const Node* node);
 
 private:
-    unsigned int m_x;
-    unsigned int m_y;
+    int m_x;
+    int m_y;
 
     Framebuffer*    m_pickingFramebuffer;
     ShaderProgram*  m_shaderProgram;

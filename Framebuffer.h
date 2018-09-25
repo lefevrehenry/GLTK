@@ -38,7 +38,7 @@ public:
     void attachDepthTexture();
 
 public:
-    void draw(float bounds[4]);
+    void draw(int bounds[4]);
 
 private:
     GLuint m_framebufferId;

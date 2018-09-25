@@ -13,6 +13,11 @@
 
 using namespace gl;
 
+Visitor::~Visitor()
+{
+
+}
+
 void Visitor::start()
 {
 
@@ -23,12 +28,12 @@ void Visitor::end()
 
 }
 
-void Visitor::forwardNode(const Node* node)
+void Visitor::forwardNode(const Node*)
 {
 
 }
 
-void Visitor::backwardNode(const Node* node)
+void Visitor::backwardNode(const Node*)
 {
 
 }
@@ -125,8 +130,8 @@ void DrawVisitor::backwardNode(const Node* node)
 }
 
 DrawVisitorWithSelection::DrawVisitorWithSelection() : DrawVisitor(),
-    m_outlineShader(0),
-    m_selected(0)
+    m_outlineShader(nullptr),
+    m_selected(nullptr)
 {
     this->m_outlineShader = helper::CreateShaderProgram(ShaderProgram::OutLine);
 
@@ -236,10 +241,10 @@ void DrawVisitorWithSelection::backwardNode(const Node* node)
 
 glm::vec4 packIndex(unsigned int n)
 {
-    float r = ((n & 0x000000FF) >>  0) / 255.0;
-    float g = ((n & 0x0000FF00) >>  8) / 255.0;
-    float b = ((n & 0x00FF0000) >> 16) / 255.0;
-    float a = ((n & 0xFF000000) >> 24) / 255.0;
+    float r = ((n & 0x000000FF) >>  0) / 255.0f;
+    float g = ((n & 0x0000FF00) >>  8) / 255.0f;
+    float b = ((n & 0x00FF0000) >> 16) / 255.0f;
+    float a = ((n & 0xFF000000) >> 24) / 255.0f;
 
     return glm::vec4(r,g,b,a);
 }
@@ -254,13 +259,13 @@ unsigned int unpackIndex(const glm::vec4& color)
     return (a << 24 | b << 16 | g << 8 | r);
 }
 
-PickingVisitor::PickingVisitor(unsigned int x, unsigned int y) :
+PickingVisitor::PickingVisitor(int x, int y) :
     m_x(x),
     m_y(y),
     m_pickingFramebuffer(nullptr),
     m_shaderProgram(nullptr),
     m_visualModels(0),
-    m_selectedVisualModel(0),
+    m_selectedVisualModel(nullptr),
     m_selectedPosition(),
     m_id(0)
 {

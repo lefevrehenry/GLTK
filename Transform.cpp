@@ -8,10 +8,10 @@
 using namespace gl;
 
 Transform::Transform() :
-    m_transform(),
     m_translation(0,0,0),
     m_orientation(1,0,0,0),
     m_scale(1,1,1),
+    m_transform(),
     m_isDirty(true)
 {
 

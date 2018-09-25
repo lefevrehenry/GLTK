@@ -31,7 +31,7 @@ GLFWApplicationEvents::~GLFWApplicationEvents()
 
 }
 
-void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)
+void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, int action, int /*mods*/)
 {
     this->mousePressed = (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS);
 
@@ -39,8 +39,11 @@ void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, 
         double xpos, ypos;
         glfwGetCursorPos(handle, &xpos, &ypos);
 
+        int sx = static_cast<int>(xpos);
+        int sy = static_cast<int>(ypos);
+
         GLFWApplication* app = GLFWApplication::getInstance();
-        Selectable* selectable = app->getViewer()->pickingObject(xpos, ypos);
+        Selectable* selectable = app->getViewer()->pickingObject(sx, sy);
 
 //        if (selectable != nullptr) {
 //            msg_info("Debug") << selectable->visualModel()->mesh()->name();
@@ -53,13 +56,13 @@ void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, 
 void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
 {
     if (this->mousePressed) {
-        double dx = xpos - this->x;
-        double dy = ypos - this->y;
+        float dx = static_cast<float>(xpos - this->x);
+        float dy = static_cast<float>(ypos - this->y);
         int width = 0;
         int height = 0;
         glfwGetWindowSize(handle, &width, &height);
         float pi = glm::pi<float>();
-        float rx = ( dx / width) * (2.0 * pi);
+        float rx = ( dx / width) * (2.0f * pi);
         float ry = (-dy / height) * pi;
         GLFWApplication* app = GLFWApplication::getInstance();
         app->getViewer()->camera()->rotate(rx, ry);

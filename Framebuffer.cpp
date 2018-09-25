@@ -8,12 +8,12 @@ using namespace gl;
 
 Framebuffer::Framebuffer(unsigned int width, unsigned int height) :
     m_framebufferId(0),
-    m_renderTexture(0),
-    m_depthTexture(0),
+    m_renderTexture(nullptr),
+    m_depthTexture(nullptr),
     m_width(width),
     m_height(height),
-    m_vaoQuad(0),
-    m_shaderProgram(0)
+    m_vaoQuad(nullptr),
+    m_shaderProgram(nullptr)
 {
     glGenFramebuffers(1, &m_framebufferId);
 
@@ -112,16 +112,16 @@ void Framebuffer::attachDepthTexture()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Framebuffer::draw(float bounds[4])
+void Framebuffer::draw(int bounds[4])
 {
     // stack the viewport
     GLint initialViewport[4];
     glGetIntegerv(GL_VIEWPORT, &initialViewport[0]);
 
-    float x = bounds[0];
-    float y = bounds[1];
-    float width = bounds[2];
-    float height = bounds[3];
+    int x = bounds[0];
+    int y = bounds[1];
+    int width = bounds[2];
+    int height = bounds[3];
 
     // set the viewport to draw
     glViewport(x, y, width, height);

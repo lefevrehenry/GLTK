@@ -70,14 +70,14 @@ private:
 private:
     ProjectionType m_projectionType;
 
-    double m_orthoLeft;
-    double m_orthoRight;
-    double m_orthoBottom;
-    double m_orthoTop;
-    double m_fovy;
-    double m_aspectRatio;
-    double m_zNear;
-    double m_zFar;
+    float m_orthoLeft;
+    float m_orthoRight;
+    float m_orthoBottom;
+    float m_orthoTop;
+    float m_fovy;
+    float m_aspectRatio;
+    float m_zNear;
+    float m_zFar;
 
     glm::mat4 m_model;
     glm::mat4 m_view;

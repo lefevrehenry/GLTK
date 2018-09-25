@@ -13,7 +13,7 @@ using namespace gl;
 
 //}
 
-VisualModel::VisualModel(const Mesh *mesh, const Material& material) :
+VisualModel::VisualModel(const Mesh* mesh, const Material& material) :
     m_mesh(mesh),
     m_transform(),
     m_material(material)
