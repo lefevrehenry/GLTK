@@ -1,5 +1,6 @@
 #include "GLFWApplicationEvents.h"
 
+#include "Camera.h"
 #include "GLFWApplication.h"
 #include "Selectable.h"
 #include "Viewer.h"
@@ -18,12 +19,16 @@
 
 using namespace gl;
 
-GLFWApplicationEvents::GLFWApplicationEvents() :
+GLFWApplicationEvents::GLFWApplicationEvents() : DefaultInterface(),
     mousePressed(false),
     x(-1),
-    y(-1)
+    y(-1),
+    m_camera(nullptr)
 {
+    GLFWApplication* app = GLFWApplication::getInstance();
 
+    if (app && app->getViewer())
+        this->m_camera = app->getViewer()->camera();
 }
 
 GLFWApplicationEvents::~GLFWApplicationEvents()
@@ -55,7 +60,8 @@ void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, 
 
 void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
 {
-    if (this->mousePressed) {
+    if (this->mousePressed && this->m_camera)
+    {
         float dx = static_cast<float>(xpos - this->x);
         float dy = static_cast<float>(ypos - this->y);
         int width = 0;
@@ -64,9 +70,9 @@ void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, d
         float pi = glm::pi<float>();
         float rx = ( dx / width) * (2.0f * pi);
         float ry = (-dy / height) * pi;
-        GLFWApplication* app = GLFWApplication::getInstance();
-        app->getViewer()->camera()->rotate(rx, ry);
+        this->m_camera->rotate(rx, ry);
     }
+
     this->x = xpos;
     this->y = ypos;
 }

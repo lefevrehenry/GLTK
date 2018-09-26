@@ -8,6 +8,8 @@ class GLFWwindow;
 
 namespace gl {
 
+class Camera;
+
 /**
  * @brief The GLFWApplicationEvents class
  */
@@ -26,6 +28,7 @@ private:
     bool mousePressed;
     double x;
     double y;
+    Camera* m_camera;
 
 };
 
