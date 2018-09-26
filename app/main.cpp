@@ -3,6 +3,7 @@
 #include <GLFWApplication.h>
 #include <Mesh.h>
 #include <Message.h>
+#include <Node.h>
 #include <Scene.h>
 
 #include <Helper.h>
