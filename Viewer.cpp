@@ -1,5 +1,6 @@
 #include "Viewer.h"
 
+#include "GLFWApplication.h"
 #include "Framebuffer.h"
 #include "Message.h"
 #include "Node.h"
@@ -48,7 +49,10 @@ void Viewer::draw(Node* node)
 
 void Viewer::draw()
 {
-    glViewport(0, 0, 640, 480);
+    int width = (int) GLFWApplication::ScreenWidth;
+    int height = (int) GLFWApplication::ScreenHeight;
+
+    glViewport(0, 0, width, height);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
