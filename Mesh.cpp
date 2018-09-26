@@ -265,32 +265,32 @@ void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVect
 
     size_t verticesBufferSize = vertices.size() * sizeof(float);
     size_t normalsBufferSize = normals.size() * sizeof(float);
-    size_t uvcoordsBufferSize = uvcoords.size() * sizeof(float);
     size_t tangentsBufferSize = tangents.size() * sizeof(float);
     size_t bitangentsBufferSize = bitangents.size() * sizeof(float);
+    size_t uvcoordsBufferSize = uvcoords.size() * sizeof(float);
 
-    size_t bufferSize = verticesBufferSize + normalsBufferSize + uvcoordsBufferSize + tangentsBufferSize + bitangentsBufferSize;
+    size_t bufferSize = verticesBufferSize + normalsBufferSize + tangentsBufferSize + bitangentsBufferSize + uvcoordsBufferSize;
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
     glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, mode);
 
     glBufferSubData(GL_ARRAY_BUFFER, 0, verticesBufferSize, vertices.data());
     glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize, normalsBufferSize, normals.data());
-    glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize, uvcoordsBufferSize, uvcoords.data());
-    glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize + uvcoordsBufferSize, tangentsBufferSize, tangents.data());
-    glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize + uvcoordsBufferSize + tangentsBufferSize, bitangentsBufferSize, bitangents.data());
+    glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize, tangentsBufferSize, tangents.data());
+    glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize + tangentsBufferSize, bitangentsBufferSize, bitangents.data());
+    glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize + tangentsBufferSize + bitangentsBufferSize, uvcoordsBufferSize, uvcoords.data());
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) nullptr);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize));
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*) (verticesBufferSize + normalsBufferSize));
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize + normalsBufferSize + uvcoordsBufferSize));
-    glVertexAttribPointer(5, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize + normalsBufferSize + uvcoordsBufferSize + tangentsBufferSize));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize + normalsBufferSize));
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize + normalsBufferSize + tangentsBufferSize));
+    glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 0, (void*) (verticesBufferSize + normalsBufferSize + tangentsBufferSize + bitangentsBufferSize));
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
     glEnableVertexAttribArray(3);
     glEnableVertexAttribArray(4);
-    glEnableVertexAttribArray(5);
 
 //    // Store mesh positions into buffer inside the GPU memory
 //    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);

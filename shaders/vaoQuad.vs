@@ -2,7 +2,7 @@
 
 // vertex attribut
 layout(location = 0) in vec3 position;
-layout(location = 3) in vec2 textureCoord;
+layout(location = 4) in vec2 textureCoord;
 
 // data to fragment shader
 out vec2 texCoord;

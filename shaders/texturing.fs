@@ -42,9 +42,7 @@ void main()
     // diffuse and specular components
     float diff = max(-dot(l,n),0.0);
 
-    // final diffuse and specular colors
-    vec4 diffuseColor = diff * texture(colorMap,uv);
-
     // final color
-    outColor = texture(colorMap,uv);//diffuseColor;
+    outColor = texture(colorMap,uv);
+    //outColor = diff * texture(colorMap,uv);
 }
