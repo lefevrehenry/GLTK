@@ -5,8 +5,6 @@
 
 // Standard Library
 #include <fstream>
-#include <map>
-
 
 using namespace gl::helper;
 
@@ -16,14 +14,6 @@ FileRepository gl::helper::DataRepository;
 FileRepository::FileRepository() :
     m_paths(0)
 {
-    std::map<std::string, std::string> iniFileValues = getMapFromIniFile("../etc/config.ini");
-
-    if (iniFileValues.find("SHARE_DIR") != iniFileValues.end()) {
-        std::string shareDir = iniFileValues["SHARE_DIR"];
-        addFirstPath(shareDir);
-    } else {
-        msg_warning("FileRepository") << "No share/ directory added";
-    }
 }
 
 FileRepository::~FileRepository()

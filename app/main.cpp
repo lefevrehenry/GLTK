@@ -15,9 +15,11 @@
 // OpenGL
 #include <GL/gl.h>
 
-#include <FileRepository.h>
+#include <map>
+#include <string>
 
 using namespace gl;
+using namespace gl::helper;
 
 int main()
 {
@@ -33,6 +35,17 @@ int main()
     glGetIntegerv(GL_MINOR_VERSION, &glMinor);
 
     msg_info("OpenGL") << "Congrat's ! You're running OpenGL " << glMajor << "." << glMinor;
+
+
+    std::map<std::string, std::string> iniFileValues = getMapFromIniFile("../etc/config.ini");
+
+    if (iniFileValues.find("SHARE_DIR") != iniFileValues.end()) {
+        std::string shareDir = iniFileValues["SHARE_DIR"];
+        DataRepository.addFirstPath(shareDir);
+    } else {
+        msg_warning("FileRepository") << "No share/ directory added";
+    }
+
 
 //    GLint bound[4];
 
