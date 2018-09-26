@@ -3,6 +3,10 @@
 layout(std140) uniform transform
 {
     mat4 ModelMatrix;
+};
+
+layout(std140) uniform material
+{
     vec4 ambientColor;
     vec4 diffuseColor;
     vec4 specularColor;

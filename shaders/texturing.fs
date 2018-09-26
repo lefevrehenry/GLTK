@@ -3,11 +3,6 @@
 layout(std140) uniform transform
 {
     mat4 ModelMatrix;
-    vec4 ambientColor;
-    vec4 diffuseColor;
-    vec4 specularColor;
-    vec4 emptyColor;
-    float shininess;
 };
 
 layout(std140) uniform camera

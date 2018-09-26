@@ -18,6 +18,13 @@ class VisualManager
 {
 
 public:
+    enum {
+        TransformIndex = 1,
+        MaterialIndex = 2,
+        CameraIndex = 3
+    };
+
+public:
     static void Init();
     static void Clean();
 
@@ -27,7 +34,8 @@ public:
     static void UpdateUniformBufferCamera(const gl::Camera& camera);
 
 private:
-    static GLuint m_uboModel;
+    static GLuint m_uboTransform;
+    static GLuint m_uboMaterial;
     static GLuint m_uboCamera;
 
 };

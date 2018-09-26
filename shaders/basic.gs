@@ -6,8 +6,10 @@ layout(triangles) in;
 // type of output primitives
 layout(triangle_strip, max_vertices = 9) out;
 
+// data from vertex shader
 in vec3 o_normal[3];
 
+// data to fragment shader
 out vec3 n;
 
 void main()

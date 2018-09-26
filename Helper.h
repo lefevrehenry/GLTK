@@ -10,6 +10,7 @@
 #include "ShaderProgram.h"
 #include "Texture.h"
 #include "Viewer.h"
+#include "VisualManager.h"
 
 // Standard Library
 #include <fstream>
@@ -214,23 +215,25 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     {
     case ShaderProgramType::Basic:
 
-        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
-        shaderProgram->addData<glm::vec3>("color", color);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::Normal:
 
         shaderProgram->addData<float>("scale", normalScale);
-        shaderProgram->addUniformBlock("transform", 1);
-        shaderProgram->addUniformBlock("camera", 2);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::FlatShading:
 
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
-        shaderProgram->addUniformBlock("transform", 1);
-        shaderProgram->addUniformBlock("camera", 2);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::GouraudShading:
@@ -243,8 +246,9 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::PhongShading:
 
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
-        shaderProgram->addUniformBlock("transform", 1);
-        shaderProgram->addUniformBlock("camera", 2);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::Frame:
@@ -259,8 +263,8 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
 //        shaderProgram->setPrimitiveMode(PrimitiveMode::TRIANGLES);
         shaderProgram->addData<glm::vec3>("color", glm::vec3(1.0,0.8,0.0));
-        shaderProgram->addUniformBlock("transform", 1);
-        shaderProgram->addUniformBlock("camera", 2);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::Texturing:
@@ -268,29 +272,29 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addData<Texture>("colorMap", colorMap);
         shaderProgram->addData<Texture>("normalMap", normalMap);
-        shaderProgram->addUniformBlock("transform", 1);
-        shaderProgram->addUniformBlock("camera", 2);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::TangentSpace:
 
         shaderProgram->setPrimitiveMode(PrimitiveMode::POINTS);
         shaderProgram->addData<float>("scale", normalScale);
-        shaderProgram->addUniformBlock("transform", 1);
-        shaderProgram->addUniformBlock("camera", 2);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::Picking:
 
         //shaderProgram->addData<glm::vec4>("index", glm::vec4());
-        shaderProgram->addUniformBlock("transform", 1);
-        shaderProgram->addUniformBlock("camera", 2);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::OutLine:
 
-        shaderProgram->addUniformBlock("transform", 1);
-        shaderProgram->addUniformBlock("camera", 2);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::VaoQuad:
