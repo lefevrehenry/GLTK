@@ -7,13 +7,8 @@
 #include <fstream>
 #include <map>
 
-// Qt
-//#include <QCoreApplication>
-//#include <QDir>
-
 
 using namespace gl::helper;
-
 
 // Definition of the extern symbol DataRepository
 FileRepository gl::helper::DataRepository;

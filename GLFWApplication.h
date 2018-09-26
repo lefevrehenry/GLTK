@@ -45,16 +45,15 @@ public:
     GLFWwindow* getWindow() const;
     void setWindow(GLFWwindow* newHandle);
 
-public:
-    Interface* getInterface() const;
-    void setInterface(Interface* interface);
-
     Selectable* selected() const;
     void setSelected(Selectable* selectable);
 
 public:
     Scene* getScene();
     Viewer* getViewer();
+
+    Interface* getInterface() const;
+    void setInterface(Interface* interface);
 
 public:
     static const unsigned int ScreenWidth;
@@ -67,13 +66,13 @@ private:
 
     GLFWwindow* windowHandle;
 
-    Interface* m_interface;
-
     Selectable* m_selectable;
 
     Scene* m_scene;
 
     Viewer* m_viewer;
+
+    Interface* m_interface;
 
 };
 

@@ -154,19 +154,19 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 
 GLFWApplication::GLFWApplication() : Application(),
     windowHandle(nullptr),
-    m_interface(nullptr),
     m_selectable(nullptr),
     m_scene(nullptr),
-    m_viewer(nullptr)
+    m_viewer(nullptr),
+    m_interface(nullptr)
 {
     OurInstance = this;
 
-    // create interface
-    this->m_interface = new GLFWApplicationEvents();
     // create scene
     this->m_scene = new Scene();
     // create viewer
     this->m_viewer = new Viewer(this->m_scene);
+    // create interface
+    this->m_interface = new GLFWApplicationEvents();
 }
 
 GLFWApplication::~GLFWApplication()
@@ -179,6 +179,9 @@ GLFWApplication::~GLFWApplication()
 
     delete m_viewer;
     m_viewer = nullptr;
+
+    delete m_interface;
+    m_interface = nullptr;
 }
 
 void GLFWApplication::init()
@@ -230,8 +233,6 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
 {
     GLFWwindow* oldHandle = this->windowHandle;
 
-    //typedef void (*cursorPosCallback) (GLFWwindow*, double, double);
-
     /* Remove callbacks set to the old handle */
     if (oldHandle != nullptr) {
         glfwSetFramebufferSizeCallback(oldHandle, nullptr);
@@ -251,16 +252,6 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
         glfwSetScrollCallback(newHandle, GLFWApplication::ScrollCallback);
         glfwSetKeyCallback(newHandle, GLFWApplication::KeyCallback);
     }
-}
-
-Interface* GLFWApplication::getInterface() const
-{
-    return this->m_interface;
-}
-
-void GLFWApplication::setInterface(Interface* interface)
-{
-    this->m_interface = interface;
 }
 
 Selectable* GLFWApplication::selected() const
@@ -286,4 +277,14 @@ Scene* GLFWApplication::getScene()
 Viewer* GLFWApplication::getViewer()
 {
     return this->m_viewer;
+}
+
+Interface* GLFWApplication::getInterface() const
+{
+    return this->m_interface;
+}
+
+void GLFWApplication::setInterface(Interface* interface)
+{
+    this->m_interface = interface;
 }

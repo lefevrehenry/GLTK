@@ -24,6 +24,7 @@ void BaseData::updateIfDirty()
     if (!this->m_dirty)
         return;
 
-    this->update();
+    update();
+
     this->m_dirty = false;
 }
