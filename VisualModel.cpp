@@ -1,9 +1,11 @@
 #include "VisualModel.h"
 
+#include "FileRepository.h"
 #include "Mesh.h"
 
 
 using namespace gl;
+using namespace gl::helper;
 
 //VisualModel::VisualModel() :
 //    m_mesh(nullptr),
@@ -13,17 +15,23 @@ using namespace gl;
 
 //}
 
-VisualModel::VisualModel(const Mesh* mesh, const Material& material) :
-    m_mesh(mesh),
+VisualModel::VisualModel(const std::string& filename, const Material& material) :
+    m_mesh(nullptr),
     m_transform(),
     m_material(material)
 {
+    std::string path = filename;
 
+    if (!DataRepository.findFile(path))
+        msg_error("Mesh") << "File " << filename << " not found";
+    else
+        this->m_mesh = new Mesh(path);
 }
 
 VisualModel::~VisualModel()
 {
-
+    delete m_mesh;
+    m_mesh = nullptr;
 }
 
 const Mesh* VisualModel::mesh() const
@@ -57,7 +65,7 @@ void VisualModel::draw(PrimitiveMode primitiveMode) const
         this->m_mesh->draw(primitiveMode);
 }
 
-TexturedVisualModel::TexturedVisualModel(const Mesh* mesh, const Texture* texture) : VisualModel(mesh),
+TexturedVisualModel::TexturedVisualModel(const std::string& filename, const Texture* texture) : VisualModel(filename),
     m_texture(texture)
 {
 

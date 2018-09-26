@@ -21,6 +21,8 @@ namespace gl {
  */
 class Mesh
 {
+    friend class VisualModel;
+
     typedef std::vector<float> floatVector;
     typedef std::vector<unsigned int> uintVector;
 
@@ -36,7 +38,7 @@ public:
 
     virtual ~Mesh();
 
-protected:
+private:
 
     Mesh();
     Mesh(const std::string& filename);

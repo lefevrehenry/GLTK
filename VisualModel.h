@@ -18,7 +18,7 @@ class VisualModel
 {
 
 public:
-    VisualModel(const Mesh* mesh, const Material& material = Material::DefaultMaterial());
+    VisualModel(const std::string& filename, const Material& material = Material::DefaultMaterial());
     virtual ~VisualModel();
 
 public:
@@ -48,7 +48,7 @@ class TexturedVisualModel : public VisualModel
 {
 
 public:
-    TexturedVisualModel(const Mesh* mesh, const Texture* texture);
+    TexturedVisualModel(const std::string& filename, const Texture* texture);
     virtual ~TexturedVisualModel();
 
 public:
