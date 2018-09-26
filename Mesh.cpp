@@ -110,11 +110,16 @@ Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
 {
     //msg_info("MeshLoader") << mesh->mName.data << " imported";
 
-    m_vertices.resize(mesh->mNumVertices * 3);
-    m_normals.resize(mesh->mNumVertices * 3);
-    m_tangents.resize(mesh->mNumVertices * 3);
-    m_bitangents.resize(mesh->mNumVertices * 3);
-    m_uvcoord.resize(mesh->mNumVertices * 2);
+    if(mesh->HasPositions())
+        m_vertices.resize(mesh->mNumVertices * 3);
+    if(mesh->HasNormals())
+        m_normals.resize(mesh->mNumVertices * 3);
+    if(mesh->HasTangentsAndBitangents())
+        m_tangents.resize(mesh->mNumVertices * 3);
+    if(mesh->HasTangentsAndBitangents())
+        m_bitangents.resize(mesh->mNumVertices * 3);
+    if(mesh->HasTextureCoords(0))
+        m_uvcoord.resize(mesh->mNumVertices * 2);
 
     for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
 
@@ -143,8 +148,6 @@ Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
         }
 
         // UV coordinates
-//        if (mesh->GetNumUVChannels() == 2) {
-//            unsigned int channel = mesh->GetNumUVChannels()-1;
         if (mesh->HasTextureCoords(0)) {
             unsigned int channel = 0;
             for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {

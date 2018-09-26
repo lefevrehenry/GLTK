@@ -11,6 +11,7 @@ in vec4 o_tpos[1];
 in vec4 o_bpos[1];
 in vec4 o_npos[1];
 
+// data to fragment shader
 flat out int id;
 
 void main()
