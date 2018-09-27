@@ -53,6 +53,7 @@ public:
         TangentSpace,
         Picking,
         OutLine,
+        MatCap,
         VaoQuad
     };
 

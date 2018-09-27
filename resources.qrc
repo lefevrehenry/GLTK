@@ -13,6 +13,8 @@
         <file>shaders/highLight.fs</file>
         <file>shaders/highLight.gs</file>
         <file>shaders/highLight.vs</file>
+        <file>shaders/matcap.vs</file>
+        <file>shaders/matcap.fs</file>
         <file>shaders/normal.fs</file>
         <file>shaders/normal.gs</file>
         <file>shaders/normal.vs</file>

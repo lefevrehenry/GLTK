@@ -75,6 +75,8 @@ set(SHADER_FILES
     shaders/highLight.vs
     shaders/highLight.gs
     shaders/highLight.fs
+    shaders/matcap.vs
+    shaders/matcap.fs
     shaders/normal.vs
     shaders/normal.gs
     shaders/normal.fs

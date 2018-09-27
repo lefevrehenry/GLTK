@@ -173,6 +173,12 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         getStringFromQrcFile(":/shaders/outline.fs", fs);
 
         break;
+    case ShaderProgramType::MatCap:
+
+        getStringFromQrcFile(":/shaders/matcap.vs", vs);
+        getStringFromQrcFile(":/shaders/matcap.fs", fs);
+
+        break;
     case ShaderProgramType::VaoQuad:
 
         getStringFromQrcFile(":/shaders/vaoQuad.vs", vs);
@@ -210,6 +216,9 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     static Texture normalMap;
     if (!normalMap.isLoaded())
         normalMap.load("textures/chesterfield-normal.png");
+    static Texture matcapTexture;
+    if (!matcapTexture.isLoaded())
+        matcapTexture.load("textures/hot.jpg");
 
     switch (shaderProgramType)
     {
@@ -286,13 +295,19 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::Picking:
 
-        //shaderProgram->addData<glm::vec4>("index", glm::vec4());
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::OutLine:
 
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+
+        break;
+    case ShaderProgramType::MatCap:
+
+        shaderProgram->addData<Texture>("matcap", matcapTexture);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
