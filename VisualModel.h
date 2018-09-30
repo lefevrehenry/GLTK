@@ -18,6 +18,7 @@ class VisualModel
 {
 
 public:
+    VisualModel(const Mesh* mesh, const Material& material = Material::DefaultMaterial());
     VisualModel(const std::string& filename, const Material& material = Material::DefaultMaterial());
     virtual ~VisualModel();
 

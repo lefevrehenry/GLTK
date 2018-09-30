@@ -7,13 +7,13 @@
 using namespace gl;
 using namespace gl::helper;
 
-//VisualModel::VisualModel() :
-//    m_mesh(nullptr),
-//    m_transform(),
-//    m_material()
-//{
+VisualModel::VisualModel(const Mesh *mesh, const Material &material) :
+    m_mesh(mesh),
+    m_transform(),
+    m_material(material)
+{
 
-//}
+}
 
 VisualModel::VisualModel(const std::string& filename, const Material& material) :
     m_mesh(nullptr),
