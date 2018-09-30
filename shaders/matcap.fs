@@ -1,18 +1,5 @@
 #version 330 core
 
-layout(std140) uniform transform
-{
-    mat4 ModelMatrix;
-};
-
-layout(std140) uniform camera
-{
-    mat4 view;
-    mat4 projection;
-    mat4 ProjViewMatrix;
-    mat3 NormalMatrix;
-};
-
 // uniform input
 uniform sampler2D matcap;
 

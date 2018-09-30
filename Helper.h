@@ -247,9 +247,10 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::GouraudShading:
 
-        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
-        shaderProgram->addData<glm::vec3>("color", color);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::PhongShading:

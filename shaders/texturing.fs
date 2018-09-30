@@ -7,8 +7,8 @@ layout(std140) uniform transform
 
 layout(std140) uniform camera
 {
-    mat4 view;
-    mat4 projection;
+    mat4 View;
+    mat4 Projection;
     mat4 ProjViewMatrix;
     mat3 NormalMatrix;
 };

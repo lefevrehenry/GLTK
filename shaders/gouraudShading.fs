@@ -1,10 +1,11 @@
 #version 330 core
 
-in vec3 o_color;
+// data from vertex shader
+in vec4 o_color;
 
 out vec4 outColor;
 
 void main()
 {
-    outColor = vec4(o_color, 1.0);
+    outColor = o_color;
 }
