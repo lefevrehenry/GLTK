@@ -108,8 +108,6 @@ std::string Mesh::name() const
 
 Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
 {
-    //msg_info("MeshLoader") << mesh->mName.data << " imported";
-
     if(mesh->HasPositions())
         m_vertices.resize(mesh->mNumVertices * 3);
     if(mesh->HasNormals())
@@ -181,27 +179,29 @@ Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
         }
 
         unsigned int offset[4] = {0,0,0,0};
+        offset[0] = 0;                                                  // offset for points
+        offset[1] = m_numVertices;                                      // offset for edges
+        offset[2] = m_numVertices + m_numEdges;                         // offset for triangles
+        offset[3] = m_numVertices + m_numEdges + m_numTriangles;        // offset for quads
 
         for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
             unsigned int k = mesh->mFaces[i].mNumIndices;
+            unsigned int j = offset[k-1];
             if (k == 2) {
-                unsigned int j = m_numVertices + (2 * offset[k]);
                 m_indices[j] = mesh->mFaces[i].mIndices[0];
                 m_indices[j + 1] = mesh->mFaces[i].mIndices[1];
-                offset[k]++;
+                offset[k-1] += 2;
             } else if (k == 3) {
-                unsigned int j = m_numVertices + (2 * m_numEdges) + (3 * offset[k]);
                 m_indices[j] = mesh->mFaces[i].mIndices[0];
                 m_indices[j + 1] = mesh->mFaces[i].mIndices[1];
                 m_indices[j + 2] = mesh->mFaces[i].mIndices[2];
-                offset[k]++;
+                offset[k-1] += 3;
             } else if (k == 4) {
-                unsigned int j = m_numVertices + (2 * m_numEdges) + (3 * m_numTriangles) + (4 * offset[k]);
                 m_indices[j] = mesh->mFaces[i].mIndices[0];
                 m_indices[j + 1] = mesh->mFaces[i].mIndices[1];
                 m_indices[j + 2] = mesh->mFaces[i].mIndices[2];
                 m_indices[j + 3] = mesh->mFaces[i].mIndices[3];
-                offset[k]++;
+                offset[k-1] += 4;
             }
         }
     }
