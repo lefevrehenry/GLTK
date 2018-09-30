@@ -21,8 +21,11 @@
 
 using namespace gl;
 
-const unsigned int GLFWApplication::ScreenWidth = 640;
-const unsigned int GLFWApplication::ScreenHeight = 480;
+unsigned int GLFWApplication::ScreenWidth = 640;
+unsigned int GLFWApplication::ScreenHeight = 480;
+
+int GLFWApplication::OpenGLMajorVersion = 3;
+int GLFWApplication::OpenGLMinorVersion = 3;
 
 GLFWApplication* GLFWApplication::OurInstance = nullptr;
 
@@ -42,12 +45,12 @@ GLFWApplication* GLFWApplication::CreateWindow()
     if (!glfwInit())
         return nullptr;
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GLFWApplication::OpenGLMajorVersion);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLFWApplication::OpenGLMinorVersion);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    unsigned int width = GLFWApplication::ScreenWidth;
-    unsigned int height = GLFWApplication::ScreenHeight;
+    int width = (int) GLFWApplication::ScreenWidth;
+    int height = (int) GLFWApplication::ScreenHeight;
 
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow* windowHandle = glfwCreateWindow(width, height, "OpenGL", nullptr, nullptr);
@@ -113,7 +116,8 @@ void GLFWApplication::Terminate()
 
 void GLFWApplication::FramebufferSizeCallback(GLFWwindow*, int width, int height)
 {
-    glViewport(0, 0, width, height);
+    GLFWApplication::ScreenWidth = (unsigned int) width;
+    GLFWApplication::ScreenHeight = (unsigned int) height;
 }
 
 void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)

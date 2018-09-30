@@ -56,8 +56,11 @@ public:
     void setInterface(Interface* interface);
 
 public:
-    static const unsigned int ScreenWidth;
-    static const unsigned int ScreenHeight;
+    static unsigned int ScreenWidth;
+    static unsigned int ScreenHeight;
+
+    static int OpenGLMajorVersion;
+    static int OpenGLMinorVersion;
 
 private:
     static GLFWApplication* OurInstance;
