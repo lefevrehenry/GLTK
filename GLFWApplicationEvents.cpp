@@ -76,3 +76,12 @@ void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, d
     this->x = xpos;
     this->y = ypos;
 }
+
+void GLFWApplicationEvents::scrollCallback(GLFWwindow*, double, double ypos)
+{
+    glm::vec3 neweye = this->m_camera->eye() - 5 * (float) ypos * this->m_camera->direction();
+    glm::vec3 target(0,0,0);
+    glm::vec3 up = this->m_camera->up();
+
+    this->m_camera->lookAt(neweye, target, up);
+}

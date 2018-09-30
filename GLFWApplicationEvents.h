@@ -23,6 +23,7 @@ public:
 public:
     virtual void mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods);
     virtual void cursorPosCallback(GLFWwindow* handle, double xpos, double ypos);
+    virtual void scrollCallback(GLFWwindow* handle, double xpos, double ypos);
 
 private:
     bool mousePressed;
