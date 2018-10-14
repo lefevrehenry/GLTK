@@ -95,6 +95,8 @@ set(SHADER_FILES
     shaders/tangentSpace.fs
     shaders/texturing.vs
     shaders/texturing.fs
+    shaders/transform.vs
+    shaders/transform.fs
     shaders/vaoQuad.vs
     shaders/vaoQuad.fs
 )

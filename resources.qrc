@@ -29,6 +29,8 @@
         <file>shaders/tangentSpace.vs</file>
         <file>shaders/texturing.fs</file>
         <file>shaders/texturing.vs</file>
+        <file>shaders/transform.vs</file>
+        <file>shaders/transform.fs</file>
         <file>shaders/vaoQuad.fs</file>
         <file>shaders/vaoQuad.vs</file>
     </qresource>
