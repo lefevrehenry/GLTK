@@ -10,12 +10,12 @@ class Visitor;
 /**
  * @brief The Scene class
  */
-class Scene
+class SceneGraph
 {
 
 public:
-    Scene();
-    virtual ~Scene();
+    SceneGraph();
+    virtual ~SceneGraph();
 
 public:
     Node* root();

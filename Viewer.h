@@ -12,7 +12,7 @@ class GLFWwindow;
 namespace gl {
 
 class Node;
-class Scene;
+class SceneGraph;
 class Selectable;
 
 /**
@@ -22,15 +22,15 @@ class Viewer
 {
 
 public:
-    Viewer(Scene* scene);
+    Viewer(SceneGraph* scene);
     virtual ~Viewer();
 
 public:
     Camera* camera();
 
 public:
-    Scene* scene() const;
-    void setScene(Scene* scene);
+    SceneGraph* scene() const;
+    void setScene(SceneGraph* scene);
 
 public:
     void draw(Node* node);  // draw sub-graph
@@ -45,7 +45,7 @@ public:
 
 private:
     Camera m_camera;
-    Scene* m_scene;
+    SceneGraph* m_scene;
 
 };
 

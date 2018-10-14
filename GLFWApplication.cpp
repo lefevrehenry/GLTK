@@ -166,7 +166,7 @@ GLFWApplication::GLFWApplication() : Application(),
     OurInstance = this;
 
     // create scene
-    this->m_scene = new Scene();
+    this->m_scene = new SceneGraph();
     // create viewer
     this->m_viewer = new Viewer(this->m_scene);
     // create interface
@@ -273,7 +273,7 @@ void GLFWApplication::setSelected(Selectable* selectable)
     this->m_selectable = selectable;
 }
 
-Scene* GLFWApplication::getScene()
+SceneGraph* GLFWApplication::getScene()
 {
     return this->m_scene;
 }

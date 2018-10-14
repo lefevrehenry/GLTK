@@ -11,7 +11,7 @@
 
 using namespace gl;
 
-Viewer::Viewer(Scene* scene) :
+Viewer::Viewer(SceneGraph* scene) :
     m_camera(),
     m_scene(scene)
 {
@@ -29,12 +29,12 @@ Camera* Viewer::camera()
     return &m_camera;
 }
 
-Scene* Viewer::scene() const
+SceneGraph* Viewer::scene() const
 {
     return this->m_scene;
 }
 
-void Viewer::setScene(Scene *scene)
+void Viewer::setScene(SceneGraph *scene)
 {
     this->m_scene = scene;
 }

@@ -5,29 +5,29 @@
 
 using namespace gl;
 
-Scene::Scene() :
+SceneGraph::SceneGraph() :
     m_rootNode(nullptr)
 {
     this->m_rootNode = new Node();
 }
 
-Scene::~Scene()
+SceneGraph::~SceneGraph()
 {
     delete m_rootNode;
     m_rootNode = nullptr;
 }
 
-Node* Scene::root()
+Node* SceneGraph::root()
 {
     return m_rootNode;
 }
 
-const Node* Scene::root() const
+const Node* SceneGraph::root() const
 {
     return m_rootNode;
 }
 
-void Scene::executeVisitor(Visitor* visitor) const
+void SceneGraph::executeVisitor(Visitor* visitor) const
 {
     const Node* node = root();
     node->executeVisitor(visitor);

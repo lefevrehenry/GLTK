@@ -150,9 +150,11 @@ template<> inline void Data<Texture>::update()
 {
     unsigned int id = this->m_value.getTextureID();
     unsigned short unit = this->m_value.getTextureUnit();
+
+    glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, id);
+
     glUniform1i(this->m_dataLocation, unit);
-//    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 /**

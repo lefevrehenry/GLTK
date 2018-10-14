@@ -204,8 +204,6 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
     shaderProgram->link();
 
-    GLFWApplication* app = GLFWApplication::getInstance();
-    Camera* camera = app->getViewer()->camera();
     float normalScale = 0.5;
 
     glm::vec3 dir_light(-1,-1,-1);
