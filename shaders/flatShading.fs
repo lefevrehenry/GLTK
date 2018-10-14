@@ -1,10 +1,5 @@
 #version 330 core
 
-layout(std140) uniform transform
-{
-    mat4 ModelMatrix;
-};
-
 layout(std140) uniform material
 {
     vec4 ambientColor;

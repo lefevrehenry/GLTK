@@ -3,11 +3,20 @@
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 
-uniform mat4 mvp;
-uniform mat3 normal_mat;
-uniform mat4 model;
-uniform vec3 scale;
+layout(std140) uniform transform
+{
+    mat4 ModelMatrix;
+};
 
+layout(std140) uniform camera
+{
+    mat4 View;
+    mat4 Projection;
+    mat4 ProjViewMatrix;
+    mat3 NormalMatrix;
+};
+
+// data to fragment shader
 out vec3 o_normal;
 flat out int instanceID;
 
@@ -39,5 +48,6 @@ void main()
 
     o_normal = mat3(orientation) * normal;
     instanceID = gl_InstanceID;
-    gl_Position = mvp * orientation * vec4(scale * position, 1.0);
+
+    gl_Position = ProjViewMatrix * ModelMatrix * orientation * vec4(15 * position, 1.0);
 }

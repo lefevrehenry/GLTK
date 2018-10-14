@@ -18,6 +18,8 @@
         <file>shaders/normal.fs</file>
         <file>shaders/normal.gs</file>
         <file>shaders/normal.vs</file>
+        <file>shaders/outline.fs</file>
+        <file>shaders/outline.vs</file>
         <file>shaders/phongShading.fs</file>
         <file>shaders/phongShading.vs</file>
         <file>shaders/picking.fs</file>
@@ -29,7 +31,5 @@
         <file>shaders/texturing.vs</file>
         <file>shaders/vaoQuad.fs</file>
         <file>shaders/vaoQuad.vs</file>
-        <file>shaders/outline.fs</file>
-        <file>shaders/outline.vs</file>
     </qresource>
 </RCC>

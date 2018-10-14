@@ -24,7 +24,7 @@ out vec3 o_eyeView;
 void main()
 {
     o_normalView = NormalMatrix * normal;
-    o_eyeView = (view * vec4(position,1.0)).xyz;
+    o_eyeView = (View * vec4(position,1.0)).xyz;
 
     gl_Position = ProjViewMatrix * ModelMatrix * vec4(position, 1.0);
 }
