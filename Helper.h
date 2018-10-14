@@ -261,10 +261,10 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::Frame:
 
-        shaderProgram->addData<Camera, glm::mat4>("mvp", camera, &Camera::mvp);
         shaderProgram->addData<glm::vec3>("dir_light", dir_light);
-        shaderProgram->addData<glm::vec3>("scale", glm::vec3(1,1,1));
-        //shaderProgram->setNbInstance(3);
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgram->setNbInstance(3);
 
         break;
     case ShaderProgramType::HighLight:
@@ -277,9 +277,9 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::Texturing:
 
-        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
+//        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addData<Texture>("colorMap", colorMap);
-        shaderProgram->addData<Texture>("normalMap", normalMap);
+//        shaderProgram->addData<Texture>("normalMap", normalMap);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 

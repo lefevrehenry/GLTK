@@ -43,7 +43,8 @@ void Viewer::draw(Node* node)
 {
     VisualManager::UpdateUniformBufferCamera(this->m_camera);
 
-    DrawVisitorWithSelection drawVisitor;
+//    DrawVisitorWithSelection drawVisitor;
+    DrawVisitor drawVisitor;
     node->executeVisitor(&drawVisitor);
 }
 
