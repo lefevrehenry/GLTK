@@ -59,10 +59,10 @@ const Material& VisualModel::material() const
     return this->m_material;
 }
 
-void VisualModel::draw(PrimitiveMode primitiveMode) const
+void VisualModel::draw(const VisualParam& param) const
 {
     if (this->m_mesh)
-        this->m_mesh->draw(primitiveMode);
+        this->m_mesh->draw(param);
 }
 
 TexturedVisualModel::TexturedVisualModel(const std::string& filename, const Texture* texture) : VisualModel(filename),

@@ -2,7 +2,6 @@
 
 #include "Mesh.h"
 #include "Helper.h"
-//#include "Message.h"
 
 using namespace gl;
 
@@ -132,8 +131,10 @@ void Framebuffer::draw(int bounds[4])
     int location = glGetUniformLocation(this->m_shaderProgram->getProgramID(), "textureColor");
     glUniform1i(location, m_renderTexture->getTextureUnit());   // i = texture unit to use
 
+    VisualParam param = VisualParam::DefaultInstance();
+
     // draw the vaoQuad
-    this->m_vaoQuad->draw(PrimitiveMode::TRIANGLES);
+    this->m_vaoQuad->draw(param);
 
     // restore default viewport
     glViewport(initialViewport[0],initialViewport[1],initialViewport[2],initialViewport[3]);

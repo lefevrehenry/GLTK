@@ -2,7 +2,6 @@
 #define SHADERPROGRAM_H
 
 #include "Data.h"
-#include "Texture.h"
 
 // Standard Library
 #include <vector>
@@ -25,12 +24,6 @@ enum PrimitiveMode {
     POINTS = GL_POINTS,
     LINES = GL_LINES,
     TRIANGLES = GL_TRIANGLES
-};
-
-struct DrawStyle {
-    //PolygonMode polygonMode = FILL;
-    PrimitiveMode primitiveMode = TRIANGLES;
-    //unsigned int nbInstance = 1;
 };
 
 /**
@@ -68,6 +61,11 @@ public:
 
 public:
 
+    unsigned int getNbInstance() const;
+    void setNbInstance(unsigned int n);
+
+public:
+
     PrimitiveMode getPrimitiveMode() const;
     void setPrimitiveMode(PrimitiveMode primitiveMode);
 
@@ -91,25 +89,6 @@ public:
 
     template< typename T >
     bool addData(const char* name, const T& value)
-    {
-        if (!m_isLinked)
-            return false;
-
-        int dataLocation = glGetUniformLocation(m_programId, name);
-
-        if (dataLocation == -1) {
-            msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Data not added";
-            return false;
-        }
-
-        Data<T>* data = new Data<T>(value, dataLocation);
-        m_dataList.insert({name, data});
-
-        return true;
-    }
-
-    template< typename T >
-    bool addData(const char* name, const Texture& value)
     {
         if (!m_isLinked)
             return false;
@@ -189,26 +168,15 @@ public:
     void setUniformValue(const char* name, const glm::mat4& m);
     void setUniformValue(int attributLocation, const glm::mat4& m);
 
-
-//private:
-
-//    struct DrawStyle {
-//        PolygonMode polygonMode = FILL;
-//        PrimitiveMode primitiveMode = TRIANGLES;
-//        unsigned short instanced = 1;
-//    };
-
 private:
-
     GLuint m_programId;
-
     std::vector< const Shader* > m_shaderList;
-
     std::map< const char*, BaseData* > m_dataList;
 
-    DrawStyle m_drawStyle;
-
     bool m_isLinked;
+
+    unsigned int m_nbInstance;
+    PrimitiveMode m_primitiveMode;
 
 };
 

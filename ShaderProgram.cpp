@@ -12,7 +12,9 @@ ShaderProgram::ShaderProgram() :
     m_programId(0),
     m_shaderList(3),
     m_dataList(),
-    m_isLinked(false)
+    m_isLinked(false),
+    m_nbInstance(1),
+    m_primitiveMode(TRIANGLES)
 {
     m_programId = glCreateProgram();
 }
@@ -29,17 +31,27 @@ ShaderProgram::~ShaderProgram()
 
 GLuint ShaderProgram::getProgramID() const
 {
-    return m_programId;
+    return this->m_programId;
+}
+
+unsigned int ShaderProgram::getNbInstance() const
+{
+    return this->m_nbInstance;
+}
+
+void ShaderProgram::setNbInstance(unsigned int n)
+{
+    this->m_nbInstance = n;
 }
 
 PrimitiveMode ShaderProgram::getPrimitiveMode() const
 {
-    return this->m_drawStyle.primitiveMode;
+    return this->m_primitiveMode;
 }
 
 void ShaderProgram::setPrimitiveMode(PrimitiveMode primitiveMode)
 {
-    this->m_drawStyle.primitiveMode = primitiveMode;
+    this->m_primitiveMode = primitiveMode;
 }
 
 bool ShaderProgram::addShader(const Shader& shader)

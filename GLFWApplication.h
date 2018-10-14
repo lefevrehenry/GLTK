@@ -63,6 +63,9 @@ public:
     static int OpenGLMinorVersion;
 
 private:
+    void draw() const;
+
+private:
     static GLFWApplication* OurInstance;
 
 private:

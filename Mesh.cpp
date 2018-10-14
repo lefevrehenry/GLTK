@@ -66,10 +66,10 @@ Mesh* Mesh::FromFile(const std::string& filename)
     return mesh;
 }
 
-void Mesh::draw(PrimitiveMode primitiveMode) const
+void Mesh::draw(const VisualParam& param) const
 {
     for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        m_meshEntries[i]->draw(primitiveMode);
+        m_meshEntries[i]->draw(param);
     }
 }
 
@@ -214,7 +214,7 @@ Mesh::MeshEntry::~MeshEntry()
     vao.free();
 }
 
-void Mesh::MeshEntry::draw(PrimitiveMode primitiveMode) const
+void Mesh::MeshEntry::draw(const VisualParam& param) const
 {
     GLenum primitiveType = 0;
     unsigned int count = 0;
@@ -222,7 +222,7 @@ void Mesh::MeshEntry::draw(PrimitiveMode primitiveMode) const
 
     glBindVertexArray(vao.id);
 
-    switch (primitiveMode) {
+    switch (param.primitiveMode) {
     case PrimitiveMode::POINTS:
         primitiveType = GL_POINTS;
         count = m_numVertices;
@@ -243,7 +243,12 @@ void Mesh::MeshEntry::draw(PrimitiveMode primitiveMode) const
         break;
     }
 
-    glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
+    unsigned int nbInstance = param.nbInstance;
+
+    if (nbInstance > 1)
+        glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), nbInstance);
+    else
+        glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
     glBindVertexArray(0);
 }

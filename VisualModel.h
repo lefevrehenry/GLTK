@@ -9,6 +9,21 @@
 
 namespace gl {
 
+struct VisualParam {
+
+    static VisualParam DefaultInstance() {
+        VisualParam param;
+        param.nbInstance = 1;
+        param.primitiveMode = TRIANGLES;
+        return param;
+    }
+
+    unsigned int nbInstance;
+    PrimitiveMode primitiveMode;
+
+};
+
+
 class Mesh;
 
 /**
@@ -33,7 +48,7 @@ public:
     const Material& material() const;
 
 public:
-    void draw(gl::PrimitiveMode primitiveMode) const;
+    void draw(const VisualParam& param) const;
 
 private:
     const Mesh* m_mesh;

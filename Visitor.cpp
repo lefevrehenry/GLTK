@@ -92,8 +92,12 @@ void DrawVisitor::processNode(const Node* node)
         m_currentShader->bind();
         m_currentShader->updateDataIfDirty();
 
+        // fetch the number of instance rendering
         // fetch what kind of primitives has to be drawn by the shader
-        PrimitiveMode primitiveMode = m_currentShader->getPrimitiveMode();
+
+        VisualParam param;
+        param.nbInstance = m_currentShader->getNbInstance();
+        param.primitiveMode = m_currentShader->getPrimitiveMode();
 
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
@@ -104,7 +108,7 @@ void DrawVisitor::processNode(const Node* node)
             VisualManager::UpdateUniformBufferTransform(transform);
             VisualManager::UpdateUniformBufferMaterial(material);
 
-            visual->draw(primitiveMode);
+            visual->draw(param);
         }
     }
 }
@@ -159,6 +163,9 @@ void DrawVisitorWithSelection::start()
 void DrawVisitorWithSelection::forwardNode(const Node* node)
 {
     if (this->m_selected != nullptr) {
+
+        VisualParam param = VisualParam::DefaultInstance();
+
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
             const VisualModel* visual = node->getVisual(i);
 
@@ -182,7 +189,7 @@ void DrawVisitorWithSelection::forwardNode(const Node* node)
                 const Transform& transform = visual->transform();
                 VisualManager::UpdateUniformBufferTransform(transform);
 
-                visual->draw(TRIANGLES);
+                visual->draw(param);
 
                 // enable color buffer
                 glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
@@ -202,6 +209,9 @@ void DrawVisitorWithSelection::forwardNode(const Node* node)
 void DrawVisitorWithSelection::backwardNode(const Node* node)
 {
     if (this->m_selected != nullptr) {
+
+        VisualParam param = VisualParam::DefaultInstance();
+
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
             const VisualModel* visual = node->getVisual(i);
 
@@ -224,7 +234,7 @@ void DrawVisitorWithSelection::backwardNode(const Node* node)
                 const Transform& transform = visual->transform();
                 VisualManager::UpdateUniformBufferTransform(transform);
 
-                visual->draw(TRIANGLES);
+                visual->draw(param);
 
                 // deactivate stencil buffer test
                 glDisable(GL_STENCIL_TEST);
@@ -377,8 +387,8 @@ void PickingVisitor::processNode(const Node* node)
 {
     if (this->m_shaderProgram != nullptr) {
 
-        // fetch what kind of primitives has to be drawn by the shader
-        PrimitiveMode primitiveMode = this->m_shaderProgram->getPrimitiveMode();
+        VisualParam param = VisualParam::DefaultInstance();
+        param.primitiveMode = this->m_shaderProgram->getPrimitiveMode();
 
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
@@ -390,7 +400,7 @@ void PickingVisitor::processNode(const Node* node)
             this->m_shaderProgram->setUniformValue("index", packIndex(this->m_id));
             this->m_visualModels.push_back(visual);
 
-            visual->draw(primitiveMode);
+            visual->draw(param);
 
             this->m_id += 1;
         }

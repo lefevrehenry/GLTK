@@ -2,6 +2,7 @@
 #define MESH_H
 
 #include "ShaderProgram.h"
+#include "VisualModel.h"
 
 // Standard Library
 #include <string>
@@ -30,7 +31,7 @@ public:
 
     static Mesh* FromFile(const std::string& filename);
 
-    void draw(gl::PrimitiveMode primitiveMode) const;
+    void draw(const VisualParam& param) const;
 
     void getBbox(glm::vec3 &min, glm::vec3 &max) const;
 
@@ -73,7 +74,7 @@ protected:
         floatVector m_uvcoord;
         uintVector m_indices;
 
-        void draw(gl::PrimitiveMode primitiveMode) const;
+        void draw(const VisualParam& param) const;
 
         MeshEntry(const aiMesh *mesh);
         virtual ~MeshEntry();

@@ -218,7 +218,7 @@ void GLFWApplication::loop()
 //        }
 
         /* Call to drawing function */
-        this->m_viewer->draw();
+        draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(this->windowHandle);
@@ -291,4 +291,9 @@ Interface* GLFWApplication::getInterface() const
 void GLFWApplication::setInterface(Interface* interface)
 {
     this->m_interface = interface;
+}
+
+void GLFWApplication::draw() const
+{
+    this->m_viewer->draw();
 }
