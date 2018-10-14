@@ -12,6 +12,8 @@ set(HEADER_FILES
     Data.h
     FileRepository.h
     Framebuffer.h
+    FrameGraph.h
+    FrameObject.h
     GLFWApplication.h
     GLFWApplicationEvents.h
     Interface.h
@@ -40,6 +42,8 @@ set(SOURCE_FILES
     Data.cpp
     FileRepository.cpp
     Framebuffer.cpp
+    FrameGraph.cpp
+    FrameObject.cpp
     GLFWApplication.cpp
     GLFWApplicationEvents.cpp
     Interface.cpp
