@@ -82,6 +82,4 @@ private:
 
 }   // namespace gl
 
-#define BLUE_MATERIAL Material()
-
 #endif

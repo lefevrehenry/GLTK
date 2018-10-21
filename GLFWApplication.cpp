@@ -2,9 +2,7 @@
 
 #include "GLFWApplicationEvents.h"
 #include "Message.h"
-#include "Scene.h"
-#include "Selectable.h"
-#include "Viewer.h"
+#include "Rendered.h"
 #include "VisualManager.h"
 
 // OpenGL
@@ -12,12 +10,6 @@
 
 // GLFW
 #include <GLFW/glfw3.h>
-
-// Glm
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 
 using namespace gl;
 
@@ -158,34 +150,14 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 
 GLFWApplication::GLFWApplication() : Application(),
     windowHandle(nullptr),
-    m_selectable(nullptr),
-    m_scene(nullptr),
-    m_viewer(nullptr),
-    m_interface(nullptr)
+    m_interface(nullptr),
+    m_renderedList()
 {
     OurInstance = this;
-
-    // create scene
-    this->m_scene = new SceneGraph();
-    // create viewer
-    this->m_viewer = new Viewer(this->m_scene);
-    // create interface
-    this->m_interface = new GLFWApplicationEvents();
 }
 
 GLFWApplication::~GLFWApplication()
 {
-    delete m_selectable;
-    m_selectable = nullptr;
-
-    delete m_scene;
-    m_scene = nullptr;
-
-    delete m_viewer;
-    m_viewer = nullptr;
-
-    delete m_interface;
-    m_interface = nullptr;
 }
 
 void GLFWApplication::init()
@@ -258,31 +230,6 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
     }
 }
 
-Selectable* GLFWApplication::selected() const
-{
-    return this->m_selectable;
-}
-
-void GLFWApplication::setSelected(Selectable* selectable)
-{
-    if (this->m_selectable != nullptr) {
-        delete m_selectable;
-        this->m_selectable = nullptr;
-    }
-
-    this->m_selectable = selectable;
-}
-
-SceneGraph* GLFWApplication::getScene()
-{
-    return this->m_scene;
-}
-
-Viewer* GLFWApplication::getViewer()
-{
-    return this->m_viewer;
-}
-
 Interface* GLFWApplication::getInterface() const
 {
     return this->m_interface;
@@ -293,7 +240,22 @@ void GLFWApplication::setInterface(Interface* interface)
     this->m_interface = interface;
 }
 
+void GLFWApplication::addRendered(const Rendered *rendered)
+{
+    this->m_renderedList.push_back(rendered);
+}
+
+void GLFWApplication::removeRendered(const Rendered *rendered)
+{
+    this->m_renderedList.remove(rendered);
+}
+
 void GLFWApplication::draw() const
 {
-    this->m_viewer->draw();
+    glClearColor(0.0f,0.f,1.f,1.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    for (const Rendered* rendered : m_renderedList) {
+        rendered->draw();
+    }
 }

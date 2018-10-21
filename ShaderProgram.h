@@ -47,7 +47,8 @@ public:
         Picking,
         OutLine,
         MatCap,
-        VaoQuad
+        VaoQuad,
+        Deferred
     };
 
 public:

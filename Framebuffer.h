@@ -6,9 +6,6 @@
 // Standard Library
 #include <vector>
 
-// OpenGL
-#include <GL/glew.h>
-
 
 namespace gl {
 
@@ -26,8 +23,12 @@ public:
     virtual ~Framebuffer();
 
 public:
-    Texture* renderTexture();
+    Texture* renderTexture(unsigned int i);
     Texture* depthTexture();
+
+public:
+    unsigned int width() const;
+    unsigned int height() const;
 
 public:
     void bind() const;
@@ -37,20 +38,16 @@ public:
     void attachTexture();
     void attachDepthTexture();
 
-public:
-    void draw(int bounds[4]);
-
 private:
     GLuint m_framebufferId;
 
-    Texture* m_renderTexture;
+    std::vector<Texture*> m_textureList;
     Texture* m_depthTexture;
+    Texture* m_stencilTexture;
 
     unsigned int m_width;
     unsigned int m_height;
 
-    Mesh* m_vaoQuad;
-    ShaderProgram* m_shaderProgram;
 };
 
 }   // namespace gl

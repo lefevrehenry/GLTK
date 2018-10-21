@@ -19,7 +19,7 @@
 
 using namespace gl;
 
-GLFWApplicationEvents::GLFWApplicationEvents() : DefaultInterface(),
+GLFWApplicationEvents::GLFWApplicationEvents(Camera* camera) : DefaultInterface(),
     mousePressed(false),
     x(-1),
     y(-1),
@@ -27,8 +27,7 @@ GLFWApplicationEvents::GLFWApplicationEvents() : DefaultInterface(),
 {
     GLFWApplication* app = GLFWApplication::getInstance();
 
-    if (app && app->getViewer())
-        this->m_camera = app->getViewer()->camera();
+    this->m_camera = camera;
 }
 
 GLFWApplicationEvents::~GLFWApplicationEvents()

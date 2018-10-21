@@ -17,7 +17,7 @@ class GLFWApplicationEvents : public DefaultInterface
 {
 
 public:
-    GLFWApplicationEvents();
+    GLFWApplicationEvents(Camera* camera);
     virtual ~GLFWApplicationEvents();
 
 public:

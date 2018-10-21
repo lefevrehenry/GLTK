@@ -3,6 +3,9 @@
 
 #include "Application.h"
 
+// Standard Library
+#include <list>
+
 
 class GLFWwindow;
 
@@ -10,9 +13,7 @@ namespace gl {
 
 class GLFWApplicationEvents;
 class Interface;
-class SceneGraph;
-class Selectable;
-class Viewer;
+class Rendered;
 
 /**
  * @brief The GLFWApplication class
@@ -45,15 +46,12 @@ public:
     GLFWwindow* getWindow() const;
     void setWindow(GLFWwindow* newHandle);
 
-    Selectable* selected() const;
-    void setSelected(Selectable* selectable);
-
-public:
-    SceneGraph* getScene();
-    Viewer* getViewer();
-
     Interface* getInterface() const;
     void setInterface(Interface* interface);
+
+public:
+    void addRendered(const gl::Rendered* rendered);
+    void removeRendered(const gl::Rendered* rendered);
 
 public:
     static unsigned int ScreenWidth;
@@ -72,13 +70,9 @@ private:
 
     GLFWwindow* windowHandle;
 
-    Selectable* m_selectable;
-
-    SceneGraph* m_scene;
-
-    Viewer* m_viewer;
-
     Interface* m_interface;
+
+    std::list<const gl::Rendered*> m_renderedList;
 
 };
 

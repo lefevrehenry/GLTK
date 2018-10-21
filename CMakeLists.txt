@@ -21,6 +21,7 @@ set(HEADER_FILES
     Message.h
     Node.h
     Program.h
+    Rendered.h
     Scene.h
     Selectable.h
     Shader.h
@@ -28,6 +29,7 @@ set(HEADER_FILES
     Texture.h
     Transform.h
     Viewer.h
+    Viewport.h
     Visitor.h
     VisualManager.h
     VisualModel.h
@@ -48,6 +50,7 @@ set(SOURCE_FILES
     Message.cpp
     Node.cpp
     Program.cpp
+    Rendered.cpp
     Scene.cpp
     Selectable.cpp
     Shader.cpp
@@ -55,6 +58,7 @@ set(SOURCE_FILES
     Texture.cpp
     Transform.cpp
     Viewer.cpp
+    Viewport.cpp
     Visitor.cpp
     VisualManager.cpp
     VisualModel.cpp
@@ -65,6 +69,8 @@ set(SHADER_FILES
     shaders/basic.vs
     shaders/basic.gs
     shaders/basic.fs
+    shaders/deferred.vs
+    shaders/deferred.fs
     shaders/flatShading.vs
     shaders/flatShading.gs
     shaders/flatShading.fs

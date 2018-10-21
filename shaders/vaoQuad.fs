@@ -12,9 +12,8 @@ out vec4 color;
 void main()
 {
     vec3 bufferColor = texture2D(textureColor, texCoord).xyz;
-    //vec3 bufferColor = texture2D(textureNormal, texCoord).xyz;
-    //float bufferColor = texture2D(textureDepth, texCoord).x;
+    //vec3 bufferNormal = texture2D(textureNormal, texCoord).xyz;
+    //vec3 bufferDepth = vec3(texture2D(textureDepth, texCoord).x);
 
-    //color = vec4(bufferColor.x, bufferColor.x, bufferColor.x, 1.0);
     color = vec4(bufferColor, 1.0);
 }
