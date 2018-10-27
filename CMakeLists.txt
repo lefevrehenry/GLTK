@@ -92,6 +92,8 @@ set(SHADER_FILES
     shaders/phongShading.fs
     shaders/picking.vs
     shaders/picking.fs
+    shaders/shadowMapping.vs
+    shaders/shadowMapping.fs
     shaders/tangentSpace.vs
     shaders/tangentSpace.gs
     shaders/tangentSpace.fs

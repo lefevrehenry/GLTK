@@ -331,34 +331,10 @@ void PickingVisitor::start()
 
 void PickingVisitor::end()
 {
-//    unsigned int width = GLFWApplication::ScreenWidth;
-//    unsigned int height = GLFWApplication::ScreenHeight;
-
-//    size_t n = 4 * sizeof(unsigned char) * width * height;
-//    unsigned char indexComponents[n];
-//    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, &indexComponents);
-
-    //unsigned char indexComponents[4];
-    //glReadPixels(this->m_x, this->m_y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &indexComponents[0]);
     float indexComponents[4];
     glReadPixels(this->m_x, this->m_y, 1, 1, GL_RGBA, GL_FLOAT, &indexComponents[0]);
 
-//    for (unsigned int i = 0; i < height; ++i) {
-//        for (unsigned int j = 0; j < width; ++j) {
-//            for (unsigned int c = 0; c < 4; ++c) {
-//                unsigned int offset = c + ((i * width) + j) * 4;
-//                if (indexComponents[offset] != 0) {
-//                    msg_warning("Debug") << "!= 0";
-//                }
-//            }
-//        }
-//    }
-
-    unsigned int offset = 0; //((this->m_y * width) + this->m_x) * 4;
-//    for (unsigned int c = 0; c < 4; ++c) {
-//        std::cout << std::setw(3) << indexComponents[offset + c] << " ";
-//    }
-//    std::cout << std::endl;
+    unsigned int offset = 0;
 
     glm::vec4 color;
     color.r = indexComponents[offset + 0];
@@ -385,25 +361,21 @@ void PickingVisitor::end()
 
 void PickingVisitor::processNode(const Node* node)
 {
-    if (this->m_shaderProgram != nullptr) {
+    VisualParam param = VisualParam::DefaultInstance();
 
-        VisualParam param = VisualParam::DefaultInstance();
-        param.primitiveMode = this->m_shaderProgram->getPrimitiveMode();
+    // draw each mesh
+    for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
+        const VisualModel* visual = node->getVisual(i);
+        const Transform& transform = visual->transform();
 
-        // draw each mesh
-        for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
-            const VisualModel* visual = node->getVisual(i);
-            const Transform& transform = visual->transform();
+        VisualManager::UpdateUniformBufferTransform(transform);
 
-            VisualManager::UpdateUniformBufferTransform(transform);
+        this->m_shaderProgram->setUniformValue("index", packIndex(this->m_id));
+        this->m_visualModels.push_back(visual);
 
-            this->m_shaderProgram->setUniformValue("index", packIndex(this->m_id));
-            this->m_visualModels.push_back(visual);
+        visual->draw(param);
 
-            visual->draw(param);
-
-            this->m_id += 1;
-        }
+        this->m_id += 1;
     }
 }
 
@@ -491,15 +463,28 @@ std::list<const VisualModel*> FetchVisualModelVisitor::getVisualModels() const
     return this->m_visualModels;
 }
 
-//void print_uint(unsigned int n)
-//{
-//    std::cout << std::setw(10) << std::right << n << " : ";
-//    //std::cout << std::bitset<32>(n) << std::endl;
+ShaderVisitor::ShaderVisitor() :
+    m_shaderProgram(nullptr)
+{
 
-//    for (size_t i = 0; i < 4; ++i) {
-//        std::cout << std::bitset<8>(n >> (3-i)*8);
-//        if (i != 3)
-//            std::cout << " ";
-//    }
-//    std::cout << std::endl;
-//}
+}
+
+ShaderVisitor::~ShaderVisitor()
+{
+
+}
+
+void ShaderVisitor::processNode(const Node* node)
+{
+    ShaderProgram* oldShaderProgram = m_currentShader;
+    m_currentShader = this->m_shaderProgram;
+
+    DrawVisitor::processNode(node);
+
+    m_currentShader = oldShaderProgram;
+}
+
+void ShaderVisitor::setShaderProgram(ShaderProgram* shaderProgram)
+{
+    this->m_shaderProgram = shaderProgram;
+}

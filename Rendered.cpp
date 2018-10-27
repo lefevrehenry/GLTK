@@ -12,7 +12,9 @@ Rendered::Rendered() :
     camera(nullptr),
     viewport(nullptr),
     framebuffer(nullptr),
-    visitor(nullptr)
+    visitor(nullptr),
+    singleShot(false),
+    count(0)
 {
 
 }
@@ -25,6 +27,9 @@ bool Rendered::isComplete() const
 void Rendered::draw() const
 {
     if (!isComplete())
+        return;
+
+    if(singleShot && count > 0)
         return;
 
     unsigned int width = GLFWApplication::ScreenWidth;
@@ -57,4 +62,7 @@ void Rendered::draw() const
 
     if (framebuffer != nullptr)
         framebuffer->unbind();
+
+    if (singleShot)
+        count += 1;
 }

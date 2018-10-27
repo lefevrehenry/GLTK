@@ -52,7 +52,7 @@ public:
     virtual void processNode(const Node* node);
     virtual void backwardNode(const Node* node);
 
-private:
+protected:
     std::stack<ShaderProgram*>  m_shaderStack;
     std::stack<VisualOption*>   m_optionStack;
 
@@ -141,6 +141,9 @@ private:
 
 };
 
+/**
+ * @brief The FetchVisualModelVisitor class
+ */
 class FetchVisualModelVisitor : public Visitor
 {
 
@@ -157,6 +160,27 @@ public:
 
 private:
     std::list<const VisualModel*> m_visualModels;
+
+};
+
+/**
+ * @brief The ShaderVisitor class
+ */
+class ShaderVisitor : public DrawVisitor
+{
+
+public:
+    ShaderVisitor();
+    virtual ~ShaderVisitor();
+
+public:
+    virtual void processNode(const Node* node);
+
+public:
+   void setShaderProgram(ShaderProgram* shaderProgram);
+
+private:
+    ShaderProgram* m_shaderProgram;
 
 };
 

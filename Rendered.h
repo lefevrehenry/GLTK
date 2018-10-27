@@ -30,6 +30,10 @@ public:
     Viewport* viewport;
     Framebuffer* framebuffer;
     Visitor* visitor;
+    bool singleShot;
+
+private:
+    mutable unsigned int count;
 
 };
 

@@ -1,7 +1,6 @@
 #include "Framebuffer.h"
 
-#include "Mesh.h"
-#include "Helper.h"
+#include "Message.h"
 
 using namespace gl;
 
@@ -123,4 +122,9 @@ void Framebuffer::attachDepthTexture()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture->getTextureID(), 0);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Framebuffer::attachStencilTexture()
+{
+    msg_warning("Framebuffer") << "not implemented yet";
 }

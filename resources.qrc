@@ -26,6 +26,8 @@
         <file>shaders/phongShading.vs</file>
         <file>shaders/picking.fs</file>
         <file>shaders/picking.vs</file>
+        <file>shaders/shadowMapping.fs</file>
+        <file>shaders/shadowMapping.vs</file>
         <file>shaders/tangentSpace.fs</file>
         <file>shaders/tangentSpace.gs</file>
         <file>shaders/tangentSpace.vs</file>

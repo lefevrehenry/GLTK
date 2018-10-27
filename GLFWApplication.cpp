@@ -252,7 +252,6 @@ void GLFWApplication::removeRendered(const Rendered *rendered)
 
 void GLFWApplication::draw() const
 {
-    glClearColor(0.0f,0.f,1.f,1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (const Rendered* rendered : m_renderedList) {

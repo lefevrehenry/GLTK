@@ -37,6 +37,7 @@ public:
 public:
     void attachTexture();
     void attachDepthTexture();
+    void attachStencilTexture();
 
 private:
     GLuint m_framebufferId;
