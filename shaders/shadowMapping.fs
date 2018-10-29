@@ -1,14 +1,5 @@
 #version 330 core
 
-layout(std140) uniform material
-{
-    vec4 ambientColor;
-    vec4 diffuseColor;
-    vec4 specularColor;
-    vec4 emptyColor;
-    float shininess;
-};
-
 layout(std140) uniform camera
 {
     mat4 View;
@@ -18,20 +9,24 @@ layout(std140) uniform camera
 };
 
 uniform sampler2D depthLight;
+uniform sampler2D colorTexture;
 
 // input from vertex shader
-in vec3 posLightCam;
+in vec4 posLightCam;
 
 out vec4 outColor;
 
 void main()
 {
-    vec3 proj = (posLightCam + 1) / 2;
-    vec4 color = texture(depthLight, proj.xy);
-    float bias = 0.05f;
+    vec2 uv = vec2(gl_FragCoord.x / 1280, gl_FragCoord.y /960);
+    vec3 color = texture(colorTexture, uv).xyz;
+
+    float bias = 0.005f;
     float coef = 1.0;
-    if (color.x < posLightCam.z - bias) {
-        coef = 0.5;
-    }
-    outColor = coef * vec4(1,0,0,1);
+
+    float z = texture(depthLight, posLightCam.xy).x;
+    if (z < posLightCam.z - bias)
+        coef = 0.3;
+
+    outColor = vec4(coef * color, 1);
 }

@@ -13,7 +13,7 @@ void VisualManager::Init()
     // Uniform Buffer Object Transform
     glGenBuffers(1, &m_uboTransform);
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboTransform);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     VisualManager::UpdateUniformBufferTransform(Transform());
@@ -56,10 +56,12 @@ void VisualManager::Clean()
 
 void VisualManager::UpdateUniformBufferTransform(const Transform& transform)
 {
-    const glm::mat4& matrix = transform.matrix();
+    const glm::mat4& ModelMatrix = transform.matrix();
+    const glm::mat4& ModelNormalMatrix = glm::transpose(glm::inverse(ModelMatrix));
 
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboTransform);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(matrix));
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(ModelMatrix));
+    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(ModelNormalMatrix));
 
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
@@ -78,14 +80,14 @@ void VisualManager::UpdateUniformBufferMaterial(const Material& material)
 
 void VisualManager::UpdateUniformBufferCamera(const Camera& camera)
 {
-    const glm::mat4& view = camera.view();
-    const glm::mat4& projection = camera.projection();
+    const glm::mat4& View = camera.view();
+    const glm::mat4& Projection = camera.projection();
     const glm::mat4& ProjViewMatrix = camera.mvp();
     const glm::mat4& NormalMatrix = glm::mat4(camera.normal());
 
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboCamera);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
-    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
+    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(View));
+    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(Projection));
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(ProjViewMatrix));
     glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(NormalMatrix));
 

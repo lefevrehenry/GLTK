@@ -469,7 +469,8 @@ ShaderVisitor::ShaderVisitor() :
 
 }
 
-ShaderVisitor::~ShaderVisitor()
+ShaderVisitor::ShaderVisitor(ShaderProgram* shaderProgram) :
+    m_shaderProgram(shaderProgram)
 {
 
 }

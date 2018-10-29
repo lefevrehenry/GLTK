@@ -31,48 +31,20 @@ void addPiece(Node* node, Mesh* mesh, Material material, int i, int j)
 {
     VisualModel* visualModel = new VisualModel(mesh, material);
     visualModel->transform().translate(-12.5f - (3 * 25) + (i * 25), -12.5f - (3 * 25) + (j * 25), 0);
+
+    if (i == 1 && j == 0) {
+        visualModel->transform().rotate(glm::pi<float>()/2.f, glm::vec3(0,1,0));
+        visualModel->transform().scale(1,5,5);
+    }
     node->addVisual(visualModel);
 }
 
 void addMatCapShader(Node* node, std::string filename) {
-    typedef Shader::ShaderType ShaderType;
-
-    ShaderProgram* shaderProgram = new ShaderProgram();
-
-    std::string vs = "";
-    std::string gs = "";
-    std::string fs = "";
-
-    Shader vertexShader(ShaderType::Vertex);
-    Shader geometryShader(ShaderType::Geometry);
-    Shader fragmentShader(ShaderType::Fragment);
-
-    getStringFromQrcFile(":/shaders/matcap.vs", vs);
-    getStringFromQrcFile(":/shaders/matcap.fs", fs);
-
-    if (vs != "") {
-        vertexShader.compileSourceCode(vs);
-        shaderProgram->addShader(vertexShader);
-    }
-
-    if (gs != "") {
-        geometryShader.compileSourceCode(gs);
-        shaderProgram->addShader(geometryShader);
-    }
-
-    if (fs != "") {
-        fragmentShader.compileSourceCode(fs);
-        shaderProgram->addShader(fragmentShader);
-    }
-
-    shaderProgram->link();
-
     Texture* matcapTexture = new Texture();
     matcapTexture->load(filename);
 
+    ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::MatCap);
     shaderProgram->addData<Texture>("matcap", *matcapTexture);
-    shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-    shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
     node->setShaderProgram(shaderProgram);
 }
@@ -89,10 +61,29 @@ void createChessboard(Node* node)
     Mesh* queen = Mesh::FromFile("models/" + folder + "/reine" + extension);
     Mesh* king = Mesh::FromFile("models/" + folder + "/roi" + extension);
 
-    ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::Deferred);
+    Texture* boardAmbientTex = new Texture();
+    boardAmbientTex->load("textures/Brick_Wall_ambient.jpg");
+
+    Texture* boardColorTex = new Texture();
+    boardColorTex->load("textures/Brick_Wall_color.jpg");
+
+    Texture* boardNormalTex = new Texture();
+    boardNormalTex->load("textures/Brick_Wall_normal.jpg");
+
+    Texture* boardSpecTex = new Texture();
+    boardSpecTex->load("textures/Brick_Wall_spec.jpg");
+
+    ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::NormalMapping);
+    shaderProgram->addData<glm::vec3>("dir_light", glm::vec3(0,0,-1));
+    shaderProgram->addData<Texture>("ambientMap", *boardAmbientTex);
+    shaderProgram->addData<Texture>("colorMap", *boardColorTex);
+    shaderProgram->addData<Texture>("normalMap", *boardNormalTex);
+    shaderProgram->addData<Texture>("specMap", *boardSpecTex);
+
     VisualModel* board = new VisualModel("models/flatQuad.obj");
     float s = 118.5;
     board->transform().scale(s,s,s);
+//    board->transform().rotate(glm::pi<float>()/2.f, glm::vec3(0,1,0));
 
     node->setShaderProgram( shaderProgram );
     node->addVisual(board);
@@ -100,7 +91,7 @@ void createChessboard(Node* node)
     // White Set
 
     Node* nodeWhite = node->addChild();
-//    addMatCapShader(nodeWhite, "textures/m8.jpg");
+    addMatCapShader(nodeWhite, "textures/m8.jpg");
 
 //    ShaderProgram* sp = helper::CreateShaderProgram(ShaderProgram::PhongShading);
 //    nodeWhite->setShaderProgram(sp);
@@ -127,7 +118,7 @@ void createChessboard(Node* node)
     // Black Set
 
     Node* nodeBlack = node->addChild();
-//    addMatCapShader(nodeBlack, "textures/metal.jpg");
+    addMatCapShader(nodeBlack, "textures/metal.jpg");
 
 //    nodeBlack->setShaderProgram(sp);
 
@@ -158,35 +149,10 @@ SceneGraph* createScene()
     Node* root = scene->root();
     createChessboard(root);
 
-//    Node* node1 = root->addChild();
-
-//    ShaderProgram* shaderProgram[2];
-
-////    shaderProgram[0] = helper::CreateShaderProgram(ShaderProgram::Basic);
-//    shaderProgram[0] = helper::CreateShaderProgram(ShaderProgram::PhongShading);
-////    shaderProgram[0] = helper::CreateShaderProgram(ShaderProgram::MatCap);
-////    shaderProgram[1] = helper::CreateShaderProgram(ShaderProgram::Frame);
-////    shaderProgram[1] = helper::CreateShaderProgram(ShaderProgram::Normal);
-////    shaderProgram[1] = helper::CreateShaderProgram(ShaderProgram::TangentSpace);
-////    shaderProgram[2] = helper::CreateShaderProgram(ShaderProgram::HighLight);
-
-//    node1->setShaderProgram(shaderProgram[0]);
-
-//    VisualModel* visual1 = new VisualModel("models/tour.stl",  Material::Bronze());
-////    VisualModel* visual1 = New VisualModel("models/Armadillo_simplified.obj",  Material::Gold());
-////    VisualModel* visual1 = New VisualModel("models/dragon_low.obj",            Material::Obsidian());
-////    VisualModel* visual1 = New VisualModel("models/reine.stl",            Material::Obsidian());
-////    VisualModel* visual1 = New VisualModel("models/teapot.obj",            Material::Gold());
-////    VisualModel* visual1 = New VisualModel("models/frame.obj",            Material::Gold());
-////    VisualModel* visual2 = New VisualModel("models/arrow.obj");
-
-//    // Node 1
-//    node1->addVisual(visual1);
-
     return scene;
 }
 
-Camera fitCamera(SceneGraph* scene)
+Camera bestFitFromDirection(SceneGraph* scene, const glm::vec3& direction)
 {
     BoundingBoxVisitor boundingBoxVisitor;
 
@@ -202,16 +168,23 @@ Camera fitCamera(SceneGraph* scene)
 
     // view
     glm::vec3 target = (min + max) / 2.0f;
-    glm::vec3 eye = target - (glm::vec3(0,0,-1) * diagonal);
-    glm::vec3 up(0,1,0);
+    glm::vec3 eye = target - (glm::normalize(direction) * (diagonal / 2.0f));
+    glm::vec3 up(0,0,1);
     camera.lookAt(eye, target, up);
 
     // projection
-    float fovy = 45.0f;
-    float aspect = 4.0f / 3.0f;
-    float zNear = 0.02f * diagonal;
-    float zFar = 2.0f * diagonal;
-    camera.perspective(fovy, aspect, zNear, zFar);
+//    float fovy = 45.0f;
+//    float aspect = 4.0f / 3.0f;
+//    float zNear = 0.05f * diagonal;
+//    float zFar = diagonal;
+//    camera.perspective(fovy, aspect, zNear, zFar);
+
+    float half_diag = diagonal / 2.0f;
+    float left = -half_diag;
+    float right = half_diag;
+    float bottom = -half_diag;
+    float top = half_diag;
+    camera.orthographic(left, right, bottom, top, 0, diagonal);
 
     return camera;
 }
@@ -260,12 +233,38 @@ int main()
     }
 
     SceneGraph* scene = createScene();
-    Camera camera = fitCamera(scene);
+    Camera camera;// = bestFitFromDirection(scene, glm::vec3(-1,-1,-1));
     Viewport viewport(0,0,1,1);
-    DrawVisitor visitor;
+    DrawVisitor drawVisitor;
+
+    scene->fitView(&camera);
+
+    Camera light = bestFitFromDirection(scene, glm::vec3(-1,-1,-1));
+
+    ShaderProgram* deferredShader = helper::CreateShaderProgram(ShaderProgram::Deferred);
+    ShaderVisitor deferredShaderVisitor(deferredShader);
+
+//    ShaderProgram* shadowMappingShader = helper::CreateShaderProgram(ShaderProgram::ShadowMapping);
+//    ShaderVisitor shadowMappingVisitor(shadowMappingShader);
 
     unsigned int width = GLFWApplication::ScreenWidth;
     unsigned int height = GLFWApplication::ScreenHeight;
+
+//    //// --------------------------------
+//    /// Dessine la texture de couleur de la scene
+//    Framebuffer fboColor(width, height);
+//    fboColor.attachTexture();
+//    fboColor.attachDepthTexture();
+
+//    Rendered fboColorRender;
+//    fboColorRender.scene = scene;
+//    fboColorRender.camera = &camera;
+//    fboColorRender.viewport = &viewport;
+//    fboColorRender.framebuffer = &fboColor;
+//    fboColorRender.visitor = &drawVisitor;
+
+    //// --------------------------------
+    /// Dessine les textures de couleur, normale et pofondeur
     Framebuffer fbo(width, height);
     fbo.attachTexture();
     fbo.attachTexture();
@@ -277,47 +276,126 @@ int main()
     fboRender.camera = &camera;
     fboRender.viewport = &viewport;
     fboRender.framebuffer = &fbo;
-    fboRender.visitor = &visitor;
+    fboRender.visitor = &deferredShaderVisitor;
+
+//    //// --------------------------------
+//    /// Dessine la scene du point de vue de la lumiere
+//    Framebuffer fboLight(width, height);
+//    fboLight.attachTexture();
+//    fboLight.attachTexture();
+//    fboLight.attachTexture();
+//    fboLight.attachDepthTexture();
+
+//    Rendered fboRenderLight;
+//    fboRenderLight.scene = scene;
+//    fboRenderLight.camera = &light;
+//    fboRenderLight.viewport = &viewport;
+//    fboRenderLight.framebuffer = &fboLight;
+//    fboRenderLight.visitor = &deferredShaderVisitor;
+//    fboRenderLight.singleShot = true;
+
+//    //// --------------------------------
+//    /// Dessine les ombres de la scene
+//    Framebuffer fboShadow(width, height);
+//    fboShadow.attachTexture();
+//    fboShadow.attachDepthTexture();
+
+//    Rendered fboRenderShadow;
+//    fboRenderShadow.scene = scene;
+//    fboRenderShadow.camera = &camera;
+//    fboRenderShadow.viewport = &viewport;
+//    fboRenderShadow.framebuffer = &fboShadow;
+//    fboRenderShadow.visitor = &shadowMappingVisitor;
+
+//    glm::mat4 biasMatrix(
+//        0.5, 0.0, 0.0, 0.0,
+//        0.0, 0.5, 0.0, 0.0,
+//        0.0, 0.0, 0.5, 0.0,
+//        0.5, 0.5, 0.5, 1.0
+//    );
+
+//    shadowMappingShader->addData<glm::mat4>("LightCam", biasMatrix * light.mvp());
+//    shadowMappingShader->addData<Texture>("depthLight", *fboLight.depthTexture());
+//    shadowMappingShader->addData<Texture>("colorTexture", *fboColor.renderTexture(0));
 
 
-    SceneGraph* vaoScene1 = createVaoScene(fbo.renderTexture(0));
-    SceneGraph* vaoScene2 = createVaoScene(fbo.renderTexture(1));
-    SceneGraph* vaoScene3 = createVaoScene(fbo.renderTexture(2));
+//    SceneGraph* vaoScene1 = createVaoScene(fboColor.renderTexture(0));
+    SceneGraph* vaoScene2 = createVaoScene(fbo.renderTexture(0));
+    SceneGraph* vaoScene3 = createVaoScene(fbo.renderTexture(1));
+    SceneGraph* vaoScene4 = createVaoScene(fbo.renderTexture(2));
+//    SceneGraph* vaoScene5 = createVaoScene(fboLight.renderTexture(2));
+//    SceneGraph* vaoScene6 = createVaoScene(fboShadow.renderTexture(0));
 
     Viewport viewport_bl( 0, 0,.5,.5);
     Viewport viewport_br(.5, 0,.5,.5);
     Viewport viewport_tl( 0,.5,.5,.5);
     Viewport viewport_tr(.5,.5,.5,.5);
 
-    Rendered defaultRender1;
-    defaultRender1.scene = vaoScene1;
-    defaultRender1.camera = &camera;
-    defaultRender1.viewport = &viewport_tl;
-    defaultRender1.framebuffer = nullptr;
-    defaultRender1.visitor = &visitor;
+//    Rendered defaultRender1;
+//    defaultRender1.scene = scene;
+//    defaultRender1.camera = &camera;
+//    defaultRender1.viewport = &viewport_tl;
+//    defaultRender1.framebuffer = nullptr;
+//    defaultRender1.visitor = &visitor;
+
+//    Rendered defaultRender1;
+//    defaultRender1.scene = vaoScene1;
+//    defaultRender1.camera = &camera;
+//    defaultRender1.viewport = &viewport_tl;
+//    defaultRender1.framebuffer = nullptr;
+//    defaultRender1.visitor = &drawVisitor;
 
     Rendered defaultRender2;
     defaultRender2.scene = vaoScene2;
     defaultRender2.camera = &camera;
     defaultRender2.viewport = &viewport_tr;
     defaultRender2.framebuffer = nullptr;
-    defaultRender2.visitor = &visitor;
+    defaultRender2.visitor = &drawVisitor;
 
     Rendered defaultRender3;
     defaultRender3.scene = vaoScene3;
     defaultRender3.camera = &camera;
     defaultRender3.viewport = &viewport_br;
     defaultRender3.framebuffer = nullptr;
-    defaultRender3.visitor = &visitor;
+    defaultRender3.visitor = &drawVisitor;
 
-    GLFWApplicationEvents interface(&camera);
+    Rendered defaultRender4;
+    defaultRender4.scene = vaoScene4;
+    defaultRender4.camera = &camera;
+    defaultRender4.viewport = &viewport_bl;
+    defaultRender4.framebuffer = nullptr;
+    defaultRender4.visitor = &drawVisitor;
 
-    app->setInterface(&interface);
+//    Rendered defaultRender5;
+//    defaultRender5.scene = vaoScene5;
+//    defaultRender5.camera = &camera;
+//    defaultRender5.viewport = &viewport_bl;
+//    defaultRender5.framebuffer = nullptr;
+//    defaultRender5.visitor = &drawVisitor;
+
+//    Rendered defaultRender6;
+//    defaultRender6.scene = vaoScene6;
+//    defaultRender6.camera = &camera;
+//    defaultRender6.viewport = &viewport_br;
+//    defaultRender6.framebuffer = nullptr;
+//    defaultRender6.visitor = &drawVisitor;
+
+//    app->addRendered(&fboColorRender);
+//    app->addRendered(&defaultRender1);
 
     app->addRendered(&fboRender);
-    app->addRendered(&defaultRender1);
     app->addRendered(&defaultRender2);
     app->addRendered(&defaultRender3);
+    app->addRendered(&defaultRender4);
+
+//    app->addRendered(&fboRenderLight);
+//    app->addRendered(&defaultRender5);
+
+//    app->addRendered(&fboRenderShadow);
+//    app->addRendered(&defaultRender6);
+
+    GLFWApplicationEvents interface(&camera);
+    app->setInterface(&interface);
 
     /* Throws the main loop */
     app->loop();

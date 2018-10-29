@@ -86,6 +86,8 @@ set(SHADER_FILES
     shaders/normal.vs
     shaders/normal.gs
     shaders/normal.fs
+    shaders/normalMapping.vs
+    shaders/normalMapping.fs
     shaders/outline.vs
     shaders/outline.fs
     shaders/phongShading.vs
@@ -107,6 +109,10 @@ set(SHADER_FILES
 
 set(QRC_FILES
     resources.qrc
+)
+
+set(CONFIG_FILES
+    etc/config.ini.in
 )
 
 set(ARCHIVE_OUTPUT_DIRECTORY lib)
@@ -135,7 +141,7 @@ add_subdirectory(app)
 
 
 #========== Creation of the library ==========#
-add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES} ${QRC_FILES} ${RESOURCE_FILES})
+add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES} ${QRC_FILES} ${RESOURCE_FILES} )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})# ${GLEW_INCLUDE_DIRS} ${GLUT_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} Qt5::Core Qt5::Gui Qt5::OpenGL)# ${GLEW_LIBRARIES} ${GLUT_LIBRARIES})
@@ -151,7 +157,7 @@ macro(link_with_local_lib LOCAL_PATH NAME)
         PATHS ${${NAME}_PATH}/lib
     )
 
-    if(${NAME}_LIBRARY-NOTFOUND)
+    if(${NAME})
         message(FATAL_ERROR "${NAME}_LIBRARY library not found !")
     else()
         target_include_directories(${PROJECT_NAME} PUBLIC ${${NAME}_PATH}/include)

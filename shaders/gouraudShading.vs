@@ -6,6 +6,7 @@ layout(location = 1) in vec3 normal;
 layout(std140) uniform transform
 {
     mat4 ModelMatrix;
+    mat3 ModelNormalMatrix;
 };
 
 layout(std140) uniform material
@@ -34,7 +35,7 @@ out vec4 o_color;
 void main()
 {
     float diff = clamp(-dot(normal,dir_light), 0.0, 1.0);
-
     o_color = ambientColor + (diff * diffuseColor);
+
     gl_Position = ProjViewMatrix * ModelMatrix * vec4(position, 1.0);
 }

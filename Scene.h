@@ -4,6 +4,7 @@
 
 namespace gl {
 
+class Camera;
 class Node;
 class Visitor;
 
@@ -20,6 +21,9 @@ public:
 public:
     Node* root();
     const Node* root() const;
+
+public:
+    void fitView(Camera* camera) const;
 
 public:
     void executeVisitor(Visitor* visitor) const;

@@ -8,11 +8,6 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-// Glm
-#include <glm/gtx/quaternion.hpp>
-#include <glm/gtx/transform.hpp>
-
-
 using namespace gl;
 
 Mesh::Mesh() :

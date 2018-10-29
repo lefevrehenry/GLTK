@@ -20,6 +20,8 @@
         <file>shaders/normal.fs</file>
         <file>shaders/normal.gs</file>
         <file>shaders/normal.vs</file>
+        <file>shaders/normalMapping.fs</file>
+        <file>shaders/normalMapping.vs</file>
         <file>shaders/outline.fs</file>
         <file>shaders/outline.vs</file>
         <file>shaders/phongShading.fs</file>

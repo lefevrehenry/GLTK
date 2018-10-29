@@ -6,6 +6,7 @@ layout(location = 1) in vec3 normal;
 layout(std140) uniform transform
 {
     mat4 ModelMatrix;
+    mat3 ModelNormalMatrix;
 };
 
 layout(std140) uniform camera
@@ -21,6 +22,7 @@ out vec3 o_normal;
 
 void main()
 {
-    o_normal = mat3(ModelMatrix) * normal;
+    o_normal = ModelNormalMatrix * normal;
+
     gl_Position = ProjViewMatrix * ModelMatrix * vec4(position, 1.0);
 }

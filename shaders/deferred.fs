@@ -18,7 +18,7 @@ layout (location = 2) out vec3 outDepth;
 
 void main()
 {
-    float z = pow(gl_FragCoord.z, 8);
+    float z = gl_FragCoord.z;
 
     outColor = (ambientColor + diffuseColor).xyz;
     outNormal = normalize(o_normal);

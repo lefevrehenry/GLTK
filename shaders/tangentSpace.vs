@@ -9,6 +9,7 @@ layout(location = 3) in vec3 bitangent;
 layout(std140) uniform transform
 {
     mat4 ModelMatrix;
+    mat3 ModelNormalMatrix;
 };
 
 layout(std140) uniform camera
@@ -20,7 +21,6 @@ layout(std140) uniform camera
 };
 
 // uniform input
-uniform mat4 mvp;
 uniform float scale;
 
 // data to geometry shader

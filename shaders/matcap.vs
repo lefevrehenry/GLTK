@@ -7,6 +7,7 @@ layout(location = 1) in vec3 normal;
 layout(std140) uniform transform
 {
     mat4 ModelMatrix;
+    mat3 ModelNormalMatrix;
 };
 
 layout(std140) uniform camera
@@ -24,7 +25,7 @@ void main()
 {
     vec4 p = vec4(position, 1.0);
 
-    vec3 n = normalize( NormalMatrix * normal );
+    vec3 n = normalize( NormalMatrix * ModelNormalMatrix * normal );
     vec3 e = normalize( vec3(View * ModelMatrix * p) );
 
     vec3 r = reflect(e, n);

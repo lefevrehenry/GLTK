@@ -191,6 +191,18 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         getStringFromQrcFile(":/shaders/deferred.fs", fs);
 
         break;
+    case ShaderProgramType::ShadowMapping:
+
+        getStringFromQrcFile(":/shaders/shadowMapping.vs", vs);
+        getStringFromQrcFile(":/shaders/shadowMapping.fs", fs);
+
+        break;
+    case ShaderProgramType::NormalMapping:
+
+        getStringFromQrcFile(":/shaders/normalMapping.vs", vs);
+        getStringFromQrcFile(":/shaders/normalMapping.fs", fs);
+
+        break;
     }
 
     if (vs != "") {
@@ -211,24 +223,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     shaderProgram->link();
 
     float normalScale = 0.5;
-
     glm::vec3 dir_light(-1,-1,-1);
-    glm::vec3 color(1,0,0);
-//    static Texture colorMap2;
-//    if (!colorMap2.isLoaded())
-//        colorMap2.load("textures/chesterfield-color.png");
-    static Texture colorMap;
-    if (!colorMap.isLoaded())
-        colorMap.load("textures/chessboard2.jpg");
-//    static Texture colorMap;
-//    if (!colorMap.isLoaded())
-//        colorMap.load("textures/chesterfield-color.png");
-//    static Texture normalMap;
-//    if (!normalMap.isLoaded())
-//        normalMap.load("textures/chesterfield-normal.png");
-//    static Texture matcapTexture;
-//    if (!matcapTexture.isLoaded())
-//        matcapTexture.load("textures/hot.jpg");
 
     switch (shaderProgramType)
     {
@@ -289,10 +284,8 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::Texturing:
 
-//        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
-        shaderProgram->addData<Texture>("colorMap", colorMap);
-//        shaderProgram->addData<Texture>("normalMap", normalMap);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
@@ -318,7 +311,6 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::MatCap:
 
-//        shaderProgram->addData<Texture>("matcap", matcapTexture);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
@@ -327,6 +319,19 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
         break;
     case ShaderProgramType::Deferred:
+
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+
+        break;
+    case ShaderProgramType::ShadowMapping:
+
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+
+        break;
+    case ShaderProgramType::NormalMapping:
 
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);

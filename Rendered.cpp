@@ -7,6 +7,9 @@
 
 using namespace gl;
 
+static Viewport defaultViewport(0,0,1,1);
+static DrawVisitor defaultVisitor;
+
 Rendered::Rendered() :
     scene(nullptr),
     camera(nullptr),
@@ -21,7 +24,7 @@ Rendered::Rendered() :
 
 bool Rendered::isComplete() const
 {
-    return (scene != nullptr && camera != nullptr && viewport != nullptr && visitor != nullptr);
+    return (scene != nullptr && camera != nullptr);
 }
 
 void Rendered::draw() const
@@ -48,6 +51,9 @@ void Rendered::draw() const
             return;
         }
     }
+
+    Viewport* viewport = (this->viewport != nullptr ? this->viewport : &defaultViewport);
+    Visitor* visitor = (this->visitor != nullptr ? this->visitor : &defaultVisitor);
 
     int v_x = viewport->x() * width;
     int v_y = viewport->y() * height;

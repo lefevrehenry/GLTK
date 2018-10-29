@@ -60,6 +60,21 @@ glm::vec3 Camera::eye() const
     return glm::vec3(eye);
 }
 
+glm::vec3 Camera::target() const
+{
+    return this->m_target;
+}
+
+float Camera::near() const
+{
+    return this->m_zNear;
+}
+
+float Camera::far() const
+{
+    return this->m_zFar;
+}
+
 const glm::mat4& Camera::model() const
 {
     return this->m_model;
@@ -91,6 +106,19 @@ const glm::mat3& Camera::normal() const
         setNormalDirty(false);
     }
     return this->m_normal;
+}
+
+void Camera::translate(const glm::vec3& dir)
+{
+    glm::mat4 transform = glm::translate(glm::mat4(), dir);
+
+    this->m_model = transform * this->m_model;
+    this->m_view = glm::inverse( this->m_model );
+
+    this->m_target += dir;
+
+    setMvpDirty(true);
+    setNormalDirty(true);
 }
 
 void Camera::rotate(float theta, float phi)

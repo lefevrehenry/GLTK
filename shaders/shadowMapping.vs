@@ -6,6 +6,7 @@ layout(location = 0) in vec3 position;
 layout(std140) uniform transform
 {
     mat4 ModelMatrix;
+    mat3 ModelNormalMatrix;
 };
 
 layout(std140) uniform camera
@@ -19,12 +20,11 @@ layout(std140) uniform camera
 uniform mat4 LightCam;
 
 // data to fragment shader
-out vec3 posLightCam;
+out vec4 posLightCam;
 
 void main()
 {
-    vec4 proj = LightCam * ModelMatrix * vec4(position, 1.0);
-    posLightCam = proj.xyz / proj.w;
+    posLightCam = LightCam * ModelMatrix * vec4(position, 1.0);
 
     gl_Position = ProjViewMatrix * ModelMatrix * vec4(position, 1.0);
 }

@@ -7,6 +7,7 @@ layout(location = 1) in vec3 normal;
 layout(std140) uniform transform
 {
     mat4 ModelMatrix;
+    mat3 ModelNormalMatrix;
 };
 
 layout(std140) uniform camera
@@ -18,7 +19,6 @@ layout(std140) uniform camera
 };
 
 // uniform input
-uniform mat4 mvp;
 uniform float scale;
 
 // data to geometry shader
@@ -27,6 +27,6 @@ out vec4 o_pos;
 void main()
 {
     o_pos = ProjViewMatrix * ModelMatrix * vec4(position + (scale * normal), 1.0);
-    //o_normal = normalize(NormalMatrix * normal);
+    //o_normal = normalize(NormalMatrix * ModelNormalMatrix * normal);
     gl_Position = ProjViewMatrix * ModelMatrix * vec4(position, 1.0);
 }

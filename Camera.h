@@ -34,7 +34,13 @@ public:
 
     glm::vec3 eye() const;
 
+    glm::vec3 target() const;
+
 public:
+
+    float near() const;
+
+    float far() const;
 
     const glm::mat4& model() const;
 
@@ -47,6 +53,8 @@ public:
     const glm::mat3& normal() const;
 
 public:
+
+    void translate(const glm::vec3& dir);
 
     void rotate(float theta, float phi);
 

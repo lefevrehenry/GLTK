@@ -171,7 +171,7 @@ class ShaderVisitor : public DrawVisitor
 
 public:
     ShaderVisitor();
-    virtual ~ShaderVisitor();
+    ShaderVisitor(ShaderProgram* shaderProgram);
 
 public:
     virtual void processNode(const Node* node);

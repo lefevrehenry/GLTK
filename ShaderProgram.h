@@ -48,7 +48,9 @@ public:
         OutLine,
         MatCap,
         VaoQuad,
-        Deferred
+        Deferred,
+        ShadowMapping,
+        NormalMapping
     };
 
 public:
@@ -133,7 +135,7 @@ public:
     {
         for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
             if (it->first == name) {
-                return static_cast< Data<T>* >(it->second);
+                return dynamic_cast< Data<T>* >(it->second);
             }
         }
 

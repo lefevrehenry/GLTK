@@ -6,6 +6,7 @@ layout(location = 0) in vec3 position;
 layout(std140) uniform transform
 {
     mat4 ModelMatrix;
+    mat3 ModelNormalMatrix;
 };
 
 layout(std140) uniform camera
