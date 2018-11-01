@@ -3,7 +3,6 @@
 // Glm
 #include <glm/gtc/matrix_access.hpp>
 
-
 using namespace gl;
 
 Material Material::DefaultMaterial()

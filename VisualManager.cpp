@@ -7,6 +7,7 @@ using namespace gl;
 GLuint VisualManager::m_uboTransform = 0;
 GLuint VisualManager::m_uboMaterial = 0;
 GLuint VisualManager::m_uboCamera = 0;
+GLuint VisualManager::m_uboLight = 0;
 
 void VisualManager::Init()
 {
@@ -45,6 +46,18 @@ void VisualManager::Init()
     // Bind l'uniform buffer object a l'index 'CameraIndex' dans la table de liaison d'OpenGL
     GLuint binding_uboCamera_point_index = CameraIndex;
     glBindBufferBase(GL_UNIFORM_BUFFER, binding_uboCamera_point_index, m_uboCamera);
+
+    // Uniform Buffer Object Light
+    glGenBuffers(1, &m_uboLight);
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboLight);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat3), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    VisualManager::UpdateUniformBufferLight(Light());
+
+    // Bind l'uniform buffer object a l'index 'LightIndex' dans la table de liaison d'OpenGL
+    GLuint binding_uboLight_point_index = LightIndex;
+    glBindBufferBase(GL_UNIFORM_BUFFER, binding_uboLight_point_index, m_uboLight);
 }
 
 void VisualManager::Clean()
@@ -52,6 +65,7 @@ void VisualManager::Clean()
     glDeleteBuffers(1, &m_uboTransform);
     glDeleteBuffers(1, &m_uboMaterial);
     glDeleteBuffers(1, &m_uboCamera);
+    glDeleteBuffers(1, &m_uboLight);
 }
 
 void VisualManager::UpdateUniformBufferTransform(const Transform& transform)
@@ -90,6 +104,16 @@ void VisualManager::UpdateUniformBufferCamera(const Camera& camera)
     glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(Projection));
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(ProjViewMatrix));
     glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(NormalMatrix));
+
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+void VisualManager::UpdateUniformBufferLight(const Light& light)
+{
+    const glm::mat3& matrix = light.matrix();
+
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboLight);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat3), glm::value_ptr(matrix));
 
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }

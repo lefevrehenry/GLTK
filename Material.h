@@ -75,7 +75,6 @@ private:
     float m_shininess;
 
     mutable glm::mat4 m_matrix;
-
     mutable bool m_isDirty;
 
 };

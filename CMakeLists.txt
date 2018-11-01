@@ -14,8 +14,9 @@ set(HEADER_FILES
     Framebuffer.h
     GLFWApplication.h
     GLFWApplicationEvents.h
-    Interface.h
     Helper.h
+    Interface.h
+    Light.h
     Material.h
     Mesh.h
     Message.h
@@ -45,6 +46,7 @@ set(SOURCE_FILES
     GLFWApplication.cpp
     GLFWApplicationEvents.cpp
     Interface.cpp
+    Light.cpp
     Material.cpp
     Mesh.cpp
     Message.cpp
