@@ -3,6 +3,10 @@
         <file>shaders/basic.fs</file>
         <file>shaders/basic.gs</file>
         <file>shaders/basic.vs</file>
+        <file>shaders/basicTexturing.fs</file>
+        <file>shaders/basicTexturing.vs</file>
+        <file>shaders/cubeMap.fs</file>
+        <file>shaders/cubeMap.vs</file>
         <file>shaders/deferred.fs</file>
         <file>shaders/deferred.vs</file>
         <file>shaders/flatShading.fs</file>

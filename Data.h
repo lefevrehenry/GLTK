@@ -148,11 +148,18 @@ template<> inline void Data<glm::mat4>::update()
 
 template<> inline void Data<Texture>::update()
 {
-    unsigned int id = this->m_value.getTextureID();
     unsigned short unit = this->m_value.getTextureUnit();
 
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(GL_TEXTURE_2D, id);
+    this->m_value.bind();
+
+    glUniform1i(this->m_dataLocation, unit);
+}
+
+template<> inline void Data<CubeMapTexture>::update()
+{
+    unsigned short unit = this->m_value.getTextureUnit();
+
+    this->m_value.bind();
 
     glUniform1i(this->m_dataLocation, unit);
 }

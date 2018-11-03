@@ -67,6 +67,7 @@ public:
         PhongShading,
         Frame,
         HighLight,
+        BasicTexturing,
         Texturing,
         TangentSpace,
         Picking,
@@ -75,7 +76,8 @@ public:
         VaoQuad,
         Deferred,
         ShadowMapping,
-        NormalMapping
+        NormalMapping,
+        CubeMap
     };
 
 public:

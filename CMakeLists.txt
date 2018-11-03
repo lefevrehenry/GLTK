@@ -71,6 +71,10 @@ set(SHADER_FILES
     shaders/basic.vs
     shaders/basic.gs
     shaders/basic.fs
+    shaders/basicTexturing.vs
+    shaders/basicTexturing.fs
+    shaders/cubeMap.vs
+    shaders/cubeMap.fs
     shaders/deferred.vs
     shaders/deferred.fs
     shaders/flatShading.vs

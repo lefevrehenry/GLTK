@@ -148,6 +148,12 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         getStringFromQrcFile(":/shaders/highLight.fs", fs);
 
         break;
+    case ShaderProgramType::BasicTexturing:
+
+        getStringFromQrcFile(":/shaders/basicTexturing.vs", vs);
+        getStringFromQrcFile(":/shaders/basicTexturing.fs", fs);
+
+        break;
     case ShaderProgramType::Texturing:
 
         getStringFromQrcFile(":/shaders/texturing.vs", vs);
@@ -201,6 +207,12 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
         getStringFromQrcFile(":/shaders/normalMapping.vs", vs);
         getStringFromQrcFile(":/shaders/normalMapping.fs", fs);
+
+        break;
+    case ShaderProgramType::CubeMap:
+
+        getStringFromQrcFile(":/shaders/cubeMap.vs", vs);
+        getStringFromQrcFile(":/shaders/cubeMap.fs", fs);
 
         break;
     }
@@ -282,6 +294,12 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
+    case ShaderProgramType::BasicTexturing:
+
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+
+        break;
     case ShaderProgramType::Texturing:
 
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
@@ -335,6 +353,11 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+
+        break;
+    case ShaderProgramType::CubeMap:
+
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
