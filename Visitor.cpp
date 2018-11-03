@@ -87,8 +87,8 @@ void DrawVisitor::forwardNode(const Node* node)
 
 void DrawVisitor::processNode(const Node* node)
 {
-    // bind the current ShaderProgram
     if (m_currentShader != nullptr) {
+        // bind the current ShaderProgram
         m_currentShader->bind();
         m_currentShader->updateDataIfDirty();
 
@@ -110,16 +110,15 @@ void DrawVisitor::processNode(const Node* node)
 
             visual->draw(param);
         }
+
+        // unbind the current ShaderProgram
+        m_currentShader->unbind();
     }
 }
 
 void DrawVisitor::backwardNode(const Node* node)
 {
     ShaderProgram* shaderProgram = node->shaderProgram();
-
-    // unbind the current ShaderProgram
-    if (m_currentShader != nullptr)
-        m_currentShader->unbind();
 
     // unstack the node's ShaderProgram
     if (shaderProgram != nullptr)
