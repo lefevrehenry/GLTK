@@ -9,6 +9,8 @@
         <file>shaders/cubeMap.vs</file>
         <file>shaders/deferred.fs</file>
         <file>shaders/deferred.vs</file>
+        <file>shaders/environmentMapping.fs</file>
+        <file>shaders/environmentMapping.vs</file>
         <file>shaders/flatShading.fs</file>
         <file>shaders/flatShading.gs</file>
         <file>shaders/flatShading.vs</file>

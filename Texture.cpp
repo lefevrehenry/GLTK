@@ -57,6 +57,9 @@ QImage getQImageFromFile(const std::string& filename)
         return QImage();
     }
 
+    // flip image vertically
+    image = image.mirrored();
+
     return image;
 }
 

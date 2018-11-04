@@ -46,7 +46,7 @@ void main()
     vec3 n = normalize(o_normal);
     mat3 tbn = mat3(t,b,n);
 
-    n = tbn * (2 * texture(normalMap,uv).xyz - 1);
+    n = tbn * normalize(2 * texture(normalMap,uv).xyz - 1);
     n = NormalMatrix * n;
 
     // diffuse and specular components

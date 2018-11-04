@@ -13,14 +13,22 @@ void OpenGLState::Push(OpenGLAttribute attribute, unsigned int value)
 {
     std::stack<unsigned int>& attributeStack = OpenGLState::OpenGLStateAttribute[attribute];
     GLboolean current;
+    GLint current_i;
 
     switch (attribute)
     {
     case DepthMask:
         glGetBooleanv(GL_DEPTH_WRITEMASK, &current);
-        glDepthMask((GLboolean) value);
+        glDepthMask(value);
 
         attributeStack.push(current);
+
+        break;
+    case DepthFunc:
+        glGetIntegerv(GL_DEPTH_FUNC, &current_i);
+        glDepthFunc(value);
+
+        attributeStack.push(current_i);
 
         break;
     case CullFace:
@@ -48,7 +56,11 @@ void OpenGLState::Pop(OpenGLAttribute attribute)
     switch (attribute)
     {
     case DepthMask:
-        glDepthMask((GLboolean) value);
+        glDepthMask(value);
+
+        break;
+    case DepthFunc:
+        glDepthFunc(value);
 
         break;
     case CullFace:

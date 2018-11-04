@@ -17,12 +17,16 @@ layout(std140) uniform camera
     mat3 NormalMatrix;
 };
 
+layout(std140) uniform light
+{
+    vec3 lightPosition;
+    vec3 lightDirection;
+    vec3 lightColor;
+};
+
 // uniform input
-uniform vec3 dir_light;
-uniform sampler2D ambientMap;
 uniform sampler2D colorMap;
 uniform sampler2D normalMap;
-uniform sampler2D specMap;
 
 // data from vertex shader
 in vec3 o_normal;
@@ -39,25 +43,25 @@ void main()
 
     // normalized vectors needed for shading
     vec3 e = normalize(o_eyeView);
-    vec3 l = normalize(NormalMatrix * dir_light);
+    vec3 l = normalize(NormalMatrix * lightDirection);
+    //vec3 np = normalize(NormalMatrix * o_normal);
 
     vec3 t = normalize(o_tangent);
     vec3 b = normalize(o_bitangent);
     vec3 n = normalize(o_normal);
     mat3 tbn = mat3(t,b,n);
 
-    n = tbn * (2 * texture(normalMap,uv).xyz - 1);
+    n = normalize(tbn * (2 * texture(normalMap,uv).xyz - 1));
     n = NormalMatrix * n;
 
-    // diffuse and specular components
+    // diffuse components
     float diff = max(-dot(l,n),0.0);
     float spec = pow(max(-dot(reflect(l,n),e),0.0),shininess);
 
     // final color
-    vec4 ambientColor = texture(ambientMap, uv);
     vec4 diffuseColor = texture(colorMap, uv);
-    vec4 specularColor = texture(specMap, uv);
+    vec4 specularColor = vec4(lightColor,1.0);
 
-    outColor = ambientColor + (diff * diffuseColor) + (spec * specularColor);
-    //outColor = ambientColor + (diff * diffuseColor);
+    // final color
+    outColor = (diff * diffuseColor) + (spec * specularColor);
 }

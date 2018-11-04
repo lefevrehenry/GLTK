@@ -215,6 +215,12 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         getStringFromQrcFile(":/shaders/cubeMap.fs", fs);
 
         break;
+    case ShaderProgramType::EnvironmentMapping:
+
+        getStringFromQrcFile(":/shaders/environmentMapping.vs", vs);
+        getStringFromQrcFile(":/shaders/environmentMapping.fs", fs);
+
+        break;
     }
 
     if (vs != "") {
@@ -234,7 +240,6 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
     shaderProgram->link();
 
-    float normalScale = 0.5;
     glm::vec3 dir_light(-1,-1,-1);
 
     switch (shaderProgramType)
@@ -249,7 +254,6 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::Normal:
 
-        shaderProgram->addData<float>("scale", normalScale);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
@@ -310,7 +314,6 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::TangentSpace:
 
         shaderProgram->setPrimitiveMode(PrimitiveMode::POINTS);
-        shaderProgram->addData<float>("scale", normalScale);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
@@ -354,10 +357,17 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::CubeMap:
 
+        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+
+        break;
+    case ShaderProgramType::EnvironmentMapping:
+
+        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;

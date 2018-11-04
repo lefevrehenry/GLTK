@@ -24,17 +24,17 @@ layout(std140) uniform camera
 uniform float scale;
 
 // data to geometry shader
+out vec4 o_npos;
 out vec4 o_tpos;
 out vec4 o_bpos;
-out vec4 o_npos;
 
 void main()
 {
     mat4 mvp = ProjViewMatrix * ModelMatrix;
 
+    o_npos = mvp * vec4(position + (scale * normal), 1.0);
     o_tpos = mvp * vec4(position + (scale * tangent), 1.0);
     o_bpos = mvp * vec4(position + (scale * bitangent), 1.0);
-    o_npos = mvp * vec4(position + (scale * normal), 1.0);
 
     gl_Position = mvp * vec4(position, 1.0);
 }

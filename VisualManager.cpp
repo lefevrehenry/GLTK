@@ -50,7 +50,7 @@ void VisualManager::Init()
     // Uniform Buffer Object Light
     glGenBuffers(1, &m_uboLight);
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboLight);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat3), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     VisualManager::UpdateUniformBufferLight(Light());
@@ -110,10 +110,10 @@ void VisualManager::UpdateUniformBufferCamera(const Camera& camera)
 
 void VisualManager::UpdateUniformBufferLight(const Light& light)
 {
-    const glm::mat3& matrix = light.matrix();
+    const glm::mat4& matrix = glm::mat4(light.matrix());
 
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboLight);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat3), glm::value_ptr(matrix));
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(matrix));
 
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }

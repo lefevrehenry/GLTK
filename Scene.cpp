@@ -41,7 +41,7 @@ void SceneGraph::fitView(Camera* camera) const
     glm::vec3 max = boundingBoxVisitor.getMax();
 
     float diagonal = glm::length(max - min);
-    glm::vec3 direction(-1,1,-1);
+    glm::vec3 direction(-1,-1,-1);
 
     // view
     glm::vec3 target = (min + max) / 2.0f;

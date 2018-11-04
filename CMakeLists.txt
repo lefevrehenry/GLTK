@@ -77,6 +77,8 @@ set(SHADER_FILES
     shaders/cubeMap.fs
     shaders/deferred.vs
     shaders/deferred.fs
+    shaders/environmentMapping.vs
+    shaders/environmentMapping.fs
     shaders/flatShading.vs
     shaders/flatShading.gs
     shaders/flatShading.fs

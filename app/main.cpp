@@ -40,7 +40,7 @@ void addPiece(Node* node, Mesh* mesh, Material material, int i, int j)
 }
 
 void addMatCapShader(Node* node, std::string filename) {
-    Texture* matcapTexture = new Texture();
+    Texture* matcapTexture = new Texture2D();
     matcapTexture->load(filename);
 
     ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::MatCap);
@@ -61,16 +61,16 @@ void createChessboard(Node* node)
     Mesh* queen = Mesh::FromFile("models/" + folder + "/reine" + extension);
     Mesh* king = Mesh::FromFile("models/" + folder + "/roi" + extension);
 
-    Texture* boardAmbientTex = new Texture();
+    Texture* boardAmbientTex = new Texture2D();
     boardAmbientTex->load("textures/Brick_Wall_ambient.jpg");
 
-    Texture* boardColorTex = new Texture();
+    Texture* boardColorTex = new Texture2D();
     boardColorTex->load("textures/Brick_Wall_color.jpg");
 
-    Texture* boardNormalTex = new Texture();
+    Texture* boardNormalTex = new Texture2D();
     boardNormalTex->load("textures/Brick_Wall_normal.jpg");
 
-    Texture* boardSpecTex = new Texture();
+    Texture* boardSpecTex = new Texture2D();
     boardSpecTex->load("textures/Brick_Wall_spec.jpg");
 
     ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::NormalMapping);

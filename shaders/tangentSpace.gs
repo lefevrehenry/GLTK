@@ -7,15 +7,24 @@ layout(points) in;
 layout(line_strip, max_vertices = 6) out;
 
 // data from vertex shader
+in vec4 o_npos[1];
 in vec4 o_tpos[1];
 in vec4 o_bpos[1];
-in vec4 o_npos[1];
 
 // data to fragment shader
 flat out int id;
 
 void main()
 {
+    // normal
+    gl_Position = gl_in[0].gl_Position;
+    id = 2;
+    EmitVertex();
+    gl_Position = o_npos[0];
+    id = 2;
+    EmitVertex();
+    EndPrimitive();
+
     // tangent
     gl_Position = gl_in[0].gl_Position;
     id = 0;
@@ -31,15 +40,6 @@ void main()
     EmitVertex();
     gl_Position = o_bpos[0];
     id = 1;
-    EmitVertex();
-    EndPrimitive();
-
-    // normal
-    gl_Position = gl_in[0].gl_Position;
-    id = 2;
-    EmitVertex();
-    gl_Position = o_npos[0];
-    id = 2;
     EmitVertex();
     EndPrimitive();
 }

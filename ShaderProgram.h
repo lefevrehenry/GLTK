@@ -37,6 +37,7 @@ public:
 
     enum OpenGLAttribute {
         DepthMask,
+        DepthFunc,
         CullFace
     };
 
@@ -77,7 +78,8 @@ public:
         Deferred,
         ShadowMapping,
         NormalMapping,
-        CubeMap
+        CubeMap,
+        EnvironmentMapping
     };
 
 public:
