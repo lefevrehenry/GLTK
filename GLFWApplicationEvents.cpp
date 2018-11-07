@@ -2,12 +2,13 @@
 
 #include "Camera.h"
 #include "GLFWApplication.h"
-#include "Selectable.h"
-#include "Viewer.h"
-
-#include "VisualModel.h"
 #include "Mesh.h"
 #include "Message.h"
+#include "Node.h"
+#include "Scene.h"
+#include "Selectable.h"
+#include "Visitor.h"
+#include "VisualModel.h"
 
 // GLFW
 #include <GLFW/glfw3.h>
@@ -37,11 +38,11 @@ void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, 
     this->mousePressed = (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS);
 
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        double xpos, ypos;
-        glfwGetCursorPos(handle, &xpos, &ypos);
+//        double xpos, ypos;
+        glfwGetCursorPos(handle, &x, &y);
 
-        int sx = static_cast<int>(xpos);
-        int sy = static_cast<int>(ypos);
+//        int sx = static_cast<int>(xpos);
+//        int sy = static_cast<int>(ypos);
 
 //        GLFWApplication* app = GLFWApplication::getInstance();
 //        Selectable* selectable = app->getViewer()->pickingObject(sx, sy);
@@ -104,4 +105,59 @@ void GLFWApplicationEvents::scrollCallback(GLFWwindow*, double, double ypos)
     glm::vec3 newEye = eye + (float) ypos * 0.1f * (target - eye);
 
     this->m_camera->lookAt(newEye, target, up);
+}
+
+InterfacePicking::InterfacePicking(SceneGraph* sceneGraph, Camera *camera) : GLFWApplicationEvents (camera),
+    m_sceneGraph(sceneGraph),
+    m_pickingVisitor(nullptr),
+    m_cameraActive(false),
+    m_callback(nullptr)
+{
+    this->m_pickingVisitor = new PickingVisitor();
+}
+
+InterfacePicking::~InterfacePicking()
+{
+    delete m_pickingVisitor;
+    m_pickingVisitor = nullptr;
+}
+
+void InterfacePicking::setCallback(void (*callback)(const VisualModel*))
+{
+    this->m_callback = callback;
+}
+
+void InterfacePicking::mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)
+{
+    if(m_cameraActive)
+    {
+        GLFWApplicationEvents::mouseButtonCallback(handle, button, action, mods);
+        return;
+    }
+
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        double x = 0;
+        double y = 0;
+        glfwGetCursorPos(handle, &x, &y);
+
+        m_pickingVisitor->set((int) x, (int) y);
+
+        const Node* root = this->m_sceneGraph->root();
+        root->executeVisitor(m_pickingVisitor);
+
+        const VisualModel* visualModel = m_pickingVisitor->selectedVisualModel();
+
+        if (m_callback != nullptr)
+            m_callback(visualModel);
+    }
+}
+
+void InterfacePicking::keyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS)
+        this->m_cameraActive = true;
+
+    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE)
+        this->m_cameraActive = false;
 }

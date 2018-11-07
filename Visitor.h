@@ -89,8 +89,11 @@ class PickingVisitor : public Visitor
 {
 
 public:
-    PickingVisitor(int x, int y);
+    PickingVisitor();
     virtual ~PickingVisitor();
+
+public:
+    void set(int x, int y);
 
 public:
     const VisualModel* selectedVisualModel() const;

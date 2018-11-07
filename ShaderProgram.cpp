@@ -24,6 +24,16 @@ void OpenGLState::Push(OpenGLAttribute attribute, unsigned int value)
         attributeStack.push(current);
 
         break;
+    case DepthTest:
+        glGetBooleanv(GL_DEPTH_TEST, &current);
+        if ((GLboolean) value == GL_TRUE)
+            glEnable(GL_DEPTH_TEST);
+        else
+            glDisable(GL_DEPTH_TEST);
+
+        attributeStack.push(current);
+
+        break;
     case DepthFunc:
         glGetIntegerv(GL_DEPTH_FUNC, &current_i);
         glDepthFunc(value);
@@ -57,6 +67,13 @@ void OpenGLState::Pop(OpenGLAttribute attribute)
     {
     case DepthMask:
         glDepthMask(value);
+
+        break;
+    case DepthTest:
+        if ((GLboolean) value == GL_TRUE)
+            glEnable(GL_DEPTH_TEST);
+        else
+            glDisable(GL_DEPTH_TEST);
 
         break;
     case DepthFunc:

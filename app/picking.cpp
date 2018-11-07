@@ -25,6 +25,8 @@
 using namespace gl;
 using namespace gl::helper;
 
+Node* selectedNode = nullptr;
+
 SceneGraph* createScene()
 {
     SceneGraph* scene = new SceneGraph();
@@ -32,37 +34,56 @@ SceneGraph* createScene()
     Node* root = scene->root();
     Node* childNode;
 
-    Texture2D* textureColor = new Texture2D();
-    textureColor->load("textures/Brick_Wall_color.jpg");
+    std::string folder = "low_res";
+    std::string extension = ".obj";
 
-    Texture2D* textureNormal = new Texture2D();
-    textureNormal->load("textures/Brick_Wall_normal_smooth.jpg");
+    Material mat1 = Material::Obsidian();
+    Material mat2 = Material::Gold();
+    Material mat3 = Material::Ruby();
+    Material mat4 = Material::Bronze();
+    Material mat5 = Material::Copper();
+    Material mat6 = Material::Jade();
+
+    VisualModel* pawn   = new VisualModel("models/" + folder + "/pion" + extension, mat1);
+    VisualModel* rook   = new VisualModel("models/" + folder + "/tour" + extension, mat2);
+    VisualModel* knight = new VisualModel("models/" + folder + "/cavalier" + extension, mat3);
+    VisualModel* bishop = new VisualModel("models/" + folder + "/fou" + extension, mat4);
+    VisualModel* queen  = new VisualModel("models/" + folder + "/reine" + extension, mat5);
+    VisualModel* king   = new VisualModel("models/" + folder + "/roi" + extension, mat6);
+
+    VisualModel* visualModels[6] = {pawn, rook, knight, bishop, queen, king};
 
     ////////////////////////////////////////
 
     childNode = root->addChild();
 
-    ShaderProgram* basicTexturingShader = helper::CreateShaderProgram(ShaderProgram::NormalMapping);
+    ShaderProgram* basicTexturingShader = helper::CreateShaderProgram(ShaderProgram::PhongShading);
     childNode->setShaderProgram(basicTexturingShader);
 
-    basicTexturingShader->addData<Texture>("colorMap", *textureColor);
-    basicTexturingShader->addData<Texture>("normalMap", *textureNormal);
-    basicTexturingShader->set(OpenGLState::CullFace, GL_FALSE);
-
-    VisualModel* board = new VisualModel("models/flatQuad.obj");
-    childNode->addVisual(board);
+    for (unsigned int i = 0; i < 6; ++i) {
+        VisualModel* vm = visualModels[i];
+        vm->transform().translate(25*i, 0, 0);
+        childNode->addVisual(vm);
+    }
 
     ////////////////////////////////////////
 
     childNode = root->addChild();
 
-    ShaderProgram* tangentSpaceShader = helper::CreateShaderProgram(ShaderProgram::TangentSpace);
-    tangentSpaceShader->addData<float>("scale", 0.5f);
-    childNode->setShaderProgram(tangentSpaceShader);
+    ShaderProgram* highlightShader = helper::CreateShaderProgram(ShaderProgram::HighLight);
+    childNode->setShaderProgram(highlightShader);
 
-    childNode->addVisual(board);
+    selectedNode = childNode;
 
     return scene;
+}
+
+void visualModelChanged(const VisualModel* visualModel)
+{
+    selectedNode->removeVisual(0);
+
+    if (visualModel != nullptr)
+        selectedNode->addVisual(visualModel);
 }
 
 int main()
@@ -117,7 +138,8 @@ int main()
 
     //////////////// Interface
 
-    GLFWApplicationEvents interface(&camera);
+    InterfacePicking interface(scene, &camera);
+    interface.setCallback(visualModelChanged);
     app->setInterface(&interface);
 
     /* Throws the main loop */

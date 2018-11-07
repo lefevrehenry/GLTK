@@ -118,7 +118,7 @@ Selectable* Viewer::pickingObject(int sx, int sy)
 {
     Selectable* selectable = nullptr;
 
-    sy = 480 - sy;
+//    sy = 480 - sy;
 
 //    float bounds[4];
 //    bounds[0] = sx / 640.0;
@@ -134,16 +134,16 @@ Selectable* Viewer::pickingObject(int sx, int sy)
     //glm::mat4 ViewProjMatrix = this->m_camera.mvp();
     //this->m_pickingVisitor.setCamera(ViewProjMatrix);
 
-    PickingVisitor pickingVisitor(sx, sy);
+//    PickingVisitor pickingVisitor(sx, sy);
 
-    Node* node = this->m_scene->root();
-    node->executeVisitor(&pickingVisitor);
+//    Node* node = this->m_scene->root();
+//    node->executeVisitor(&pickingVisitor);
 
-    const VisualModel* visual = pickingVisitor.selectedVisualModel();
-    if (visual != nullptr) {
-        selectable = new Selectable();
-        selectable->setVisualModel(visual);
-    }
+//    const VisualModel* visual = pickingVisitor.selectedVisualModel();
+//    if (visual != nullptr) {
+//        selectable = new Selectable();
+//        selectable->setVisualModel(visual);
+//    }
 
     return selectable;
 

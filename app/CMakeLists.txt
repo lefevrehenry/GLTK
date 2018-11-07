@@ -2,13 +2,12 @@ cmake_minimum_required(VERSION 3.2)
 project(app)
 
 set(EXECUTABLE_FILES
-    skybox
+    environmentMapping
     normalMapping
+    picking
 )
 
-
 foreach(exec_i ${EXECUTABLE_FILES})
-#    message(STATUS exec_i)
     add_executable(${exec_i} ${exec_i}.cpp)
     target_include_directories(${exec_i} PRIVATE ${CMAKE_SOURCE_DIR})
     target_link_libraries(${exec_i} LINK_PRIVATE OpenGL)

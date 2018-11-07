@@ -73,6 +73,9 @@ Node* Node::getChild(unsigned int i) const
 
 void Node::addVisual(const VisualModel* visual)
 {
+    if (visual == nullptr)
+        return;
+
     this->m_visuals.push_back(visual);
 }
 

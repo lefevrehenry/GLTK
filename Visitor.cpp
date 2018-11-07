@@ -269,9 +269,9 @@ unsigned int unpackIndex(const glm::vec4& color)
     return (a << 24 | b << 16 | g << 8 | r);
 }
 
-PickingVisitor::PickingVisitor(int x, int y) :
-    m_x(x),
-    m_y(y),
+PickingVisitor::PickingVisitor() :
+    m_x(0),
+    m_y(0),
     m_pickingFramebuffer(nullptr),
     m_shaderProgram(nullptr),
     m_visualModels(0),
@@ -297,6 +297,12 @@ PickingVisitor::~PickingVisitor()
     delete m_shaderProgram;
     m_shaderProgram = nullptr;
 
+}
+
+void PickingVisitor::set(int x, int y)
+{
+    this->m_x = x;
+    this->m_y = GLFWApplication::ScreenHeight - y;
 }
 
 const VisualModel* PickingVisitor::selectedVisualModel() const

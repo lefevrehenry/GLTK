@@ -9,7 +9,6 @@
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
-#include "Viewer.h"
 #include "VisualManager.h"
 
 // Standard Library
@@ -292,10 +291,11 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::HighLight:
 
-//        shaderProgram->setPrimitiveMode(PrimitiveMode::TRIANGLES);
         shaderProgram->addData<glm::vec3>("color", glm::vec3(1.0,0.8,0.0));
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgram->set(OpenGLState::CullFace, GL_TRUE);
+//        shaderProgram->set(OpenGLState::DepthMask, GL_FALSE);
 
         break;
     case ShaderProgramType::BasicTexturing:
