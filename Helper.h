@@ -253,6 +253,8 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::Normal:
 
+        shaderProgram->addData<float>("scale", 0.5f);
+        shaderProgram->addData<glm::vec3>("normalColor", glm::vec3(1,1,1));
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 

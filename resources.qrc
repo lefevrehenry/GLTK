@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>shaders/basic.fs</file>
-        <file>shaders/basic.gs</file>
         <file>shaders/basic.vs</file>
         <file>shaders/basicTexturing.fs</file>
         <file>shaders/basicTexturing.vs</file>

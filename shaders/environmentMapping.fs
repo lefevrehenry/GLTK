@@ -14,9 +14,9 @@ void main()
     vec3 n = normalize(normalWorld);
     vec3 e = normalize(eyeWorld);
 
-    //vec3 r = reflect(e,n);
+    vec3 r = reflect(e,n);
     float ratio = 1.0 / 1.309;
-    vec3 r = refract(e,n,ratio);
+    //vec3 r = refract(e,n,ratio);
 
     outColor = texture(cubeMap,r);
 }

@@ -25,17 +25,12 @@
 using namespace gl;
 using namespace gl::helper;
 
-static Node* selectedNode = nullptr;
-
 SceneGraph* createScene()
 {
     SceneGraph* scene = new SceneGraph();
 
     Node* root = scene->root();
     Node* childNode;
-
-    std::string folder = "low_res";
-    std::string extension = ".obj";
 
     Material mat1 = Material::Obsidian();
     Material mat2 = Material::Gold();
@@ -44,46 +39,24 @@ SceneGraph* createScene()
     Material mat5 = Material::Copper();
     Material mat6 = Material::Jade();
 
-    VisualModel* pawn   = new VisualModel("models/" + folder + "/pion" + extension, mat1);
-    VisualModel* rook   = new VisualModel("models/" + folder + "/tour" + extension, mat2);
-    VisualModel* knight = new VisualModel("models/" + folder + "/cavalier" + extension, mat3);
-    VisualModel* bishop = new VisualModel("models/" + folder + "/fou" + extension, mat4);
-    VisualModel* queen  = new VisualModel("models/" + folder + "/reine" + extension, mat5);
-    VisualModel* king   = new VisualModel("models/" + folder + "/roi" + extension, mat6);
-
-    VisualModel* visualModels[6] = {pawn, rook, knight, bishop, queen, king};
+    VisualModel* pawn   = new VisualModel("models/dragon_low.obj", mat2);
 
     ////////////////////////////////////////
 
     childNode = root->addChild();
 
-    ShaderProgram* phongShadingShader = helper::CreateShaderProgram(ShaderProgram::PhongShading);
-    childNode->setShaderProgram(phongShadingShader);
+    ShaderProgram* basicTexturingShader = helper::CreateShaderProgram(ShaderProgram::Normal);
+    childNode->setShaderProgram(basicTexturingShader);
 
-    for (unsigned int i = 0; i < 6; ++i) {
-        VisualModel* vm = visualModels[i];
-        vm->transform().translate(25*i, 0, 0);
-        childNode->addVisual(vm);
-    }
+//    for (unsigned int i = 0; i < 6; ++i) {
+//        VisualModel* vm = visualModels[i];
+//        vm->transform().translate(25*i, 0, 0);
+//        childNode->addVisual(vm);
+//    }
 
-    ////////////////////////////////////////
-
-    childNode = root->addChild();
-
-    ShaderProgram* highlightShader = helper::CreateShaderProgram(ShaderProgram::Normal);
-    childNode->setShaderProgram(highlightShader);
-
-    selectedNode = childNode;
+    childNode->addVisual(pawn);
 
     return scene;
-}
-
-void visualModelChanged(const VisualModel* visualModel)
-{
-    selectedNode->removeVisual(0);
-
-    if (visualModel != nullptr)
-        selectedNode->addVisual(visualModel);
 }
 
 int main()
@@ -138,8 +111,7 @@ int main()
 
     //////////////// Interface
 
-    InterfacePicking interface(scene, &camera);
-    interface.setCallback(visualModelChanged);
+    GLFWApplicationEvents interface(&camera);
     app->setInterface(&interface);
 
     /* Throws the main loop */

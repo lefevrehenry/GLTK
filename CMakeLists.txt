@@ -69,7 +69,6 @@ set(SOURCE_FILES
 
 set(SHADER_FILES
     shaders/basic.vs
-    shaders/basic.gs
     shaders/basic.fs
     shaders/basicTexturing.vs
     shaders/basicTexturing.fs

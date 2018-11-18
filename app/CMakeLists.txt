@@ -5,6 +5,7 @@ set(EXECUTABLE_FILES
     environmentMapping
     normalMapping
     picking
+    deferredShading
 )
 
 foreach(exec_i ${EXECUTABLE_FILES})
