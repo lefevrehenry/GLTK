@@ -139,8 +139,6 @@ configure_file(${CMAKE_SOURCE_DIR}/etc/config.ini.in "${CMAKE_BINARY_DIR}/etc/co
 # Required packages
 find_package(OpenGL REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui OpenGL REQUIRED)
-#find_package(GLEW REQUIRED)
-#find_package(GLUT REQUIRED)
 
 qt5_add_resources(RESOURCE_FILES ${QRC_FILES})
 
@@ -150,8 +148,8 @@ add_subdirectory(app)
 #========== Creation of the library ==========#
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES} ${QRC_FILES} ${RESOURCE_FILES} )
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})# ${GLEW_INCLUDE_DIRS} ${GLUT_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} Qt5::Core Qt5::Gui Qt5::OpenGL)# ${GLEW_LIBRARIES} ${GLUT_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} Qt5::Core Qt5::Gui Qt5::OpenGL)
 
 
 #========= Linking with local library =========#
@@ -175,3 +173,14 @@ endmacro()
 link_with_local_lib(extlibs/glew GLEW)
 link_with_local_lib(extlibs/GLFW glfw)
 link_with_local_lib(extlibs/assimp assimp)
+
+
+#========= Install rules =========#
+
+## Change default install prefix
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
+endif()
+
+install(FILES ${HEADER_FILES} DESTINATION include)
+install(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION lib)
