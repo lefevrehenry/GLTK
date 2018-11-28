@@ -147,6 +147,13 @@ void InterfacePicking::mouseButtonCallback(GLFWwindow* handle, int button, int a
         root->executeVisitor(m_pickingVisitor);
 
         const VisualModel* visualModel = m_pickingVisitor->selectedVisualModel();
+        const glm::vec3& ndc = m_pickingVisitor->selectedPosition();
+
+        const glm::mat4& projection = this->m_camera->projection();
+        glm::vec4 vs = glm::inverse(projection) * glm::vec4(ndc,1);
+        vs /= vs.w;
+
+        glm::vec4 ws = this->m_camera->model() * vs;
 
         if (m_callback != nullptr)
             m_callback(visualModel);

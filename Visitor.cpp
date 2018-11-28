@@ -319,8 +319,13 @@ void PickingVisitor::start()
 {
     this->m_pickingFramebuffer->bind();
 
+    GLfloat oldClearColor[4];
+    glGetFloatv(GL_COLOR_CLEAR_VALUE, &oldClearColor[0]);
+
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glClearColor(oldClearColor[0],oldClearColor[1],oldClearColor[2],oldClearColor[3]);
 
     this->m_shaderProgram->bind();
     this->m_shaderProgram->updateDataIfDirty();
@@ -355,9 +360,16 @@ void PickingVisitor::end()
         float z = 1.0;
         glReadPixels(this->m_x, this->m_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
 
+        float w = GLFWApplication::ScreenWidth;
+        float h = GLFWApplication::ScreenHeight;
+
+        float ndc_x = (this->m_x / w) * 2.f - 1;
+        float ndc_y = (this->m_y / h) * 2.f - 1;
+        float ndc_z = (z * 2.f) - 1;
+
         // todo: set position of selected visual
         this->m_selectedVisualModel = visual;
-        this->m_selectedPosition = glm::vec3(0,0,0);
+        this->m_selectedPosition = glm::vec3(ndc_x,ndc_y,ndc_z);
     }
 
     this->m_pickingFramebuffer->unbind();

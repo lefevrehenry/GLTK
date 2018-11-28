@@ -32,6 +32,8 @@ private:
     bool mousePressed;
     double x;
     double y;
+
+protected:
     Camera* m_camera;
 
 };
