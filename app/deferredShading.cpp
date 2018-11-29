@@ -32,29 +32,27 @@ SceneGraph* createScene()
     Node* root = scene->root();
     Node* childNode;
 
-    Material mat1 = Material::Obsidian();
-    Material mat2 = Material::Gold();
-    Material mat3 = Material::Ruby();
-    Material mat4 = Material::Bronze();
-    Material mat5 = Material::Copper();
-    Material mat6 = Material::Jade();
-
-    VisualModel* pawn   = new VisualModel("models/dragon_low.obj", mat2);
-
     ////////////////////////////////////////
 
     childNode = root->addChild();
 
-    ShaderProgram* basicTexturingShader = helper::CreateShaderProgram(ShaderProgram::Normal);
-    childNode->setShaderProgram(basicTexturingShader);
+    VisualModel* vm = new VisualModel("models/dragon_low.obj", Material::Gold());
+    childNode->addVisual(vm);
 
-//    for (unsigned int i = 0; i < 6; ++i) {
-//        VisualModel* vm = visualModels[i];
-//        vm->transform().translate(25*i, 0, 0);
-//        childNode->addVisual(vm);
-//    }
+    return scene;
+}
 
-    childNode->addVisual(pawn);
+SceneGraph* createVaoScene(Texture* textureColor)
+{
+    SceneGraph* scene = new SceneGraph();
+    Node* root = scene->root();
+
+    VisualModel* vaoQuad = new VisualModel("models/vaoQuad.obj");
+    root->addVisual(vaoQuad);
+
+    ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::VaoQuad);
+    shaderProgram->addData<Texture>("textureColor", *textureColor);
+    root->setShaderProgram(shaderProgram);
 
     return scene;
 }
@@ -87,6 +85,12 @@ int main()
         msg_warning("FileRepository") << "No share/ directory added";
     }
 
+    unsigned int width = GLFWApplication::ScreenWidth;
+    unsigned int height = GLFWApplication::ScreenHeight;
+
+    ShaderProgram* deferredShader = helper::CreateShaderProgram(ShaderProgram::Deferred);
+    ShaderVisitor deferredShaderVisitor(deferredShader);
+
     //////////////// Scene
 
     SceneGraph* scene = createScene();
@@ -94,20 +98,53 @@ int main()
 
     scene->fitView(&camera);
 
-    Light light;
-    light.setPosition(glm::vec3(0,0,0));
-    light.setDirection(glm::vec3(0,0,-1));
-    light.setColor(glm::vec3(1,1,1));
+    //// --------------------------------
+    /// Dessine les textures de couleur, normale et pofondeur dans un fbo
+    Framebuffer fbo(width, height);
+    fbo.attachTexture();
+    fbo.attachTexture();
+    fbo.attachTexture();
+    fbo.attachDepthTexture();
 
-    VisualManager::UpdateUniformBufferLight(light);
+    Rendered fboRender;
+    fboRender.scene = scene;
+    fboRender.camera = &camera;
+    fboRender.framebuffer = &fbo;
+    fboRender.visitor = &deferredShaderVisitor;
 
     //////////////// Render pass
 
-    Rendered defaultRender1;
-    defaultRender1.scene = scene;
-    defaultRender1.camera = &camera;
+    SceneGraph* vaoScene2 = createVaoScene(fbo.renderTexture(0));
+    SceneGraph* vaoScene3 = createVaoScene(fbo.renderTexture(1));
+    SceneGraph* vaoScene4 = createVaoScene(fbo.renderTexture(2));
 
-    app->addRendered(&defaultRender1);
+    Viewport viewport_bl( 0, 0,.5,.5);
+    Viewport viewport_br(.5, 0,.5,.5);
+    Viewport viewport_tl( 0,.5,.5,.5);
+    Viewport viewport_tr(.5,.5,.5,.5);
+
+    Rendered defaultRender2;
+    defaultRender2.scene = vaoScene2;
+    defaultRender2.camera = &camera;
+    defaultRender2.viewport = &viewport_tr;
+    defaultRender2.framebuffer = nullptr;
+
+    Rendered defaultRender3;
+    defaultRender3.scene = vaoScene3;
+    defaultRender3.camera = &camera;
+    defaultRender3.viewport = &viewport_br;
+    defaultRender3.framebuffer = nullptr;
+
+    Rendered defaultRender4;
+    defaultRender4.scene = vaoScene4;
+    defaultRender4.camera = &camera;
+    defaultRender4.viewport = &viewport_bl;
+    defaultRender4.framebuffer = nullptr;
+
+    app->addRendered(&fboRender);
+    app->addRendered(&defaultRender2);
+    app->addRendered(&defaultRender3);
+    app->addRendered(&defaultRender4);
 
     //////////////// Interface
 
