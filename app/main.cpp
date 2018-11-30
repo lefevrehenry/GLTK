@@ -54,12 +54,12 @@ void createChessboard(Node* node)
     std::string folder = "low_res";
     std::string extension = ".obj";
 
-    Mesh* pawn = Mesh::FromFile("models/" + folder + "/pion" + extension);
-    Mesh* rook = Mesh::FromFile("models/" + folder + "/tour" + extension);
-    Mesh* knight = Mesh::FromFile("models/" + folder + "/cavalier" + extension);
-    Mesh* bishop = Mesh::FromFile("models/" + folder + "/fou" + extension);
-    Mesh* queen = Mesh::FromFile("models/" + folder + "/reine" + extension);
-    Mesh* king = Mesh::FromFile("models/" + folder + "/roi" + extension);
+    Mesh* pawn = Mesh::FromFile("mesh/" + folder + "/pion" + extension);
+    Mesh* rook = Mesh::FromFile("mesh/" + folder + "/tour" + extension);
+    Mesh* knight = Mesh::FromFile("mesh/" + folder + "/cavalier" + extension);
+    Mesh* bishop = Mesh::FromFile("mesh/" + folder + "/fou" + extension);
+    Mesh* queen = Mesh::FromFile("mesh/" + folder + "/reine" + extension);
+    Mesh* king = Mesh::FromFile("mesh/" + folder + "/roi" + extension);
 
     Texture* boardAmbientTex = new Texture2D();
     boardAmbientTex->load("textures/Brick_Wall_ambient.jpg");
@@ -80,7 +80,7 @@ void createChessboard(Node* node)
     shaderProgram->addData<Texture>("normalMap", *boardNormalTex);
     shaderProgram->addData<Texture>("specMap", *boardSpecTex);
 
-    VisualModel* board = new VisualModel("models/flatQuad.obj");
+    VisualModel* board = new VisualModel("mesh/flatQuad.obj");
     float s = 118.5;
     board->transform().scale(s,s,s);
 //    board->transform().rotate(glm::pi<float>()/2.f, glm::vec3(0,1,0));
@@ -194,7 +194,7 @@ SceneGraph* createVaoScene(Texture* textureColor)
     SceneGraph* scene = new SceneGraph();
     Node* root = scene->root();
 
-    VisualModel* vaoQuad = new VisualModel("models/vaoQuad.obj");
+    VisualModel* vaoQuad = new VisualModel("mesh/vaoQuad.obj");
     root->addVisual(vaoQuad);
 
     ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::VaoQuad);

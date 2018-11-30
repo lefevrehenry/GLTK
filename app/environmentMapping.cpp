@@ -44,7 +44,7 @@ SceneGraph* createScene()
 
     basicTexturingShader->addData<Texture>("cubeMap", *cubeMapTexture);
 
-    VisualModel* board = new VisualModel("models/Armadillo_simplified.obj");
+    VisualModel* board = new VisualModel("mesh/Armadillo_simplified.obj");
     childNode->addVisual(board);
 
     ////////////////////////////////////////
@@ -60,7 +60,7 @@ SceneGraph* createScene()
     cubeMapShader->set(OpenGLState::DepthFunc, GL_LEQUAL);
     cubeMapShader->set(OpenGLState::CullFace, GL_FALSE);
 
-    VisualModel* vaoQuad = new VisualModel("models/cube.obj");
+    VisualModel* vaoQuad = new VisualModel("mesh/cube.obj");
     childNode->addVisual(vaoQuad);
     return scene;
 }

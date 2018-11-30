@@ -44,12 +44,12 @@ SceneGraph* createScene()
     Material mat5 = Material::Copper();
     Material mat6 = Material::Jade();
 
-    VisualModel* pawn   = new VisualModel("models/" + folder + "/pion" + extension, mat1);
-    VisualModel* rook   = new VisualModel("models/" + folder + "/tour" + extension, mat2);
-    VisualModel* knight = new VisualModel("models/" + folder + "/cavalier" + extension, mat3);
-    VisualModel* bishop = new VisualModel("models/" + folder + "/fou" + extension, mat4);
-    VisualModel* queen  = new VisualModel("models/" + folder + "/reine" + extension, mat5);
-    VisualModel* king   = new VisualModel("models/" + folder + "/roi" + extension, mat6);
+    VisualModel* pawn   = new VisualModel("mesh/" + folder + "/pion" + extension, mat1);
+    VisualModel* rook   = new VisualModel("mesh/" + folder + "/tour" + extension, mat2);
+    VisualModel* knight = new VisualModel("mesh/" + folder + "/cavalier" + extension, mat3);
+    VisualModel* bishop = new VisualModel("mesh/" + folder + "/fou" + extension, mat4);
+    VisualModel* queen  = new VisualModel("mesh/" + folder + "/reine" + extension, mat5);
+    VisualModel* king   = new VisualModel("mesh/" + folder + "/roi" + extension, mat6);
 
     VisualModel* visualModels[6] = {pawn, rook, knight, bishop, queen, king};
 
@@ -78,7 +78,7 @@ SceneGraph* createScene()
     return scene;
 }
 
-void visualModelChanged(const VisualModel* visualModel)
+void visualModelChanged(const VisualModel* visualModel, glm::vec4)
 {
     selectedNode->removeVisual(0);
 

@@ -36,7 +36,7 @@ SceneGraph* createScene()
 
     childNode = root->addChild();
 
-    VisualModel* vm = new VisualModel("models/dragon_low.obj", Material::Gold());
+    VisualModel* vm = new VisualModel("mesh/dragon_low.obj", Material::Gold());
     childNode->addVisual(vm);
 
     return scene;
@@ -47,7 +47,7 @@ SceneGraph* createVaoScene(Texture* textureColor)
     SceneGraph* scene = new SceneGraph();
     Node* root = scene->root();
 
-    VisualModel* vaoQuad = new VisualModel("models/vaoQuad.obj");
+    VisualModel* vaoQuad = new VisualModel("mesh/vaoQuad.obj");
     root->addVisual(vaoQuad);
 
     ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::VaoQuad);

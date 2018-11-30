@@ -49,7 +49,7 @@ SceneGraph* createScene()
     basicTexturingShader->addData<Texture>("normalMap", *textureNormal);
     basicTexturingShader->set(OpenGLState::CullFace, GL_FALSE);
 
-    VisualModel* board = new VisualModel("models/flatQuad.obj");
+    VisualModel* board = new VisualModel("mesh/flatQuad.obj");
     childNode->addVisual(board);
 
     ////////////////////////////////////////
