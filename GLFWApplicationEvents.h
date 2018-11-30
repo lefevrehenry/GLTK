@@ -3,6 +3,9 @@
 
 #include "Interface.h"
 
+// Glm
+#include <glm/glm.hpp>
+
 
 class GLFWwindow;
 
@@ -49,7 +52,7 @@ public:
     virtual ~InterfacePicking();
 
 public:
-    void setCallback(void (*callback)(const VisualModel*));
+    void setCallback(void (*callback)(const VisualModel*, glm::vec4));
 
 public:
     virtual void mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods);
@@ -60,7 +63,7 @@ private:
     PickingVisitor* m_pickingVisitor;
     bool m_cameraActive;
 
-    void (*m_callback)(const VisualModel*);
+    void (*m_callback)(const VisualModel*, glm::vec4);
 };
 
 }   // namespace gl

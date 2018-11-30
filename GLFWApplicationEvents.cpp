@@ -14,7 +14,6 @@
 #include <GLFW/glfw3.h>
 
 // Glm
-#include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
 
@@ -122,7 +121,7 @@ InterfacePicking::~InterfacePicking()
     m_pickingVisitor = nullptr;
 }
 
-void InterfacePicking::setCallback(void (*callback)(const VisualModel*))
+void InterfacePicking::setCallback(void (*callback)(const VisualModel*, glm::vec4))
 {
     this->m_callback = callback;
 }
@@ -156,7 +155,7 @@ void InterfacePicking::mouseButtonCallback(GLFWwindow* handle, int button, int a
         glm::vec4 ws = this->m_camera->model() * vs;
 
         if (m_callback != nullptr)
-            m_callback(visualModel);
+            m_callback(visualModel, ws);
     }
 }
 
