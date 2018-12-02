@@ -12,8 +12,8 @@
 
 using namespace gl;
 
-unsigned int GLFWApplication::ScreenWidth = 640;
-unsigned int GLFWApplication::ScreenHeight = 480;
+unsigned int GLFWApplication::ScreenWidth = 0;
+unsigned int GLFWApplication::ScreenHeight = 0;
 
 int GLFWApplication::OpenGLMajorVersion = 3;
 int GLFWApplication::OpenGLMinorVersion = 3;
@@ -25,7 +25,7 @@ GLFWApplication* GLFWApplication::getInstance()
     return OurInstance;
 }
 
-GLFWApplication* GLFWApplication::CreateWindow()
+GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
 {
     if (OurInstance != nullptr) {
         msg_error("GLFWApplication") << "Cannot create a second GLFWApplication. Singleton pattern is used";
@@ -40,8 +40,8 @@ GLFWApplication* GLFWApplication::CreateWindow()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLFWApplication::OpenGLMinorVersion);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    int width = (int) GLFWApplication::ScreenWidth;
-    int height = (int) GLFWApplication::ScreenHeight;
+    GLFWApplication::ScreenWidth = uint(width);
+    GLFWApplication::ScreenHeight = uint(height);
 
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow* windowHandle = glfwCreateWindow(width, height, "OpenGL", nullptr, nullptr);
@@ -57,8 +57,7 @@ GLFWApplication* GLFWApplication::CreateWindow()
     glfwMakeContextCurrent(windowHandle);
 
     // Glew initialization
-    GLenum err = glewInit();
-    if (err != GLEW_OK)
+    if (glewInit() != GLEW_OK)
     {
         // Problem: glewInit failed, something is seriously wrong.
         msg_error("OpenGL") << "Glew init failed";

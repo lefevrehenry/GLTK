@@ -20,7 +20,7 @@ class GLFWApplication : public Application
 public:
     static GLFWApplication* getInstance();
 
-    static GLFWApplication* CreateWindow();
+    static GLFWApplication* CreateWindow(int width, int height);
     static void Terminate();
 
     static void FramebufferSizeCallback(GLFWwindow* handle, int width, int height);
