@@ -166,11 +166,25 @@ void InterfacePicking::mouseButtonCallback(GLFWwindow* handle, int button, int a
     }
 }
 
-void InterfacePicking::keyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods)
+void InterfacePicking::keyCallback(GLFWwindow* handle, int key, int, int action, int)
 {
     if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS)
         this->m_cameraActive = true;
 
     if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE)
         this->m_cameraActive = false;
+
+    if (action == GLFW_PRESS)
+    {
+        switch(key) {
+//        case GLFW_KEY_Q:
+//            glfwSetWindowShouldClose(windowHandle, GL_TRUE);
+//            break;
+        case GLFW_KEY_ESCAPE:
+            glfwSetWindowShouldClose(handle, GL_TRUE);
+            break;
+        default:
+            break;
+        }
+    }
 }
