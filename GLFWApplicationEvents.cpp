@@ -105,7 +105,7 @@ void GLFWApplicationEvents::scrollCallback(GLFWwindow*, double, double ypos)
     glm::vec3 target = this->m_camera->target();
     glm::vec3 up = this->m_camera->up();
 
-    glm::vec3 newEye = eye + (float) ypos * 0.1f * (target - eye);
+    glm::vec3 newEye = eye + float(ypos) * 0.1f * (target - eye);
 
     this->m_camera->lookAt(newEye, target, up);
 }

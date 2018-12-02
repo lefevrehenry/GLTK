@@ -261,10 +261,10 @@ glm::vec4 packIndex(unsigned int n)
 
 unsigned int unpackIndex(const glm::vec4& color)
 {
-    unsigned int r = color.r * 255;
-    unsigned int g = color.g * 255;
-    unsigned int b = color.b * 255;
-    unsigned int a = color.a * 255;
+    unsigned int r = uint(color.r * 255);
+    unsigned int g = uint(color.g * 255);
+    unsigned int b = uint(color.b * 255);
+    unsigned int a = uint(color.a * 255);
 
     return (a << 24 | b << 16 | g << 8 | r);
 }
