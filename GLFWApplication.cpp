@@ -2,7 +2,6 @@
 
 #include "GLFWApplicationEvents.h"
 #include "Message.h"
-#include "Rendered.h"
 #include "VisualManager.h"
 
 // OpenGL
@@ -151,7 +150,7 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 GLFWApplication::GLFWApplication() : Application(),
     windowHandle(nullptr),
     m_interface(nullptr),
-    m_renderedList()
+    m_drawCallback(nullptr)
 {
     OurInstance = this;
 }
@@ -189,8 +188,9 @@ void GLFWApplication::loop()
 //            lastTime += 1.0;
 //        }
 
-        /* Call to drawing function */
-        draw();
+        /* Call the drawing function */
+        if (this->m_drawCallback)
+            this->m_drawCallback();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(this->windowHandle);
@@ -240,21 +240,7 @@ void GLFWApplication::setInterface(Interface* interface)
     this->m_interface = interface;
 }
 
-void GLFWApplication::addRendered(const Rendered *rendered)
+void GLFWApplication::setDrawCallBack(void (*drawCallback)())
 {
-    this->m_renderedList.push_back(rendered);
-}
-
-void GLFWApplication::removeRendered(const Rendered *rendered)
-{
-    this->m_renderedList.remove(rendered);
-}
-
-void GLFWApplication::draw() const
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    for (const Rendered* rendered : m_renderedList) {
-        rendered->draw();
-    }
+    this->m_drawCallback = drawCallback;
 }

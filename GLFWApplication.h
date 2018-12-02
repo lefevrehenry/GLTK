@@ -3,9 +3,6 @@
 
 #include "Application.h"
 
-// Standard Library
-#include <list>
-
 
 class GLFWwindow;
 
@@ -13,7 +10,6 @@ namespace gl {
 
 class GLFWApplicationEvents;
 class Interface;
-class Rendered;
 
 /**
  * @brief The GLFWApplication class
@@ -49,9 +45,7 @@ public:
     Interface* getInterface() const;
     void setInterface(Interface* interface);
 
-public:
-    void addRendered(const gl::Rendered* rendered);
-    void removeRendered(const gl::Rendered* rendered);
+    void setDrawCallBack(void (*drawCallback)());
 
 public:
     static unsigned int ScreenWidth;
@@ -59,9 +53,6 @@ public:
 
     static int OpenGLMajorVersion;
     static int OpenGLMinorVersion;
-
-private:
-    void draw() const;
 
 private:
     static GLFWApplication* OurInstance;
@@ -72,7 +63,7 @@ private:
 
     Interface* m_interface;
 
-    std::list<const gl::Rendered*> m_renderedList;
+    void (*m_drawCallback)();
 
 };
 
