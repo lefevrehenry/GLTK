@@ -20,9 +20,7 @@ Rendered::Rendered() :
     camera(nullptr),
     viewport(nullptr),
     framebuffer(nullptr),
-    visitor(nullptr),
-    singleShot(false),
-    count(0)
+    visitor(nullptr)
 {
 
 }
