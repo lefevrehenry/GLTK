@@ -37,17 +37,14 @@ void Rendered::draw() const
     if (!isComplete())
         return;
 
-    if(singleShot && count > 0)
-        return;
-
-    unsigned int width = GLFWApplication::ScreenWidth;
-    unsigned int height = GLFWApplication::ScreenHeight;
+    unsigned int fwidth = GLFWApplication::ScreenWidth;
+    unsigned int fheight = GLFWApplication::ScreenHeight;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     if (framebuffer != nullptr) {
         framebuffer->bind();
-        width = framebuffer->width();
-        height = framebuffer->height();
+        fwidth = framebuffer->width();
+        fheight = framebuffer->height();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -57,23 +54,21 @@ void Rendered::draw() const
         }
     }
 
+    VisualManager::UpdateUniformBufferCamera(*camera);
+
     Viewport* viewport = (this->viewport != nullptr ? this->viewport : &defaultViewport);
     Visitor* visitor = (this->visitor != nullptr ? this->visitor : &defaultVisitor);
 
-    int v_x = viewport->x() * width;
-    int v_y = viewport->y() * height;
-    int v_width = viewport->rw() * width;
-    int v_height = viewport->rh() * height;
-    glViewport(v_x, v_y, v_width, v_height);
+    int x = int(viewport->x() * fwidth);
+    int y = int(viewport->y() * fheight);
+    int width = int(viewport->rw() * fwidth);
+    int height = int(viewport->rh() * fheight);
 
-    VisualManager::UpdateUniformBufferCamera(*camera);
+    glViewport(x, y, width, height);
 
     Node* node = scene->root();
     node->executeVisitor(visitor);
 
     if (framebuffer != nullptr)
         framebuffer->unbind();
-
-    if (singleShot)
-        count += 1;
 }

@@ -112,7 +112,7 @@ void GLFWApplication::FramebufferSizeCallback(GLFWwindow*, int width, int height
 
 void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)
 {
-    GLFWApplication* app = GLFWApplication::getInstance();
+    static GLFWApplication* app = GLFWApplication::getInstance();
 
     if (app->getInterface() != nullptr) {
         app->getInterface()->mouseButtonCallback(handle, button, action, mods);
@@ -121,7 +121,7 @@ void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int ac
 
 void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
 {
-    GLFWApplication* app = GLFWApplication::getInstance();
+    static GLFWApplication* app = GLFWApplication::getInstance();
 
     if (app->getInterface() != nullptr) {
         app->getInterface()->cursorPosCallback(handle, xpos, ypos);
@@ -130,7 +130,7 @@ void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double 
 
 void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double yoffset)
 {
-    GLFWApplication* app = GLFWApplication::getInstance();
+    static GLFWApplication* app = GLFWApplication::getInstance();
 
     if (app->getInterface() != nullptr) {
         app->getInterface()->scrollCallback(handle, xoffset, yoffset);
@@ -139,7 +139,7 @@ void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double 
 
 void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods)
 {
-    GLFWApplication* app = GLFWApplication::getInstance();
+    static GLFWApplication* app = GLFWApplication::getInstance();
 
     if (app->getInterface() != nullptr) {
         app->getInterface()->keyCallback(handle, key, scancode, action, mods);
