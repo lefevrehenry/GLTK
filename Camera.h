@@ -79,10 +79,10 @@ private:
 private:
     ProjectionType m_projectionType;
 
-    float m_orthoLeft;
-    float m_orthoRight;
-    float m_orthoBottom;
-    float m_orthoTop;
+    float m_left;
+    float m_right;
+    float m_bottom;
+    float m_top;
     float m_fovy;
     float m_aspectRatio;
     float m_zNear;

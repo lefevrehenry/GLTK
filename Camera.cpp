@@ -11,10 +11,10 @@ using namespace gl;
 
 Camera::Camera() :
     m_projectionType(Perspective),
-    m_orthoLeft(0),
-    m_orthoRight(0),
-    m_orthoBottom(0),
-    m_orthoTop(0),
+    m_left(0),
+    m_right(0),
+    m_bottom(0),
+    m_top(0),
     m_fovy(0),
     m_aspectRatio(0),
     m_zNear(0),
@@ -173,10 +173,10 @@ void Camera::perspective(float fovy, float aspect, float zNear, float zFar)
 void Camera::orthographic(float left, float right, float bottom, float top, float zNear, float zFar)
 {
     this->m_projectionType = Orthograhic;
-    this->m_orthoLeft = left;
-    this->m_orthoRight = right;
-    this->m_orthoBottom = bottom;
-    this->m_orthoTop = top;
+    this->m_left = left;
+    this->m_right = right;
+    this->m_bottom = bottom;
+    this->m_top = top;
     this->m_zNear = zNear;
     this->m_zFar = zFar;
 
@@ -190,10 +190,10 @@ glm::mat4 Camera::projectionROI(float bounds[4]) const
     glm::mat4 projection;
 
     if (this->m_projectionType == Orthograhic) {
-        float l = m_orthoLeft   + (m_orthoRight - m_orthoLeft) * bounds[0];
-        float r = m_orthoLeft   + (m_orthoRight - m_orthoLeft) * bounds[1];
-        float b = m_orthoBottom + (m_orthoTop - m_orthoBottom) * bounds[2];
-        float t = m_orthoBottom + (m_orthoTop - m_orthoBottom) * bounds[3];
+        float l = m_left   + (m_right - m_left) * bounds[0];
+        float r = m_left   + (m_right - m_left) * bounds[1];
+        float b = m_bottom + (m_top - m_bottom) * bounds[2];
+        float t = m_bottom + (m_top - m_bottom) * bounds[3];
         float n = m_zNear;
         float f = m_zFar;
         projection = glm::ortho(l, r, b, t, n, f);
