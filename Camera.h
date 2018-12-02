@@ -36,12 +36,21 @@ public:
     void setEye(const glm::vec3& eye);
 
     glm::vec3 target() const;
+    void setTarget(const glm::vec3& target);
 
-public:
+    float fovy() const;
+    void setFovy(float fovy);
+
+    float aspectRatio() const;
+    void setAspectRatio(float aspectRatio);
 
     float near() const;
+    void setNear(float near);
 
     float far() const;
+    void setFar(float far);
+
+public:
 
     const glm::mat4& model() const;
 
@@ -66,6 +75,7 @@ public:
     void orthographic(float left, float right, float bottom, float top, float zNear, float zFar);
 
 public:
+
     glm::mat4 projectionROI(float bounds[4]) const;
 
 private:

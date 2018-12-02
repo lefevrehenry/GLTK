@@ -71,14 +71,64 @@ glm::vec3 Camera::target() const
     return this->m_target;
 }
 
+void Camera::setTarget(const glm::vec3& target)
+{
+    this->lookAt(eye(), target, up());
+}
+
+float Camera::fovy() const
+{
+    if (this->m_projectionType != Perspective)
+        return 0;
+
+    return this->m_fovy;
+}
+
+void Camera::setFovy(float fovy)
+{
+    if (this->m_projectionType != Perspective)
+        return;
+
+    this->perspective(fovy, aspectRatio(), near(), far());
+}
+
+float Camera::aspectRatio() const
+{
+    return this->m_aspectRatio;
+}
+
+void Camera::setAspectRatio(float aspectRatio)
+{
+    if (this->m_projectionType != Perspective)
+        return;
+
+    this->perspective(fovy(), aspectRatio, near(), far());
+}
+
 float Camera::near() const
 {
     return this->m_zNear;
 }
 
+void Camera::setNear(float near)
+{
+    if (this->m_projectionType == Perspective)
+        this->perspective(fovy(), aspectRatio(), near, far());
+    else
+        this->orthographic(this->m_left, this->m_right, this->m_bottom, this->m_top, near, far());
+}
+
 float Camera::far() const
 {
     return this->m_zFar;
+}
+
+void Camera::setFar(float far)
+{
+    if (this->m_projectionType == Perspective)
+        this->perspective(fovy(), aspectRatio(), near(), far);
+    else
+        this->orthographic(this->m_left, this->m_right, this->m_bottom, this->m_top, near(), far);
 }
 
 const glm::mat4& Camera::model() const
