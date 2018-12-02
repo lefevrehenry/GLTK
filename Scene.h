@@ -1,6 +1,9 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+// Glm
+#include <glm/glm.hpp>
+
 
 namespace gl {
 
@@ -23,7 +26,7 @@ public:
     const Node* root() const;
 
 public:
-    void fitView(Camera* camera) const;
+    void getBB(glm::vec3& min, glm::vec3& max) const;
 
 public:
     void executeVisitor(Visitor* visitor) const;
