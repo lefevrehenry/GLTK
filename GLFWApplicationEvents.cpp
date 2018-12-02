@@ -32,25 +32,28 @@ GLFWApplicationEvents::~GLFWApplicationEvents()
 
 }
 
-void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, int action, int /*mods*/)
+void GLFWApplicationEvents::frameBufferSizeCallback(GLFWwindow*, int width, int height)
+{
+    // Compute the aspect ratio of the size of the window
+    float screen_aspect_ratio = float(width) / float(height);
+
+    if (this->m_camera)
+        this->m_camera->setAspectRatio(screen_aspect_ratio);
+
+    glViewport(0, 0, width, height);
+}
+
+void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, int action, int)
 {
     this->mousePressed = (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS);
 
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-//        double xpos, ypos;
-        glfwGetCursorPos(handle, &x, &y);
+        double xpos;
+        double ypos;
+        glfwGetCursorPos(handle, &xpos, &ypos);
 
-//        int sx = static_cast<int>(xpos);
-//        int sy = static_cast<int>(ypos);
-
-//        GLFWApplication* app = GLFWApplication::getInstance();
-//        Selectable* selectable = app->getViewer()->pickingObject(sx, sy);
-
-//        if (selectable != nullptr) {
-//            msg_info("Debug") << selectable->visualModel()->mesh()->name();
-//        }
-
-//        app->setSelected(selectable);
+        this->last_x_position = xpos;
+        this->last_y_position = ypos;
     }
 }
 

@@ -16,6 +16,8 @@ public:
 
     virtual ~Interface();
 
+    virtual void framebufferSizeCallback(GLFWwindow* handle, int width, int height) = 0;
+
     virtual void mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods) = 0;
 
     virtual void cursorPosCallback(GLFWwindow* handle, double xpos, double ypos) = 0;
@@ -33,6 +35,8 @@ class DefaultInterface : public Interface
 {
 
 public:
+
+    virtual void framebufferSizeCallback(GLFWwindow*, int, int) {}
 
     virtual void mouseButtonCallback(GLFWwindow*, int, int, int) {}
 

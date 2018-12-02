@@ -27,6 +27,7 @@ public:
     virtual ~GLFWApplicationEvents();
 
 public:
+    virtual void frameBufferSizeCallback(GLFWwindow* handle, int width, int height);
     virtual void mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods);
     virtual void cursorPosCallback(GLFWwindow* handle, double xpos, double ypos);
     virtual void scrollCallback(GLFWwindow* handle, double xpos, double ypos);
