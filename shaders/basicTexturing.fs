@@ -1,7 +1,6 @@
 #version 330 core
 
 // uniform input
-//uniform vec3 dir_light;
 uniform sampler2D colorMap;
 
 // data from vertex shader

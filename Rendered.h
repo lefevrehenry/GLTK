@@ -1,14 +1,14 @@
 #ifndef RENDERED_H
 #define RENDERED_H
 
-#include "Camera.h"
-#include "Scene.h"
-#include "Framebuffer.h"
-#include "Viewport.h"
-#include "Visitor.h"
-
 
 namespace gl {
+
+class Camera;
+class Framebuffer;
+class SceneGraph;
+class Viewport;
+class Visitor;
 
 /**
  * @brief The Rendered class

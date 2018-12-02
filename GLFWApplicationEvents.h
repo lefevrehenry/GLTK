@@ -34,8 +34,8 @@ public:
 
 private:
     bool mousePressed;
-    double x;
-    double y;
+    double last_x_position;
+    double last_y_position;
 
 protected:
     Camera* m_camera;

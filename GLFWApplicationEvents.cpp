@@ -21,8 +21,8 @@ using namespace gl;
 
 GLFWApplicationEvents::GLFWApplicationEvents(Camera* camera) : DefaultInterface(),
     mousePressed(false),
-    x(-1),
-    y(-1),
+    last_x_position(-1),
+    last_y_position(-1),
     m_camera(camera)
 {
 }
@@ -61,8 +61,8 @@ void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, d
 {
     if (this->mousePressed && this->m_camera)
     {
-        float dx = static_cast<float>(xpos - this->x);
-        float dy = static_cast<float>(ypos - this->y);
+        float dx = float(xpos - this->last_x_position);
+        float dy = float(ypos - this->last_y_position);
 
 //        int width = 0;
 //        int height = 0;
@@ -88,14 +88,15 @@ void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, d
         int width = 0;
         int height = 0;
         glfwGetWindowSize(handle, &width, &height);
+
         float pi = glm::pi<float>();
         float rx = ( dx / width) * (2.0f * pi);
         float ry = (-dy / height) * pi;
         this->m_camera->rotate(rx, ry);
     }
 
-    this->x = xpos;
-    this->y = ypos;
+    this->last_x_position = xpos;
+    this->last_y_position = ypos;
 }
 
 void GLFWApplicationEvents::scrollCallback(GLFWwindow*, double, double ypos)
@@ -109,7 +110,7 @@ void GLFWApplicationEvents::scrollCallback(GLFWwindow*, double, double ypos)
     this->m_camera->lookAt(newEye, target, up);
 }
 
-InterfacePicking::InterfacePicking(SceneGraph* sceneGraph, Camera *camera) : GLFWApplicationEvents (camera),
+InterfacePicking::InterfacePicking(SceneGraph* sceneGraph, Camera* camera) : GLFWApplicationEvents (camera),
     m_sceneGraph(sceneGraph),
     m_pickingVisitor(nullptr),
     m_cameraActive(false),

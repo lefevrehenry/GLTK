@@ -1,7 +1,6 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include "Application.h"
 #include "Camera.h"
 #include "Message.h"
 #include "Texture.h"

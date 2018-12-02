@@ -105,9 +105,6 @@ public:
     virtual void processNode(const Node* node);
 
 private:
-    int m_x;
-    int m_y;
-
     Framebuffer*    m_pickingFramebuffer;
     ShaderProgram*  m_shaderProgram;
 
@@ -116,6 +113,8 @@ private:
     const VisualModel*  m_selectedVisualModel;
     glm::vec3           m_selectedPosition;
 
+    int m_x;
+    int m_y;
     unsigned int m_id;
 
 };

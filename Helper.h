@@ -2,7 +2,6 @@
 #define HELPER_H
 
 #include "Camera.h"
-#include "GLFWApplication.h"
 #include "Message.h"
 #include "Program.h"
 #include "Scene.h"

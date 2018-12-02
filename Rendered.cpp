@@ -1,8 +1,13 @@
 #include "Rendered.h"
 
+#include "Camera.h"
+#include "Framebuffer.h"
 #include "GLFWApplication.h"
 #include "Message.h"
 #include "Node.h"
+#include "Scene.h"
+#include "Viewport.h"
+#include "Visitor.h"
 #include "VisualManager.h"
 
 using namespace gl;

@@ -1,6 +1,7 @@
 #include "Visitor.h"
 
 #include "Framebuffer.h"
+#include "GLFWApplication.h"
 #include "Helper.h"
 #include "Mesh.h"
 #include "Node.h"
@@ -10,7 +11,6 @@
 #include "VisualManager.h"
 #include "VisualModel.h"
 #include "VisualOption.h"
-
 
 using namespace gl;
 
@@ -270,13 +270,13 @@ unsigned int unpackIndex(const glm::vec4& color)
 }
 
 PickingVisitor::PickingVisitor() :
-    m_x(0),
-    m_y(0),
     m_pickingFramebuffer(nullptr),
     m_shaderProgram(nullptr),
     m_visualModels(0),
     m_selectedVisualModel(nullptr),
     m_selectedPosition(),
+    m_x(0),
+    m_y(0),
     m_id(0)
 {
     unsigned int width = GLFWApplication::ScreenWidth;
