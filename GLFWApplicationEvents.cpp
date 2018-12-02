@@ -138,28 +138,31 @@ void InterfacePicking::mouseButtonCallback(GLFWwindow* handle, int button, int a
         return;
     }
 
+    if (m_callback == nullptr)
+        return;
+
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
     {
         double x = 0;
         double y = 0;
         glfwGetCursorPos(handle, &x, &y);
 
-        m_pickingVisitor->set((int) x, (int) y);
+        y = GLFWApplication::ScreenHeight - y;
+
+        m_pickingVisitor->set(int(x), int(y));
 
         const Node* root = this->m_sceneGraph->root();
         root->executeVisitor(m_pickingVisitor);
 
         const VisualModel* visualModel = m_pickingVisitor->selectedVisualModel();
+
         const glm::vec3& ndc = m_pickingVisitor->selectedPosition();
-
         const glm::mat4& projection = this->m_camera->projection();
+
         glm::vec4 vs = glm::inverse(projection) * glm::vec4(ndc,1);
-        vs /= vs.w;
+        glm::vec4 ws = this->m_camera->model() * (vs / vs.w);
 
-        glm::vec4 ws = this->m_camera->model() * vs;
-
-        if (m_callback != nullptr)
-            m_callback(visualModel, ws);
+        this->m_callback(visualModel, ws);
     }
 }
 

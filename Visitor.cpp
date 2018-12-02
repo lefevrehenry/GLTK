@@ -302,7 +302,7 @@ PickingVisitor::~PickingVisitor()
 void PickingVisitor::set(int x, int y)
 {
     this->m_x = x;
-    this->m_y = GLFWApplication::ScreenHeight - y;
+    this->m_y = y;
 }
 
 const VisualModel* PickingVisitor::selectedVisualModel() const
