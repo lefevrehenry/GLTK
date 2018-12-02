@@ -7,15 +7,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer -g")
 
 set(HEADER_FILES
-    Application.h
     Camera.h
     Data.h
     FileRepository.h
     Framebuffer.h
-    GLFWApplication.h
-    GLFWApplicationEvents.h
     Helper.h
-    Interface.h
     Light.h
     Material.h
     Mesh.h
@@ -29,7 +25,6 @@ set(HEADER_FILES
     ShaderProgram.h
     Texture.h
     Transform.h
-    Viewer.h
     Viewport.h
     Visitor.h
     VisualManager.h
@@ -38,14 +33,10 @@ set(HEADER_FILES
 )
 
 set(SOURCE_FILES
-    Application.cpp
     Camera.cpp
     Data.cpp
     FileRepository.cpp
     Framebuffer.cpp
-    GLFWApplication.cpp
-    GLFWApplicationEvents.cpp
-    Interface.cpp
     Light.cpp
     Material.cpp
     Mesh.cpp
@@ -59,7 +50,6 @@ set(SOURCE_FILES
     ShaderProgram.cpp
     Texture.cpp
     Transform.cpp
-    Viewer.cpp
     Viewport.cpp
     Visitor.cpp
     VisualManager.cpp
@@ -122,6 +112,9 @@ set(CONFIG_FILES
     etc/config.ini.in
 )
 
+set(BUILD_EXAMPLES ON CACHE BOOL "")
+set(BUILD_WITH_GLFW ON CACHE BOOL "")
+
 set(ARCHIVE_OUTPUT_DIRECTORY lib)
 set(LIBRARY_OUTPUT_DIRECTORY lib)
 set(RUNTIME_OUTPUT_DIRECTORY bin)
@@ -142,7 +135,16 @@ find_package(Qt5 COMPONENTS Core Gui OpenGL REQUIRED)
 
 qt5_add_resources(RESOURCE_FILES ${QRC_FILES})
 
-add_subdirectory(app)
+if(${BUILD_EXAMPLES})
+    add_subdirectory(app)
+endif()
+
+if(${BUILD_WITH_GLFW})
+    find_package(glfw3 REQUIRED)
+
+    set(HEADER_FILES ${HEADER_FILES} Application.h GLFWApplication.h GLFWApplicationEvents.h Interface.h)
+    set(SOURCE_FILES ${SOURCE_FILES} Application.cpp GLFWApplication.cpp GLFWApplicationEvents.cpp Interface.cpp)
+endif()
 
 
 #========== Creation of the library ==========#
@@ -151,6 +153,10 @@ add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILE
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} Qt5::Core Qt5::Gui Qt5::OpenGL)
 
+if(${BUILD_WITH_GLFW})
+    target_include_directories(${PROJECT_NAME} PUBLIC ${GLFW3_INCLUDE_DIR})
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW3_LIBRARY})
+endif()
 
 #========= Linking with local library =========#
 macro(link_with_local_lib LOCAL_PATH NAME)
@@ -171,7 +177,6 @@ macro(link_with_local_lib LOCAL_PATH NAME)
 endmacro()
 
 link_with_local_lib(extlibs/glew GLEW)
-link_with_local_lib(extlibs/GLFW glfw)
 link_with_local_lib(extlibs/assimp assimp)
 
 
