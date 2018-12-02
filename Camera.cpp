@@ -24,6 +24,7 @@ Camera::Camera() :
     m_proj(),
     m_mvp(),
     m_normal(),
+    m_eye(),
     m_target(),
     m_mvpDirty(true),
     m_normalDirty(true)
@@ -58,6 +59,11 @@ glm::vec3 Camera::eye() const
 {
     glm::vec4 eye = glm::column(this->m_model, 3);
     return glm::vec3(eye);
+}
+
+void Camera::setEye(const glm::vec3& eye)
+{
+    this->lookAt(eye, target(), up());
 }
 
 glm::vec3 Camera::target() const
@@ -140,8 +146,9 @@ void Camera::rotate(float theta, float phi)
     setNormalDirty(true);
 }
 
-void Camera::lookAt(const glm::vec3 &eye, const glm::vec3 &target, const glm::vec3 &up)
+void Camera::lookAt(const glm::vec3& eye, const glm::vec3& target, const glm::vec3& up)
 {
+    this->m_eye = glm::vec3(eye);
     this->m_target = glm::vec3(target);
     this->m_view = glm::lookAt(eye, target, up);
     this->m_model = glm::inverse( this->m_view );

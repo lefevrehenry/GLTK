@@ -33,6 +33,7 @@ public:
     glm::vec3 direction() const;
 
     glm::vec3 eye() const;
+    void setEye(const glm::vec3& eye);
 
     glm::vec3 target() const;
 
@@ -94,6 +95,7 @@ private:
     mutable glm::mat4 m_mvp;
     mutable glm::mat3 m_normal;
 
+    glm::vec3 m_eye;
     glm::vec3 m_target;
 
     mutable bool m_mvpDirty;
