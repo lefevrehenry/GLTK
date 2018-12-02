@@ -104,10 +104,16 @@ void GLFWApplication::Terminate()
     glfwTerminate();
 }
 
-void GLFWApplication::FramebufferSizeCallback(GLFWwindow*, int width, int height)
+void GLFWApplication::FramebufferSizeCallback(GLFWwindow* handle, int width, int height)
 {
-    GLFWApplication::ScreenWidth = (unsigned int) width;
-    GLFWApplication::ScreenHeight = (unsigned int) height;
+    static GLFWApplication* app = GLFWApplication::getInstance();
+
+    if (app->getInterface() != nullptr) {
+        app->getInterface()->framebufferSizeCallback(handle, width, height);
+    }
+
+    GLFWApplication::ScreenWidth = uint(width);
+    GLFWApplication::ScreenHeight = uint(height);
 }
 
 void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)
