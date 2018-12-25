@@ -58,54 +58,50 @@ set(SOURCE_FILES
 )
 
 set(SHADER_FILES
-    shaders/basic.vs
-    shaders/basic.fs
-    shaders/basicTexturing.vs
-    shaders/basicTexturing.fs
-    shaders/cubeMap.vs
-    shaders/cubeMap.fs
-    shaders/deferred.vs
-    shaders/deferred.fs
-    shaders/environmentMapping.vs
-    shaders/environmentMapping.fs
-    shaders/flatShading.vs
-    shaders/flatShading.gs
-    shaders/flatShading.fs
-    shaders/frame.vs
-    shaders/frame.fs
-    shaders/gouraudShading.vs
-    shaders/gouraudShading.fs
-    shaders/highLight.vs
-    shaders/highLight.gs
-    shaders/highLight.fs
-    shaders/matcap.vs
-    shaders/matcap.fs
-    shaders/normal.vs
-    shaders/normal.gs
-    shaders/normal.fs
-    shaders/normalMapping.vs
-    shaders/normalMapping.fs
-    shaders/outline.vs
-    shaders/outline.fs
-    shaders/phongShading.vs
-    shaders/phongShading.fs
-    shaders/picking.vs
-    shaders/picking.fs
-    shaders/shadowMapping.vs
-    shaders/shadowMapping.fs
-    shaders/tangentSpace.vs
-    shaders/tangentSpace.gs
-    shaders/tangentSpace.fs
-    shaders/texturing.vs
-    shaders/texturing.fs
-    shaders/transform.vs
-    shaders/transform.fs
-    shaders/vaoQuad.vs
-    shaders/vaoQuad.fs
-)
-
-set(QRC_FILES
-    resources.qrc
+    share/shaders/basic.vs
+    share/shaders/basic.fs
+    share/shaders/basicTexturing.vs
+    share/shaders/basicTexturing.fs
+    share/shaders/cubeMap.vs
+    share/shaders/cubeMap.fs
+    share/shaders/deferred.vs
+    share/shaders/deferred.fs
+    share/shaders/environmentMapping.vs
+    share/shaders/environmentMapping.fs
+    share/shaders/flatShading.vs
+    share/shaders/flatShading.gs
+    share/shaders/flatShading.fs
+    share/shaders/frame.vs
+    share/shaders/frame.fs
+    share/shaders/gouraudShading.vs
+    share/shaders/gouraudShading.fs
+    share/shaders/highLight.vs
+    share/shaders/highLight.gs
+    share/shaders/highLight.fs
+    share/shaders/matcap.vs
+    share/shaders/matcap.fs
+    share/shaders/normal.vs
+    share/shaders/normal.gs
+    share/shaders/normal.fs
+    share/shaders/normalMapping.vs
+    share/shaders/normalMapping.fs
+    share/shaders/outline.vs
+    share/shaders/outline.fs
+    share/shaders/phongShading.vs
+    share/shaders/phongShading.fs
+    share/shaders/picking.vs
+    share/shaders/picking.fs
+    share/shaders/shadowMapping.vs
+    share/shaders/shadowMapping.fs
+    share/shaders/tangentSpace.vs
+    share/shaders/tangentSpace.gs
+    share/shaders/tangentSpace.fs
+    share/shaders/texturing.vs
+    share/shaders/texturing.fs
+    share/shaders/transform.vs
+    share/shaders/transform.fs
+    share/shaders/vaoQuad.vs
+    share/shaders/vaoQuad.fs
 )
 
 set(CONFIG_FILES
@@ -124,16 +120,15 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ARCHIVE_OUTPUT_DIRECTOR
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${LIBRARY_OUTPUT_DIRECTORY})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${RUNTIME_OUTPUT_DIRECTORY})
 
-# Create etc/config.ini: it contains the paths to share/
-# In the build directory, it points to the source tree
+# Create etc/config.ini in the build direcotry: it contains the paths to severals share/ directories
 set(SHARE_DIR "${CMAKE_SOURCE_DIR}/share")
+set(MESHES_DIR "${CMAKE_SOURCE_DIR}/share/mesh")
+set(SHADERS_DIR "${CMAKE_SOURCE_DIR}/share/shaders")
+set(TEXTURES_DIR "${CMAKE_SOURCE_DIR}/share/textures")
 configure_file(${CMAKE_SOURCE_DIR}/etc/config.ini.in "${CMAKE_BINARY_DIR}/etc/config.ini")
 
 # Required packages
 find_package(OpenGL REQUIRED)
-find_package(Qt5 COMPONENTS Core Gui OpenGL REQUIRED)
-
-qt5_add_resources(RESOURCE_FILES ${QRC_FILES})
 
 if(${BUILD_EXAMPLES})
     add_subdirectory(app)
@@ -146,12 +141,15 @@ if(${BUILD_WITH_GLFW})
     set(SOURCE_FILES ${SOURCE_FILES} Application.cpp GLFWApplication.cpp GLFWApplicationEvents.cpp Interface.cpp)
 endif()
 
+set(STB_IMAGE_INCLUDE_DIR
+    extlibs/stb_image/include
+)
 
 #========== Creation of the library ==========#
-add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES} ${QRC_FILES} ${RESOURCE_FILES})
+add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${Qt5Core_INCLUDE_DIRS} ${Qt5Gui_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES} Qt5::Core Qt5::Gui Qt5::OpenGL)
+target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${STB_IMAGE_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES})
 
 if(${BUILD_WITH_GLFW})
     target_include_directories(${PROJECT_NAME} PUBLIC ${GLFW3_INCLUDE_DIR})

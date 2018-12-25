@@ -2,6 +2,7 @@
 #define HELPER_H
 
 #include "Camera.h"
+#include "FileRepository.h"
 #include "Message.h"
 #include "Program.h"
 #include "Scene.h"
@@ -14,10 +15,6 @@
 #include <fstream>
 #include <map>
 #include <string>
-
-// Qt
-#include <QFile>
-#include <QString>
 
 namespace gl {
 
@@ -66,22 +63,22 @@ static bool getStringFromFile(const std::string& filename, std::string& dest)
     return true;
 }
 
-static bool getStringFromQrcFile(const std::string& filename, std::string& dest)
-{
-    QFile file(QString::fromStdString(filename));
-    file.open(QIODevice::ReadOnly);
+//static bool getStringFromFile(const std::string& filename, std::string& dest)
+//{
+//    QFile file(QString::fromStdString(filename));
+//    file.open(QIODevice::ReadOnly);
 
-    if (!file.isOpen()) {
-        msg_error("Helper") << "Could not open file " << filename;
-        return false;
-    }
+//    if (!file.isOpen()) {
+//        msg_error("Helper") << "Could not open file " << filename;
+//        return false;
+//    }
 
-    dest = file.readAll().toStdString();
+//    dest = file.readAll().toStdString();
 
-    file.close();
+//    file.close();
 
-    return true;
-}
+//    return true;
+//}
 
 static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shaderProgramType)
 {
@@ -89,6 +86,10 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     typedef ShaderProgram::ShaderProgramType ShaderProgramType;
 
     ShaderProgram* shaderProgram = new ShaderProgram();
+
+    std::string vertexFilename = "";
+    std::string geometryFilename = "";
+    std::string fragmentFilename = "";
 
     std::string vs = "";
     std::string gs = "";
@@ -102,124 +103,133 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     {
     case ShaderProgramType::Basic:
 
-        getStringFromQrcFile(":/shaders/basic.vs", vs);
-        getStringFromQrcFile(":/shaders/basic.fs", fs);
+        vertexFilename = "shaders/basic.vs";
+        fragmentFilename = "shaders/basic.fs";
 
         break;
     case ShaderProgramType::Normal:
 
-        getStringFromQrcFile(":/shaders/normal.vs", vs);
-        getStringFromQrcFile(":/shaders/normal.gs", gs);
-        getStringFromQrcFile(":/shaders/normal.fs", fs);
+        vertexFilename = "shaders/normal.vs";
+        geometryFilename = "shaders/normal.gs";
+        fragmentFilename = "shaders/normal.fs";
 
         break;
     case ShaderProgramType::FlatShading:
 
-        getStringFromQrcFile(":/shaders/flatShading.vs", vs);
-        getStringFromQrcFile(":/shaders/flatShading.gs", gs);
-        getStringFromQrcFile(":/shaders/flatShading.fs", fs);
+        vertexFilename = "shaders/flatShading.vs";
+        geometryFilename = "shaders/flatShading.gs";
+        fragmentFilename = "shaders/flatShading.fs";
 
         break;
     case ShaderProgramType::GouraudShading:
 
-        getStringFromQrcFile(":/shaders/gouraudShading.vs", vs);
-        getStringFromQrcFile(":/shaders/gouraudShading.fs", fs);
+        vertexFilename = "shaders/gouraudShading.vs";
+        fragmentFilename = "shaders/gouraudShading.fs";
 
         break;
     case ShaderProgramType::PhongShading:
 
-        getStringFromQrcFile(":/shaders/phongShading.vs", vs);
-        getStringFromQrcFile(":/shaders/phongShading.fs", fs);
+        vertexFilename = "shaders/phongShading.vs";
+        fragmentFilename = "shaders/phongShading.fs";
 
         break;
 
     case ShaderProgramType::Frame:
 
-        getStringFromQrcFile(":/shaders/frame.vs", vs);
-        getStringFromQrcFile(":/shaders/frame.fs", fs);
+        vertexFilename = "shaders/frame.vs";
+        fragmentFilename = "shaders/frame.fs";
 
         break;
     case ShaderProgramType::HighLight:
 
-        getStringFromQrcFile(":/shaders/highLight.vs", vs);
-        getStringFromQrcFile(":/shaders/highLight.gs", gs);
-        getStringFromQrcFile(":/shaders/highLight.fs", fs);
+        vertexFilename = "shaders/highLight.vs";
+        geometryFilename = "shaders/highLight.gs";
+        fragmentFilename = "shaders/highLight.fs";
 
         break;
     case ShaderProgramType::BasicTexturing:
 
-        getStringFromQrcFile(":/shaders/basicTexturing.vs", vs);
-        getStringFromQrcFile(":/shaders/basicTexturing.fs", fs);
+        vertexFilename = "shaders/basicTexturing.vs";
+        fragmentFilename = "shaders/basicTexturing.fs";
 
         break;
     case ShaderProgramType::Texturing:
 
-        getStringFromQrcFile(":/shaders/texturing.vs", vs);
-        getStringFromQrcFile(":/shaders/texturing.fs", fs);
+        vertexFilename = "shaders/texturing.vs";
+        fragmentFilename = "shaders/texturing.fs";
 
         break;
     case ShaderProgramType::TangentSpace:
 
-        getStringFromQrcFile(":/shaders/tangentSpace.vs", vs);
-        getStringFromQrcFile(":/shaders/tangentSpace.gs", gs);
-        getStringFromQrcFile(":/shaders/tangentSpace.fs", fs);
+        vertexFilename = "shaders/tangentSpace.vs";
+        geometryFilename = "shaders/tangentSpace.gs";
+        fragmentFilename = "shaders/tangentSpace.fs";
 
         break;
     case ShaderProgramType::Picking:
 
-        getStringFromQrcFile(":/shaders/picking.vs", vs);
-        getStringFromQrcFile(":/shaders/picking.fs", fs);
+        vertexFilename = "shaders/picking.vs";
+        fragmentFilename = "shaders/picking.fs";
 
         break;
     case ShaderProgramType::OutLine:
 
-        getStringFromQrcFile(":/shaders/outline.vs", vs);
-        getStringFromQrcFile(":/shaders/outline.fs", fs);
+        vertexFilename = "shaders/outline.vs";
+        fragmentFilename = "shaders/outline.fs";
 
         break;
     case ShaderProgramType::MatCap:
 
-        getStringFromQrcFile(":/shaders/matcap.vs", vs);
-        getStringFromQrcFile(":/shaders/matcap.fs", fs);
+        vertexFilename = "shaders/matcap.vs";
+        fragmentFilename = "shaders/matcap.fs";
 
         break;
     case ShaderProgramType::VaoQuad:
 
-        getStringFromQrcFile(":/shaders/vaoQuad.vs", vs);
-        getStringFromQrcFile(":/shaders/vaoQuad.fs", fs);
+        vertexFilename = "shaders/vaoQuad.vs";
+        fragmentFilename = "shaders/vaoQuad.fs";
 
         break;
     case ShaderProgramType::Deferred:
 
-        getStringFromQrcFile(":/shaders/deferred.vs", vs);
-        getStringFromQrcFile(":/shaders/deferred.fs", fs);
+        vertexFilename = "shaders/deferred.vs";
+        fragmentFilename = "shaders/deferred.fs";
 
         break;
     case ShaderProgramType::ShadowMapping:
 
-        getStringFromQrcFile(":/shaders/shadowMapping.vs", vs);
-        getStringFromQrcFile(":/shaders/shadowMapping.fs", fs);
+        vertexFilename = "shaders/shadowMapping.vs";
+        fragmentFilename = "shaders/shadowMapping.fs";
 
         break;
     case ShaderProgramType::NormalMapping:
 
-        getStringFromQrcFile(":/shaders/normalMapping.vs", vs);
-        getStringFromQrcFile(":/shaders/normalMapping.fs", fs);
+        vertexFilename = "shaders/normalMapping.vs";
+        fragmentFilename = "shaders/normalMapping.fs";
 
         break;
     case ShaderProgramType::CubeMap:
 
-        getStringFromQrcFile(":/shaders/cubeMap.vs", vs);
-        getStringFromQrcFile(":/shaders/cubeMap.fs", fs);
+        vertexFilename = "shaders/cubeMap.vs";
+        fragmentFilename = "shaders/cubeMap.fs";
 
         break;
     case ShaderProgramType::EnvironmentMapping:
 
-        getStringFromQrcFile(":/shaders/environmentMapping.vs", vs);
-        getStringFromQrcFile(":/shaders/environmentMapping.fs", fs);
+        vertexFilename = "shaders/environmentMapping.vs";
+        fragmentFilename = "shaders/environmentMapping.fs";
 
         break;
     }
+
+    if (DataRepository.findFile(vertexFilename))
+        getStringFromFile(vertexFilename, vs);
+
+    if (DataRepository.findFile(geometryFilename))
+        getStringFromFile(geometryFilename, gs);
+
+    if (DataRepository.findFile(fragmentFilename))
+        getStringFromFile(fragmentFilename, fs);
 
     if (vs != "") {
         vertexShader.compileSourceCode(vs);

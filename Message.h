@@ -9,9 +9,6 @@
 // Glm
 #include <glm/glm.hpp>
 
-// Qt
-#include <QString>
-
 
 namespace gl {
 
@@ -31,12 +28,6 @@ public:
     Message& operator<<(const T& x)
     {
         m_message << x;
-        return *this;
-    }
-
-    Message& operator<<(const QString& x)
-    {
-        m_message << x.toStdString();
         return *this;
     }
 

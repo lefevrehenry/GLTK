@@ -3,12 +3,12 @@
 #include "FileRepository.h"
 #include "Message.h"
 
-// Qt
-#include <QImage>
-#include <QGLWidget>
-
 // Standard Library
 #include <algorithm>
+
+// Stb Image
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image/stb_image.h>
 
 using namespace gl;
 
@@ -32,35 +32,6 @@ unsigned short find_gap(const std::list<T>& list)
     }
 
     return next;
-}
-
-QImage getQImageFromFile(const std::string& filename)
-{
-    std::string path(filename);
-
-    if (!helper::DataRepository.findFile(path)) {
-        msg_error("Texture") << "File " << filename << " not found";
-        return QImage();
-    }
-
-    QImage bufferImage = QImage(path.c_str());
-
-    if (bufferImage.isNull()) {
-        msg_error("Texture") << "Unable to load " << filename << " (does file exist ?)";
-        return QImage();
-    }
-
-    QImage image = QGLWidget::convertToGLFormat(bufferImage);
-
-    if (image.isNull()) {
-        msg_error("Texture") << "Unable to convert " << filename << " into readable OpenGL format (extension not supported ?)";
-        return QImage();
-    }
-
-    // flip image vertically
-    image = image.mirrored();
-
-    return image;
 }
 
 Texture::Texture() :
@@ -115,9 +86,18 @@ void Texture::load(const std::string&)
 
 void Texture2D::load(const std::string& filename)
 {
-    QImage image = getQImageFromFile(filename);
+    std::string path(filename);
 
-    if (image.isNull()) {
+    if (!helper::DataRepository.findFile(path)) {
+        msg_error("Texture") << "File " << filename << " not found";
+        return;
+    }
+
+    int width, height, channels;
+    unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 4);
+    channels = 4;
+
+    if (data == nullptr) {
         msg_error("Texture2D") << "image " << filename << " not loaded";
         return;
     }
@@ -125,7 +105,7 @@ void Texture2D::load(const std::string& filename)
     glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
 
     glBindTexture(GL_TEXTURE_2D, this->m_textureId);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -133,6 +113,8 @@ void Texture2D::load(const std::string& filename)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     glGenerateMipmap(GL_TEXTURE_2D);
+
+    stbi_image_free(data);
 }
 
 void CubeMapTexture::bind() const
@@ -149,23 +131,34 @@ void CubeMapTexture::unbind() const
 
 void CubeMapTexture::load(const std::string& filename)
 {
-    QImage image = getQImageFromFile(filename);
+    std::string path(filename);
 
-    if (image.isNull()) {
-        msg_error("CubeMapTexture") << "image " << filename << " not loaded";
+    if (!helper::DataRepository.findFile(path)) {
+        msg_error("Texture") << "File " << filename << " not found";
         return;
     }
 
-    int width = image.width() / 4;
-    int height = image.height() / 3;
+    int width, height, channels;
+    unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 4);
+    channels = 4;
+
+    if (data == nullptr) {
+        msg_error("Texture2D") << "image " << filename << " not loaded";
+        return;
+    }
+
+    int sw = width / 4;
+    int sh = height / 3;
+
+    unsigned char* subset_data = new unsigned char[sw * sh * channels];
 
     int map[6][2] = {
-        {2 * width, 1 * height},        // Right
-        {0 * width, 1 * height},        // Left
-        {1 * width, 0 * height},        // Top
-        {1 * width, 2 * height},        // Bottom
-        {1 * width, 1 * height},        // Front
-        {3 * width, 1 * height}         // Back
+        {2 * sw, 1 * sh},        // Right
+        {0 * sw, 1 * sh},        // Left
+        {1 * sw, 0 * sh},        // Top
+        {1 * sw, 2 * sh},        // Bottom
+        {1 * sw, 1 * sh},        // Front
+        {3 * sw, 1 * sh}         // Back
     };
 
     glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
@@ -174,9 +167,19 @@ void CubeMapTexture::load(const std::string& filename)
     for (unsigned int i = 0; i < 6; ++i) {
         int ox = map[i][0];
         int oy = map[i][1];
-        QImage crop = image.copy(ox, oy, width, height);
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, crop.bits());
+        int offset = ((oy * width) + ox) * channels;
+
+        for (int h = 0; h < sh; ++h) {
+            unsigned char* src_first = data + (offset + (h * width) * channels);
+            unsigned char* src_last = data + (offset + (h * width + sw) * channels);
+            unsigned char* dest = subset_data + ((h * sw) * channels);
+            std::copy(src_first, src_last, dest);
+        }
+
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGBA32F, sw, sh, 0, GL_RGBA, GL_UNSIGNED_BYTE, subset_data);
     }
+
+    delete[] subset_data;
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -185,6 +188,8 @@ void CubeMapTexture::load(const std::string& filename)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+    stbi_image_free(data);
 }
 
 void CubeMapTexture::load(const std::string& left, const std::string& right, const std::string& bottom, const std::string& top, const std::string& back, const std::string& front)
