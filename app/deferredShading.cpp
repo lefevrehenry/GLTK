@@ -227,22 +227,26 @@ void initGLTK()
 
 void displayCallback()
 {
-    fbo->bind();
+    {
+        fbo->bind();
+
+        int width = int(fbo->width());
+        int height = int(fbo->height());
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glViewport(0, 0, width, height);
+        fboRender.draw();
+
+        fbo->unbind();
+    }
+
+    int width = int(GLFWApplication::ScreenWidth) / 2;
+    int height = int(GLFWApplication::ScreenHeight) / 2;
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    int width = int(fbo->width());
-    int height = int(fbo->height());
     glViewport(0, 0, width, height);
-
-    fboRender.draw();
-
-    fbo->unbind();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    width = int(GLFWApplication::ScreenWidth) / 2;
-    height = int(GLFWApplication::ScreenHeight) / 2;
-    glViewport(0, 0, width, height);
-
     defaultRender2.draw();
 
     glViewport(width, 0, width, height);

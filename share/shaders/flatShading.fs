@@ -17,12 +17,16 @@ layout(std140) uniform camera
     mat3 NormalMatrix;
 };
 
+layout(std140) uniform light
+{
+    vec3 lightPosition;
+    vec3 lightDirection;
+    vec3 lightColor;
+};
+
 // data from geometry shader
 in vec3 normalView;
 in vec3 eyeView;
-
-// uniform input
-uniform vec3 dir_light;
 
 out vec4 outColor;
 
@@ -31,13 +35,13 @@ void main()
     // normal / view and light directions (in camera space)
     vec3 n = normalize(normalView);
     vec3 e = normalize(eyeView);
-    vec3 l = normalize(NormalMatrix * dir_light);
+    vec3 l = normalize(NormalMatrix * lightDirection);
 
     // diffuse and specular components of the phong shading model
     float diff = max(-dot(l,n),0.0);
     float spec = pow(max(-dot(reflect(l,n),e),0.0),shininess);
 
-    //vec3 l = normalize(dir_light);
+    //vec3 l = normalize(lightDirection);
     //float d = max(-dot(n, l), 0.0);
 
     outColor = ambientColor + (diff * diffuseColor) + (spec * specularColor);

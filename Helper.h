@@ -248,16 +248,14 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
 
     shaderProgram->link();
 
-    glm::vec3 dir_light(-1,-1,-1);
-
     switch (shaderProgramType)
     {
     case ShaderProgramType::Basic:
 
-        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::Normal:
@@ -270,33 +268,33 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         break;
     case ShaderProgramType::FlatShading:
 
-        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::GouraudShading:
 
-        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::PhongShading:
 
-        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::Frame:
 
-        shaderProgram->addData<glm::vec3>("dir_light", dir_light);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
         shaderProgram->setNbInstance(3);
 
         break;
@@ -320,6 +318,7 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::TangentSpace:

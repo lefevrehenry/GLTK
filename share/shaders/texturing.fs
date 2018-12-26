@@ -17,8 +17,14 @@ layout(std140) uniform camera
     mat3 NormalMatrix;
 };
 
+layout(std140) uniform light
+{
+    vec3 lightPosition;
+    vec3 lightDirection;
+    vec3 lightColor;
+};
+
 // uniform input
-uniform vec3 dir_light;
 uniform sampler2D ambientMap;
 uniform sampler2D colorMap;
 uniform sampler2D normalMap;
@@ -39,7 +45,7 @@ void main()
 
     // normalized vectors needed for shading
     vec3 e = normalize(o_eyeView);
-    vec3 l = normalize(NormalMatrix * dir_light);
+    vec3 l = normalize(NormalMatrix * lightDirection);
 
     vec3 t = normalize(o_tangent);
     vec3 b = normalize(o_bitangent);

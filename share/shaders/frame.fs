@@ -1,9 +1,15 @@
 #version 330 core
 
+layout(std140) uniform light
+{
+    vec3 lightPosition;
+    vec3 lightDirection;
+    vec3 lightColor;
+};
+
+// input from vertex shader
 in vec3 o_normal;
 flat in int instanceID;
-
-uniform vec3 dir_light;
 
 out vec4 outColor;
 
@@ -13,7 +19,7 @@ void main()
     color[instanceID] = 1;
 
     vec3 n = normalize(o_normal);
-    float d = max(-dot(n, dir_light), 0.0);
+    float d = max(-dot(n, lightDirection), 0.0);
 
     outColor = d * color;
 }
