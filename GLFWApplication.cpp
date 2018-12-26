@@ -48,6 +48,7 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
 
     if (!windowHandle)
     {
+        // Problem: window creation failed, something went wrong.
         glfwTerminate();
         msg_error("GLFW") << "Cannot create a window and its opengl context";
         return nullptr;
@@ -60,6 +61,7 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
     if (glewInit() != GLEW_OK)
     {
         // Problem: glewInit failed, something is seriously wrong.
+        glfwTerminate();
         msg_error("OpenGL") << "Glew init failed";
         return nullptr;
     }
@@ -68,17 +70,6 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
     app->setWindow(windowHandle);
 
     VisualManager::Init();
-
-    // Specifies background color
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    // Enable depth buffer test
-    glEnable(GL_DEPTH_TEST);
-    // Enable eliminaton of hidden faces
-    glEnable(GL_CULL_FACE);
-    // Specifies whether front or back facing facets are candidates for culling
-    glCullFace(GL_BACK);
-    // Specifies the orientation of front-facing polygons
-    glFrontFace(GL_CCW);
 
     /* Set the number of screen updates to wait from the time glfwSwapBuffers was called before swapping */
     // 0 = no waiting for rendering the next frame

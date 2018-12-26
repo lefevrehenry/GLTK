@@ -32,7 +32,7 @@ GLFWApplicationEvents::~GLFWApplicationEvents()
 
 }
 
-void GLFWApplicationEvents::frameBufferSizeCallback(GLFWwindow*, int width, int height)
+void GLFWApplicationEvents::framebufferSizeCallback(GLFWwindow*, int width, int height)
 {
     // Compute the aspect ratio of the size of the window
     float screen_aspect_ratio = float(width) / float(height);

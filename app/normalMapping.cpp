@@ -1,24 +1,28 @@
 
 #include <FileRepository.h>
 #include <GLFWApplication.h>
+#include <GLFWApplicationEvents.h>
+#include <Helper.h>
 #include <Mesh.h>
 #include <Message.h>
 #include <Node.h>
-#include <Scene.h>
-#include <Viewport.h>
 #include <Rendered.h>
-
-#include "GLFWApplicationEvents.h"
-#include <Helper.h>
+#include <Scene.h>
 #include <ShaderProgram.h>
-#include <VisualModel.h>
 #include <Texture.h>
 #include <Visitor.h>
+#include <VisualModel.h>
+
+// Glfw
+#include <GLFW/glfw3.h>
 
 // OpenGL
 #include <GL/gl.h>
 
 // Standard Library
+#include <cstdlib>
+#include <exception>
+#include <iostream>
 #include <map>
 #include <string>
 
@@ -65,16 +69,90 @@ SceneGraph* createScene()
     return scene;
 }
 
+void fitView(SceneGraph* scene, Camera* camera)
+{
+    glm::vec3 min;
+    glm::vec3 max;
+    scene->getBB(min, max);
+
+    float diagonal = glm::length(max - min);
+    glm::vec3 direction(-1,-1,-1);
+
+    // view
+    glm::vec3 target = (min + max) / 2.0f;
+    glm::vec3 eye = target - (glm::normalize(direction) * diagonal);
+    glm::vec3 up(0,0,1);
+    camera->lookAt(eye, target, up);
+
+    // projection
+    float fovy = 45.0f;
+    float aspect = 4.0f / 3.0f;
+    float zNear = 0.02f * diagonal;
+    float zFar = 2.0f * diagonal;
+    camera->perspective(fovy, aspect, zNear, zFar);
+}
+
+
+static GLFWApplication* app = nullptr;
+static GLFWApplicationEvents* interface = nullptr;
+static Rendered renderer;
+
+void initGL();
+void initGLTK();
+void displayCallback();
+void errorCallback(int error, const char* description);
+
+
 int main()
 {
-    GLFWApplication::ScreenWidth = 1280;
-    GLFWApplication::ScreenHeight = 960;
+    int return_code = EXIT_SUCCESS;
+
+    /* Set an error callback */
+    glfwSetErrorCallback(errorCallback);
 
     /* Create a window and its OpenGL context */
-    GLFWApplication* app = GLFWApplication::CreateWindow();
+    app = GLFWApplication::CreateWindow(1280, 960);
 
-    if (!app)
+    if (app == nullptr)
         return -1;
+
+    try
+    {
+        // Initialise OpenGL
+        initGL();
+
+        // Initialise GLTK
+        initGLTK();
+
+        // Throws the main loop
+        app->loop();
+    }
+    // Catch exception if any
+    catch (const std::exception& error)
+    {
+        std::cerr << error.what() << std::endl;
+        return_code = EXIT_FAILURE;
+    }
+
+    /* Close the window and shut GLFW if needed */
+    GLFWApplication::Terminate();
+
+    // Return an exit code
+    return return_code;
+}
+
+void initGL()
+{
+    // Specifies background color
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    // Enable depth buffer test
+    glEnable(GL_DEPTH_TEST);
+    // Enable eliminaton of hidden faces
+    glEnable(GL_CULL_FACE);
+    // Specifies whether front or back facing facets are candidates for culling
+    glCullFace(GL_BACK);
+    // Specifies the orientation of front-facing polygons
+    glFrontFace(GL_CCW);
 
     int glMajor;
     int glMinor;
@@ -82,23 +160,30 @@ int main()
     glGetIntegerv(GL_MINOR_VERSION, &glMinor);
 
     msg_info("OpenGL") << "Congrat's ! You're running OpenGL " << glMajor << "." << glMinor;
+}
 
-
+void initGLTK()
+{
     std::map<std::string, std::string> iniFileValues = getMapFromIniFile("../etc/config.ini");
 
     if (iniFileValues.find("SHARE_DIR") != iniFileValues.end()) {
-        std::string shareDir = iniFileValues["SHARE_DIR"];
-        DataRepository.addFirstPath(shareDir);
+        std::string ini_directories[4] = {
+            iniFileValues["SHARE_DIR"],
+            iniFileValues["MESHES_DIR"],
+            iniFileValues["SHADERS_DIR"],
+            iniFileValues["TEXTURES_DIR"]
+        };
+        for (std::string ini_dir : ini_directories) {
+            DataRepository.addFirstPath(ini_dir);
+        }
     } else {
         msg_warning("FileRepository") << "No share/ directory added";
     }
 
-    //////////////// Scene
+    renderer.scene = createScene();
+    renderer.camera = new Camera();
 
-    SceneGraph* scene = createScene();
-    Camera camera;
-
-    scene->fitView(&camera);
+    fitView(renderer.scene, renderer.camera);
 
     Light light;
     light.setPosition(glm::vec3(0,0,0));
@@ -107,23 +192,21 @@ int main()
 
     VisualManager::UpdateUniformBufferLight(light);
 
-    //////////////// Render pass
+    interface = new GLFWApplicationEvents(renderer.camera);
+    app->setInterface(interface);
 
-    Rendered defaultRender1;
-    defaultRender1.scene = scene;
-    defaultRender1.camera = &camera;
+    app->setDrawCallBack(displayCallback);
+}
 
-    app->addRendered(&defaultRender1);
+void displayCallback()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //////////////// Interface
+    renderer.draw();
+}
 
-    GLFWApplicationEvents interface(&camera);
-    app->setInterface(&interface);
-
-    /* Throws the main loop */
-    app->loop();
-
-    GLFWApplication::Terminate();
-
-    return 0;
+void errorCallback(int, const char* description)
+{
+    // Throw an error
+    throw (description);
 }

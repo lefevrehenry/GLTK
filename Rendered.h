@@ -5,9 +5,7 @@
 namespace gl {
 
 class Camera;
-class Framebuffer;
 class SceneGraph;
-class Viewport;
 class Visitor;
 
 /**
@@ -27,8 +25,6 @@ public:
 public:
     SceneGraph* scene;
     Camera* camera;
-    Viewport* viewport;
-    Framebuffer* framebuffer;
     Visitor* visitor;
 
 };
