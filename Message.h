@@ -46,9 +46,9 @@ public:
     Message& operator<<(const glm::mat3& m)
     {
         m_message << "Matrix 3" << std::setprecision(2);
-        for (unsigned int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i) {
             m_message << "\n";
-            for (unsigned int j = 0; j < 3; ++j) {
+            for (int j = 0; j < 3; ++j) {
                 m_message << std::setw(5) << std::left << m[j][i];
             }
         }
@@ -58,9 +58,9 @@ public:
     Message& operator<<(const glm::mat4& m)
     {
         m_message << "Matrix 4" << std::setprecision(2);
-        for (unsigned int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             m_message << "\n";
-            for (unsigned int j = 0; j < 4; ++j) {
+            for (int j = 0; j < 4; ++j) {
                 m_message << std::setw(5) << std::left << m[j][i];
             }
         }
