@@ -61,11 +61,12 @@ SceneGraph* createScene()
     cubeMapShader->addData<CubeMapTexture>("cubeMap", *cubeMapTexture);
 
 //    cubeMapShader->set(OpenGLState::DepthMask, GL_FALSE);
-    cubeMapShader->set(OpenGLState::DepthFunc, GL_LEQUAL);
-    cubeMapShader->set(OpenGLState::CullFace, GL_FALSE);
+//    cubeMapShader->set(OpenGLState::DepthFunc, GL_LEQUAL);
+//    cubeMapShader->set(OpenGLState::CullFace, GL_FALSE);
 
-    VisualModel* vaoQuad = new VisualModel("mesh/cube.obj");
-    childNode->addVisual(vaoQuad);
+    VisualModel* cube = new VisualModel("mesh/cube.obj");
+    childNode->addVisual(cube);
+
     return scene;
 }
 

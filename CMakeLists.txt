@@ -17,6 +17,8 @@ set(HEADER_FILES
     Mesh.h
     Message.h
     Node.h
+    OpenGLStateMachine.h
+    OpenGLStateMachine.inl
     Program.h
     Rendered.h
     Scene.h
@@ -42,6 +44,7 @@ set(SOURCE_FILES
     Mesh.cpp
     Message.cpp
     Node.cpp
+    OpenGLStateMachine.cpp
     Program.cpp
     Rendered.cpp
     Scene.cpp

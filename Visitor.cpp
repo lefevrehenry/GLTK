@@ -5,6 +5,7 @@
 #include "Helper.h"
 #include "Mesh.h"
 #include "Node.h"
+#include "OpenGLStateMachine.h"
 #include "Selectable.h"
 #include "ShaderProgram.h"
 #include "Transform.h"
@@ -296,7 +297,6 @@ PickingVisitor::~PickingVisitor()
 
     delete m_shaderProgram;
     m_shaderProgram = nullptr;
-
 }
 
 void PickingVisitor::set(int x, int y)
@@ -319,13 +319,12 @@ void PickingVisitor::start()
 {
     this->m_pickingFramebuffer->bind();
 
-    GLfloat oldClearColor[4];
-    glGetFloatv(GL_COLOR_CLEAR_VALUE, &oldClearColor[0]);
+    OpenGLStateMachine::Push(ClearColor);
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glClearColor(oldClearColor[0],oldClearColor[1],oldClearColor[2],oldClearColor[3]);
+    OpenGLStateMachine::Pop(ClearColor);
 
     this->m_shaderProgram->bind();
     this->m_shaderProgram->updateDataIfDirty();
@@ -344,13 +343,11 @@ void PickingVisitor::end()
     float indexComponents[4];
     glReadPixels(this->m_x, this->m_y, 1, 1, GL_RGBA, GL_FLOAT, &indexComponents[0]);
 
-    unsigned int offset = 0;
-
     glm::vec4 color;
-    color.r = indexComponents[offset + 0];
-    color.g = indexComponents[offset + 1];
-    color.b = indexComponents[offset + 2];
-    color.a = indexComponents[offset + 3];
+    color.r = indexComponents[0];
+    color.g = indexComponents[1];
+    color.b = indexComponents[2];
+    color.a = indexComponents[3];
 
     unsigned int index = unpackIndex(color);
 
@@ -367,7 +364,6 @@ void PickingVisitor::end()
         float ndc_y = (this->m_y / h) * 2.f - 1;
         float ndc_z = (z * 2.f) - 1;
 
-        // todo: set position of selected visual
         this->m_selectedVisualModel = visual;
         this->m_selectedPosition = glm::vec3(ndc_x,ndc_y,ndc_z);
     }
@@ -430,7 +426,7 @@ void BoundingBoxVisitor::processNode(const Node* node)
         min = glm::vec3(transform.matrix() * glm::vec4(min, 1.0));
         max = glm::vec3(transform.matrix() * glm::vec4(max, 1.0));
 
-        //update globalMin
+        // update globalMin
         globalMin[0] = (min[0] < globalMin[0] ? min[0] : globalMin[0]);
         globalMin[1] = (min[1] < globalMin[1] ? min[1] : globalMin[1]);
         globalMin[2] = (min[2] < globalMin[2] ? min[2] : globalMin[2]);
@@ -492,6 +488,11 @@ ShaderVisitor::ShaderVisitor(ShaderProgram* shaderProgram) :
 
 }
 
+void ShaderVisitor::setShaderProgram(ShaderProgram* shaderProgram)
+{
+    this->m_shaderProgram = shaderProgram;
+}
+
 void ShaderVisitor::processNode(const Node* node)
 {
     ShaderProgram* oldShaderProgram = m_currentShader;
@@ -500,9 +501,4 @@ void ShaderVisitor::processNode(const Node* node)
     DrawVisitor::processNode(node);
 
     m_currentShader = oldShaderProgram;
-}
-
-void ShaderVisitor::setShaderProgram(ShaderProgram* shaderProgram)
-{
-    this->m_shaderProgram = shaderProgram;
 }

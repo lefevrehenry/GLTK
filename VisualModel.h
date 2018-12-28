@@ -27,7 +27,7 @@ struct VisualParam {
 class Mesh;
 
 /**
- * @brief The Transform class
+ * @brief The VisualModel class
  */
 class VisualModel
 {

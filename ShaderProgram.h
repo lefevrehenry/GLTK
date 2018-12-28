@@ -2,11 +2,12 @@
 #define SHADERPROGRAM_H
 
 #include "Data.h"
+//#include "OpenGLStateMachine.h"
 
 // Standard Library
 #include <vector>
 #include <map>
-#include <stack>
+//#include <stack>
 
 // OpenGL
 #include <GL/glew.h>
@@ -28,36 +29,12 @@ enum PrimitiveMode {
 };
 
 /**
- * @brief The OpenGLState class
- */
-class OpenGLState
-{
-
-public:
-
-    enum OpenGLAttribute {
-        DepthMask,
-        DepthTest,
-        DepthFunc,
-        CullFace
-    };
-
-public:
-    static void Push(OpenGLAttribute attribute, unsigned int value);
-    static void Pop(OpenGLAttribute attribute);
-
-private:
-    static std::map<OpenGLAttribute, std::stack<unsigned int> > OpenGLStateAttribute;
-
-};
-
-/**
  * @brief The ShaderProgram class
  */
 class ShaderProgram
 {
 
-    typedef OpenGLState::OpenGLAttribute OpenGLAttribute;
+//    typedef OpenGLState::OpenGLAttribute OpenGLAttribute;
 
 public:
 
@@ -102,11 +79,11 @@ public:
     PrimitiveMode getPrimitiveMode() const;
     void setPrimitiveMode(PrimitiveMode primitiveMode);
 
-public:
+//public:
 
-    void set(OpenGLAttribute attribute, unsigned int value);
-    void pushAttribute() const;
-    void popAttribute() const;
+//    void set(OpenGLAttribute attribute, unsigned int value);
+//    void pushAttribute() const;
+//    void popAttribute() const;
 
 public:
 
@@ -217,7 +194,7 @@ private:
     unsigned int m_nbInstance;
     PrimitiveMode m_primitiveMode;
 
-    mutable std::map< OpenGLState::OpenGLAttribute, unsigned int > m_attributeStack;
+//    mutable std::map< OpenGLAttribute, unsigned int > m_attributeStack;
 
 };
 
