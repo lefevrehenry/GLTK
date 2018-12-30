@@ -38,3 +38,5 @@ CMakeLists.txt.user
 
 # Personnal build
 build*
+share/mesh/*
+share/textures/*
