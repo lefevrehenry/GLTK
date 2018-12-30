@@ -7,91 +7,6 @@
 
 using namespace gl;
 
-//std::map<OpenGLState::OpenGLAttribute, std::stack<unsigned int> > OpenGLState::OpenGLStateAttribute;
-
-//void OpenGLState::Push(OpenGLAttribute attribute, unsigned int value)
-//{
-//    std::stack<unsigned int>& attributeStack = OpenGLState::OpenGLStateAttribute[attribute];
-//    GLboolean current;
-//    GLint current_i;
-
-//    switch (attribute)
-//    {
-//    case DepthMask:
-//        glGetBooleanv(GL_DEPTH_WRITEMASK, &current);
-//        glDepthMask(value);
-
-//        attributeStack.push(current);
-
-//        break;
-//    case DepthTest:
-//        glGetBooleanv(GL_DEPTH_TEST, &current);
-//        if ((GLboolean) value == GL_TRUE)
-//            glEnable(GL_DEPTH_TEST);
-//        else
-//            glDisable(GL_DEPTH_TEST);
-
-//        attributeStack.push(current);
-
-//        break;
-//    case DepthFunc:
-//        glGetIntegerv(GL_DEPTH_FUNC, &current_i);
-//        glDepthFunc(value);
-
-//        attributeStack.push(current_i);
-
-//        break;
-//    case CullFace:
-//        glGetBooleanv(GL_CULL_FACE, &current);
-//        if ((GLboolean) value == GL_TRUE)
-//            glEnable(GL_CULL_FACE);
-//        else
-//            glDisable(GL_CULL_FACE);
-
-//        attributeStack.push(current);
-
-//        break;
-//    }
-//}
-
-//void OpenGLState::Pop(OpenGLAttribute attribute)
-//{
-//    std::stack<unsigned int>& attributeStack = OpenGLState::OpenGLStateAttribute[attribute];
-
-//    if (attributeStack.empty())
-//        return;
-
-//    unsigned int value = attributeStack.top();
-
-//    switch (attribute)
-//    {
-//    case DepthMask:
-//        glDepthMask(value);
-
-//        break;
-//    case DepthTest:
-//        if ((GLboolean) value == GL_TRUE)
-//            glEnable(GL_DEPTH_TEST);
-//        else
-//            glDisable(GL_DEPTH_TEST);
-
-//        break;
-//    case DepthFunc:
-//        glDepthFunc(value);
-
-//        break;
-//    case CullFace:
-//        if ((GLboolean) value == GL_TRUE)
-//            glEnable(GL_CULL_FACE);
-//        else
-//            glDisable(GL_CULL_FACE);
-
-//        break;
-//    }
-
-//    attributeStack.pop();
-//}
-
 ShaderProgram::ShaderProgram() :
     m_programId(0),
     m_shaderList(3),
@@ -138,27 +53,24 @@ void ShaderProgram::setPrimitiveMode(PrimitiveMode primitiveMode)
     this->m_primitiveMode = primitiveMode;
 }
 
-//void ShaderProgram::set(OpenGLAttribute attribute, unsigned int value)
-//{
-//    this->m_attributeStack[attribute] = value;
-//}
+void ShaderProgram::pushAttribute() const
+{
+    for (auto it : this->m_attributeStack) {
+        StateAttribute attribute = it.first;
+        BaseOpenGLAttribute* value = it.second;
 
-//void ShaderProgram::pushAttribute() const
-//{
-//    for (auto it : this->m_attributeStack) {
-//        OpenGLAttribute attribute = it.first;
-//        unsigned int value = it.second;
-//        OpenGLState::Push(attribute, value);
-//    }
-//}
+        OpenGLStateMachine::Push(attribute);
+        OpenGLStateMachine::Apply(attribute, value);
+    }
+}
 
-//void ShaderProgram::popAttribute() const
-//{
-//    for (auto it : this->m_attributeStack) {
-//        OpenGLAttribute attribute = it.first;
-//        OpenGLState::Pop(attribute);
-//    }
-//}
+void ShaderProgram::popAttribute() const
+{
+    for (auto it : this->m_attributeStack) {
+        StateAttribute attribute = it.first;
+        OpenGLStateMachine::Pop(attribute);
+    }
+}
 
 bool ShaderProgram::addShader(const Shader& shader)
 {
@@ -213,12 +125,12 @@ bool ShaderProgram::isLinked() const
 void ShaderProgram::bind() const
 {
     glUseProgram(m_programId);
-//    this->pushAttribute();
+    this->pushAttribute();
 }
 
 void ShaderProgram::unbind() const
 {
-//    this->popAttribute();
+    this->popAttribute();
     glUseProgram(0);
 }
 

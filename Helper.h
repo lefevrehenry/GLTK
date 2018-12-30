@@ -373,6 +373,8 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::CubeMap:
 
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgram->set<GLboolean,1>(CullFace, false);
+        shaderProgram->set<GLenum,1>(DepthFunc, GL_LEQUAL);
 
         break;
     case ShaderProgramType::EnvironmentMapping:

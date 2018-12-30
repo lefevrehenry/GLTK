@@ -6,6 +6,7 @@
 #include <Mesh.h>
 #include <Message.h>
 #include <Node.h>
+#include <OpenGLAttribute.h>
 #include <Rendered.h>
 #include <Scene.h>
 #include <ShaderProgram.h>
@@ -59,10 +60,6 @@ SceneGraph* createScene()
     childNode->setShaderProgram(cubeMapShader);
 
     cubeMapShader->addData<CubeMapTexture>("cubeMap", *cubeMapTexture);
-
-//    cubeMapShader->set(OpenGLState::DepthMask, GL_FALSE);
-//    cubeMapShader->set(OpenGLState::DepthFunc, GL_LEQUAL);
-//    cubeMapShader->set(OpenGLState::CullFace, GL_FALSE);
 
     VisualModel* cube = new VisualModel("mesh/cube.obj");
     childNode->addVisual(cube);

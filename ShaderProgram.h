@@ -2,12 +2,12 @@
 #define SHADERPROGRAM_H
 
 #include "Data.h"
-//#include "OpenGLStateMachine.h"
+#include "OpenGLAttribute.h"
+#include "OpenGLStateMachine.h"
 
 // Standard Library
 #include <vector>
 #include <map>
-//#include <stack>
 
 // OpenGL
 #include <GL/glew.h>
@@ -33,8 +33,6 @@ enum PrimitiveMode {
  */
 class ShaderProgram
 {
-
-//    typedef OpenGLState::OpenGLAttribute OpenGLAttribute;
 
 public:
 
@@ -79,11 +77,16 @@ public:
     PrimitiveMode getPrimitiveMode() const;
     void setPrimitiveMode(PrimitiveMode primitiveMode);
 
-//public:
+public:
 
-//    void set(OpenGLAttribute attribute, unsigned int value);
-//    void pushAttribute() const;
-//    void popAttribute() const;
+    template <typename T, int N>
+    void set(StateAttribute attribute, T args...)
+    {
+        this->m_attributeStack[attribute] = new OpenGLAttribute<T,N>(args);
+    }
+
+    void pushAttribute() const;
+    void popAttribute() const;
 
 public:
 
@@ -194,7 +197,7 @@ private:
     unsigned int m_nbInstance;
     PrimitiveMode m_primitiveMode;
 
-//    mutable std::map< OpenGLAttribute, unsigned int > m_attributeStack;
+    std::map< StateAttribute, BaseOpenGLAttribute* > m_attributeStack;
 
 };
 
