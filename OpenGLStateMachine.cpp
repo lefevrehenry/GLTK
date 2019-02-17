@@ -18,7 +18,8 @@ std::map< StateAttribute, BaseOpenGLStateMachineAttribute* > OpenGLStateMachine:
     std::make_pair(CullFace, Factory::Create<CullFace>()),
     std::make_pair(DepthFunc, Factory::Create<DepthFunc>()),
     std::make_pair(DepthMask, Factory::Create<DepthMask>()),
-    std::make_pair(DepthTest, Factory::Create<DepthTest>())
+    std::make_pair(DepthTest, Factory::Create<DepthTest>()),
+    std::make_pair(Viewport, Factory::Create<Viewport>())
 };
 
 BaseOpenGLStateMachineAttribute::~BaseOpenGLStateMachineAttribute()
@@ -94,5 +95,17 @@ void OpenGLStateMachine::Apply(StateAttribute attribute, BaseOpenGLAttribute* ba
             glEnable(GL_DEPTH_TEST);
         else
             glDisable(GL_DEPTH_TEST);
+
+    } else if (attribute == Viewport) {
+        OpenGLAttribute<GLint,4>* value = static_cast< OpenGLAttribute<GLint,4>* >(base);
+
+        if (value == nullptr)
+            return;
+
+        int x = value->x();
+        int y = value->y();
+        int width = value->z();
+        int height = value->w();
+        glViewport(x,y,width,height);
     }
 }

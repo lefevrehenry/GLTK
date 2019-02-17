@@ -112,4 +112,26 @@ void OpenGLStateMachineAttribute<DepthTest>::popAttribute()
     delete base;
 }
 
+//////////////////////////// Viewport
+
+template<>
+void OpenGLStateMachineAttribute<Viewport>::pushAttribute()
+{
+    OpenGLAttribute<GLint,4>* value = new OpenGLAttribute<GLint,4>();
+    glGetIntegerv(GL_VIEWPORT, value->data());
+
+    this->m_stack.push(value);
+}
+
+template<>
+void OpenGLStateMachineAttribute<Viewport>::popAttribute()
+{
+    BaseOpenGLAttribute* base = this->m_stack.top();
+    OpenGLStateMachine::Apply(Viewport, base);
+
+    this->m_stack.pop();
+
+    delete base;
+}
+
 }   // namespace gl

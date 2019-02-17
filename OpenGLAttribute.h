@@ -20,6 +20,7 @@ enum StateAttribute {
     DepthFunc,
     DepthMask,
     DepthTest,
+    Viewport
 };
 
 /**
