@@ -20,7 +20,7 @@ Rendered::Rendered() :
 
 bool Rendered::isComplete() const
 {
-    return (scene != nullptr && camera != nullptr);
+    return (scene != nullptr);
 }
 
 void Rendered::draw() const
@@ -28,7 +28,8 @@ void Rendered::draw() const
     if (!isComplete())
         return;
 
-    VisualManager::UpdateUniformBufferCamera(*camera);
+    if (camera != nullptr)
+        VisualManager::UpdateUniformBufferCamera(*camera);
 
     Visitor* visitor = (this->visitor != nullptr ? this->visitor : &defaultVisitor);
 
