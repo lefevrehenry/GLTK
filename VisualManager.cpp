@@ -8,6 +8,7 @@ GLuint VisualManager::m_uboTransform = 0;
 GLuint VisualManager::m_uboMaterial = 0;
 GLuint VisualManager::m_uboCamera = 0;
 GLuint VisualManager::m_uboLight = 0;
+GLuint VisualManager::m_uboTime = 0;
 
 void VisualManager::Init()
 {
@@ -58,6 +59,18 @@ void VisualManager::Init()
     // Bind l'uniform buffer object a l'index 'LightIndex' dans la table de liaison d'OpenGL
     GLuint binding_uboLight_point_index = LightIndex;
     glBindBufferBase(GL_UNIFORM_BUFFER, binding_uboLight_point_index, m_uboLight);
+
+    // Uniform Buffer Object Time
+    glGenBuffers(1, &m_uboTime);
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboTime);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(float), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    VisualManager::UpdateUniformBufferTime(0.f);
+
+    // Bind l'uniform buffer object a l'index 'TimeIndex' dans la table de liaison d'OpenGL
+    GLuint binding_uboTime_point_index = TimeIndex;
+    glBindBufferBase(GL_UNIFORM_BUFFER, binding_uboTime_point_index, m_uboTime);
 }
 
 void VisualManager::Clean()
@@ -66,6 +79,7 @@ void VisualManager::Clean()
     glDeleteBuffers(1, &m_uboMaterial);
     glDeleteBuffers(1, &m_uboCamera);
     glDeleteBuffers(1, &m_uboLight);
+    glDeleteBuffers(1, &m_uboTime);
 }
 
 void VisualManager::UpdateUniformBufferTransform(const Transform& transform)
@@ -114,6 +128,14 @@ void VisualManager::UpdateUniformBufferLight(const Light& light)
 
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboLight);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(matrix));
+
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+void VisualManager::UpdateUniformBufferTime(float time)
+{
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uboTime);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float), &time);
 
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
