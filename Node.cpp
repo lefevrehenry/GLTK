@@ -10,7 +10,9 @@ using namespace gl;
 Node::Node() :
     m_children(0),
     m_visuals(0),
-    m_shaderProgram(nullptr)
+    m_shaderProgram(nullptr),
+    m_visualOption(nullptr),
+    m_light(nullptr)
 {
 
 }
