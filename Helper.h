@@ -303,8 +303,9 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
         shaderProgram->addData<glm::vec3>("color", glm::vec3(1.0,0.8,0.0));
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-//        shaderProgram->set(OpenGLState::CullFace, GL_TRUE);
-//        shaderProgram->set(OpenGLState::DepthMask, GL_FALSE);
+        shaderProgram->set<CullFace>(GL_TRUE);
+        shaderProgram->set<DepthMask>(GL_FALSE);
+        shaderProgram->set<DepthFunc>(GL_LESS);
 
         break;
     case ShaderProgramType::BasicTexturing:
@@ -373,8 +374,8 @@ static ShaderProgram* CreateShaderProgram(ShaderProgram::ShaderProgramType shade
     case ShaderProgramType::CubeMap:
 
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->set<GLboolean,1>(CullFace, false);
-        shaderProgram->set<GLenum,1>(DepthFunc, GL_LEQUAL);
+        shaderProgram->set<CullFace>(GL_FALSE);
+        shaderProgram->set<DepthFunc>(GL_LEQUAL);
 
         break;
     case ShaderProgramType::EnvironmentMapping:

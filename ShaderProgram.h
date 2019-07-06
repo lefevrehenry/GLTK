@@ -2,6 +2,7 @@
 #define SHADERPROGRAM_H
 
 #include "Data.h"
+#include "GLTK.h"
 #include "OpenGLAttribute.h"
 #include "OpenGLStateMachine.h"
 
@@ -64,25 +65,22 @@ public:
     virtual ~ShaderProgram();
 
 public:
-
     GLuint getProgramID() const;
 
 public:
-
     unsigned int getNbInstance() const;
     void setNbInstance(unsigned int n);
 
 public:
-
     PrimitiveMode getPrimitiveMode() const;
     void setPrimitiveMode(PrimitiveMode primitiveMode);
 
 public:
 
-    template <typename T, int N>
-    void set(StateAttribute attribute, T args...)
+    template< AttributName N >
+    void set(typename OpenGL<N>::Type value)
     {
-        this->m_attributeStack[attribute] = new OpenGLAttribute<T,N>(args);
+        this->m_attributeStack[N] = OpenGLAttribut<N>::Create(value);
     }
 
     void pushAttribute() const;
@@ -97,13 +95,10 @@ public:
     bool isLinked() const;
 
 public:
-
     void bind() const;
-
     void unbind() const;
 
 public:
-
     void updateDataIfDirty();
 
     template< typename T >
@@ -145,7 +140,6 @@ public:
     }
 
 public:
-
     template< typename T >
     Data<T>* getDataByName(const char* name)
     {
@@ -159,11 +153,9 @@ public:
     }
 
 public:
-
     bool addUniformBlock(const char* name, unsigned int binding_index);
 
 public:
-
     int attributLocation(const char* name) const;
 
     void setUniformValue(const char* name, float x);
@@ -197,7 +189,7 @@ private:
     unsigned int m_nbInstance;
     PrimitiveMode m_primitiveMode;
 
-    std::map< StateAttribute, BaseOpenGLAttribute* > m_attributeStack;
+    std::map< AttributName, BaseOpenGLAttribut::SPtr > m_attributeStack;
 
 };
 

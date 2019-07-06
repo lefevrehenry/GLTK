@@ -319,12 +319,12 @@ void PickingVisitor::start()
 {
     this->m_pickingFramebuffer->bind();
 
-    OpenGLStateMachine::Push(ClearColor);
+    OpenGLStateMachine::Push<ClearColor>();
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    OpenGLStateMachine::Pop(ClearColor);
+    OpenGLStateMachine::Pop<ClearColor>();
 
     this->m_shaderProgram->bind();
     this->m_shaderProgram->updateDataIfDirty();

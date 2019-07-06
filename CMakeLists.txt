@@ -5,12 +5,14 @@ project(OpenGL)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer -g")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
 set(HEADER_FILES
     Camera.h
     Data.h
     FileRepository.h
     Framebuffer.h
+    GLTK.h
     Helper.h
     Light.h
     Material.h
@@ -39,6 +41,7 @@ set(SOURCE_FILES
     Data.cpp
     FileRepository.cpp
     Framebuffer.cpp
+    GLTK.cpp
     Light.cpp
     Material.cpp
     Mesh.cpp

@@ -5,6 +5,9 @@
 #include "Scene.h"
 #include "Shader.h"
 
+// Standard Library
+#include <memory>
+
 using namespace gl;
 
 ShaderProgram::ShaderProgram() :
@@ -13,7 +16,8 @@ ShaderProgram::ShaderProgram() :
     m_dataList(),
     m_isLinked(false),
     m_nbInstance(1),
-    m_primitiveMode(TRIANGLES)
+    m_primitiveMode(TRIANGLES),
+    m_attributeStack()
 {
     m_programId = glCreateProgram();
 }
@@ -53,22 +57,80 @@ void ShaderProgram::setPrimitiveMode(PrimitiveMode primitiveMode)
     this->m_primitiveMode = primitiveMode;
 }
 
+template< AttributName N >
+void PushAndApply(BaseOpenGLAttribut::SPtr baseAttribut)
+{
+    OpenGLStateMachine::Push<N>();
+    OpenGLStateMachine::Set<N>( std::static_pointer_cast<OpenGLAttribut<N>>(baseAttribut) );
+}
+
 void ShaderProgram::pushAttribute() const
 {
-    for (auto it : this->m_attributeStack) {
-        StateAttribute attribute = it.first;
-        BaseOpenGLAttribute* value = it.second;
+    // ugly as fuck !
+    // mixing compile-time template compilation with runtime check :/
+    // implement a static_for loop ?
+    // but probably a bad idea to use template in this case
 
-        OpenGLStateMachine::Push(attribute);
-        OpenGLStateMachine::Apply(attribute, value);
+    for (auto it : this->m_attributeStack) {
+        AttributName attribute = it.first;
+        BaseOpenGLAttribut::SPtr value = it.second;
+
+        switch (attribute) {
+        case ClearColor:
+            PushAndApply<ClearColor>(value);
+            break;
+        case CullFace:
+            PushAndApply<CullFace>(value);
+            break;
+        case DepthFunc:
+            PushAndApply<DepthFunc>(value);
+            break;
+        case DepthMask:
+            PushAndApply<DepthMask>(value);
+            break;
+        case DepthTest:
+            PushAndApply<DepthTest>(value);
+            break;
+        case Viewport:
+            PushAndApply<Viewport>(value);
+            break;
+        default:
+            msg_error("ShaderProgram") << "Unknown AttributName" << attribute;
+            break;
+        }
     }
 }
 
 void ShaderProgram::popAttribute() const
 {
+    // same as above, ugly idea
+
     for (auto it : this->m_attributeStack) {
-        StateAttribute attribute = it.first;
-        OpenGLStateMachine::Pop(attribute);
+        AttributName attribute = it.first;
+
+        switch (attribute) {
+        case ClearColor:
+            OpenGLStateMachine::Pop<ClearColor>();
+            break;
+        case CullFace:
+            OpenGLStateMachine::Pop<CullFace>();
+            break;
+        case DepthFunc:
+            OpenGLStateMachine::Pop<DepthFunc>();
+            break;
+        case DepthMask:
+            OpenGLStateMachine::Pop<DepthMask>();
+            break;
+        case DepthTest:
+            OpenGLStateMachine::Pop<DepthTest>();
+            break;
+        case Viewport:
+            OpenGLStateMachine::Pop<Viewport>();
+            break;
+        default:
+            msg_error("ShaderProgram") << "Unknown AttributName" << attribute;
+            break;
+        }
     }
 }
 

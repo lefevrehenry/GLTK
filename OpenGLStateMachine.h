@@ -1,6 +1,7 @@
 #ifndef OPENGLSTATEMACHINE_H
 #define OPENGLSTATEMACHINE_H
 
+#include "GLTK.h"
 #include "Message.h"
 #include "OpenGLAttribute.h"
 
@@ -14,46 +15,6 @@
 
 namespace gl {
 
-class OpenGLStateMachine;
-
-/**
- * @brief The BaseOpenGLStateMachineAttribute class
- */
-class BaseOpenGLStateMachineAttribute
-{
-    friend class OpenGLStateMachine;
-
-public:
-    virtual ~BaseOpenGLStateMachineAttribute();
-
-private:
-    virtual void pushAttribute() = 0;
-    virtual void popAttribute() = 0;
-
-};
-
-/**
- * @brief The OpenGLStateMachineAttribute class
- */
-template <StateAttribute S>
-class OpenGLStateMachineAttribute : public BaseOpenGLStateMachineAttribute
-{
-
-private:
-    virtual void pushAttribute()
-    {
-        msg_warning("OpenGLStateMachine") << "pushAttribute not specialized yet";
-    }
-    virtual void popAttribute()
-    {
-        msg_warning("OpenGLStateMachine") << "popAttribute not specialized yet";
-    }
-
-private:
-    std::stack< BaseOpenGLAttribute* >  m_stack;
-
-};
-
 /**
  * @brief The OpenGLStateMachine class
  */
@@ -64,14 +25,44 @@ public:
     OpenGLStateMachine() = delete;
 
 public:
-    static void Push(StateAttribute attribute);
-    static void Pop(StateAttribute attribute);
+    template< AttributName N >
+    static void Push()
+    {
+        // create an OpenGLAttribut with the current OpenGL state to store it
+        typename OpenGLAttribut<N>::SPtr attribut = OpenGLStateMachine::Get<N>();
+
+        MapOpenGLStateMachineAttribute[N].push(attribut);
+    }
+    template< AttributName N >
+    static void Pop()
+    {
+        // cast and copy the top item of the stack to apply it
+        BaseOpenGLAttribut::SPtr baseAttribut = MapOpenGLStateMachineAttribute[N].top();
+        typename OpenGLAttribut<N>::SPtr attribut = std::static_pointer_cast< OpenGLAttribut<N> >(baseAttribut);
+
+        MapOpenGLStateMachineAttribute[N].pop();
+
+        OpenGLStateMachine::Set<N>(attribut);
+    }
 
 public:
-    static void Apply(StateAttribute attribute, BaseOpenGLAttribute* value);
+    template< AttributName N >
+    static typename OpenGLAttribut<N>::SPtr Get()
+    {
+        using Type = typename OpenGL<N>::Type;
 
-private:
-    static std::map< StateAttribute, BaseOpenGLStateMachineAttribute* > MapOpenGLStateMachineAttribute;
+        Type value = OpenGL<N>::Get();
+
+        return OpenGLAttribut<N>::Create(value);
+    }
+    template< AttributName N >
+    static void Set(typename OpenGLAttribut<N>::SPtr attribut)
+    {
+        OpenGL<N>::Set(attribut->value());
+    }
+
+public:
+    static std::map< AttributName, std::stack<BaseOpenGLAttribut::SPtr> > MapOpenGLStateMachineAttribute;
 
 };
 
