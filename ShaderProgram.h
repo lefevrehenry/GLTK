@@ -60,7 +60,6 @@ public:
     };
 
 public:
-
     ShaderProgram();
     virtual ~ShaderProgram();
 
@@ -76,7 +75,6 @@ public:
     void setPrimitiveMode(PrimitiveMode primitiveMode);
 
 public:
-
     template< AttributName N >
     void set(typename OpenGL<N>::Type value)
     {
@@ -89,9 +87,7 @@ public:
 public:
 
     bool addShader(const Shader& shader);
-
     void link();
-
     bool isLinked() const;
 
 public:

@@ -1,11 +1,10 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
-project(OpenGL)
+project(GLTK)
 
 #set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer -g")
-#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 
 set(HEADER_FILES
     Camera.h
@@ -194,5 +193,5 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
 endif()
 
-install(FILES ${HEADER_FILES} DESTINATION include)
+install(FILES ${HEADER_FILES} DESTINATION include/GLTK)
 install(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION lib)

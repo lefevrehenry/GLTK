@@ -6,6 +6,7 @@
 // Standard Library
 #include <memory>
 
+
 namespace gl {
 
 class OpenGLStateMachine;

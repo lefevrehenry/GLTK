@@ -33,8 +33,10 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
     }
 
     /* GLFW initialization */
-    if (!glfwInit())
+    if (!glfwInit()) {
+        msg_error("GLFWApplication") << "oh no ! glfwInit() has failed";
         return nullptr;
+    }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GLFWApplication::OpenGLMajorVersion);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLFWApplication::OpenGLMinorVersion);
@@ -62,7 +64,7 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
     {
         // Problem: glewInit failed, something is seriously wrong.
         glfwTerminate();
-        msg_error("OpenGL") << "Glew init failed";
+        msg_error("OpenGL") << "oh no ! glewInit() has failed";
         return nullptr;
     }
 
@@ -84,10 +86,10 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
 
 void GLFWApplication::Terminate()
 {
-    static GLFWApplication* app = GLFWApplication::getInstance();
+    GLFWApplication* app = GLFWApplication::getInstance();
     VisualManager::Clean();
 
-    if (!app->windowHandle) {
+    if (app && !app->windowHandle) {
         glfwDestroyWindow(app->windowHandle);
         app->setWindow(nullptr);
     }
