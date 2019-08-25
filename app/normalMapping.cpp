@@ -40,7 +40,13 @@ SceneGraph* createScene()
     textureColor->load("textures/Brick_Wall_color.jpg");
 
     Texture2D* textureNormal = new Texture2D();
-    textureNormal->load("textures/Brick_Wall_normal_smooth.jpg");
+    textureNormal->load("textures/Brick_Wall_normal.jpg");
+
+    Texture2D* textureSpecular = new Texture2D();
+    textureSpecular->load("textures/Brick_Wall_spec.jpg");
+
+    Texture2D* textureOcclusion = new Texture2D();
+    textureOcclusion->load("textures/Brick_Wall_ambient.jpg");
 
     ////////////////////////////////////////
 
@@ -51,6 +57,8 @@ SceneGraph* createScene()
 
     basicTexturingShader->addData<Texture>("colorMap", *textureColor);
     basicTexturingShader->addData<Texture>("normalMap", *textureNormal);
+    basicTexturingShader->addData<Texture>("specularMap", *textureSpecular);
+    basicTexturingShader->addData<Texture>("occlusionMap", *textureOcclusion);
 //    basicTexturingShader->set(OpenGLState::CullFace, GL_FALSE);
 
     VisualModel* board = new VisualModel("mesh/flatQuad.obj");

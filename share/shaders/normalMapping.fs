@@ -27,6 +27,8 @@ layout(std140) uniform light
 // uniform input
 uniform sampler2D colorMap;
 uniform sampler2D normalMap;
+uniform sampler2D specularMap;
+uniform sampler2D occlusionMap;
 
 // data from vertex shader
 in vec3 o_normal;
@@ -61,6 +63,8 @@ void main()
     // final color
     vec4 diffuseColor = texture(colorMap, uv);
     vec4 specularColor = vec4(lightColor,1.0);
+
+    vec4 ao = texture(occlusionMap,uv).xyzw;
 
     // final color
     outColor = (diff * diffuseColor) + (spec * specularColor);
