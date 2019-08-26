@@ -23,6 +23,7 @@ set(HEADER_FILES
     Program.h
     Rendered.h
     Scene.h
+    SceneView.h
     Selectable.h
     Shader.h
     ShaderProgram.h
@@ -53,6 +54,7 @@ set(SOURCE_FILES
     Program.cpp
     Rendered.cpp
     Scene.cpp
+    SceneView.cpp
     Selectable.cpp
     Shader.cpp
     ShaderProgram.cpp
