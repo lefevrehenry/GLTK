@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit
 
 set(HEADER_FILES
     Camera.h
+    CameraController.h
     Data.h
     FileRepository.h
     Framebuffer.h
@@ -38,6 +39,7 @@ set(HEADER_FILES
 
 set(SOURCE_FILES
     Camera.cpp
+    CameraController.cpp
     Data.cpp
     FileRepository.cpp
     Framebuffer.cpp

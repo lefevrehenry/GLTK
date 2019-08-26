@@ -1,8 +1,8 @@
 #ifndef SCENEVIEW_H
 #define SCENEVIEW_H
 
+#include "CameraController.h"
 #include "Viewport.h"
-#include "GLFWApplicationEvents.h"
 
 // Standard Library
 #include <functional>
@@ -15,12 +15,16 @@ class Camera;
 class Scene;
 class Interface;
 
+/**
+ * @brief The SceneView class
+ */
 class SceneView
 {
+    using CameraType = CameraController::CameraType;
 
 public:
-    explicit SceneView(const Viewport& viewport);
-    explicit SceneView(int x, int y, int width, int height);
+    explicit SceneView(const Viewport& viewport, CameraType type = CameraType::None);
+    explicit SceneView(int x, int y, int width, int height, CameraType type = CameraType::None);
 
 public:
     const Viewport& viewport() const;
@@ -33,15 +37,8 @@ public:
     std::weak_ptr<Camera> camera() const;
     void setCamera(std::weak_ptr<Camera> camera);
 
-//    const std::unique_ptr<Interface>& interface() const;
-    void setInterface(CameraController::CameraType type)
-    {
-        BaseCameraControllerCreator* creator = CameraController::Create(type);
-
-        this->m_interface.reset(creator->create());
-
-        delete creator;
-    }
+    //const std::unique_ptr<Interface>& interface() const;
+    void setInterface(CameraType type);
 
 public:
     void setDrawCallback(std::function<void()> drawCallback);

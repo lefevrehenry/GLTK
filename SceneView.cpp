@@ -1,29 +1,27 @@
 #include "SceneView.h"
 
-#include "Camera.h"
-#include "GLFWApplicationEvents.h"
 #include "OpenGLStateMachine.h"
 
 using namespace gl;
 
-SceneView::SceneView(const class Viewport& viewport) :
+SceneView::SceneView(const class Viewport& viewport, CameraType type) :
     m_viewport(viewport),
     m_scene(nullptr),
     m_camera(nullptr),
     m_interface(nullptr),
     m_drawCallback()
 {
-
+    this->setInterface(type);
 }
 
-SceneView::SceneView(int x, int y, int width, int height) :
+SceneView::SceneView(int x, int y, int width, int height, CameraType type) :
     m_viewport(x,y,width,height),
     m_scene(nullptr),
     m_camera(nullptr),
     m_interface(nullptr),
     m_drawCallback()
 {
-
+    this->setInterface(type);
 }
 
 const class Viewport& SceneView::viewport() const
@@ -54,6 +52,12 @@ std::weak_ptr<Camera> SceneView::camera() const
 void SceneView::setCamera(std::weak_ptr<Camera> camera)
 {
     this->m_camera = std::shared_ptr<Camera>(camera);
+}
+
+void SceneView::setInterface(CameraType type)
+{
+    Scene* sc = m_scene.get();
+    this->m_interface.reset(CameraController::Create(type, camera()));
 }
 
 void SceneView::setDrawCallback(std::function<void()> drawCallback)
