@@ -20,6 +20,8 @@ public:
     float rw() const;
     float rh() const;
 
+    bool contains(float x, float y) const;
+
 public:
     void set(float x, float y, float rw, float rh);
 

@@ -40,6 +40,11 @@ float Viewport::rh() const
     return m_rh;
 }
 
+bool Viewport::contains(float x, float y) const
+{
+    return (x >= this->m_x && x <= this->m_x + this->rw() && y >= this->m_y && y <= this->m_y + this->rh());
+}
+
 void Viewport::set(float x, float y, float rw, float rh)
 {
     this->m_x = x;

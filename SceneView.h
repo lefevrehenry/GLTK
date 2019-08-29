@@ -37,7 +37,7 @@ public:
     std::weak_ptr<Camera> camera() const;
     void setCamera(std::weak_ptr<Camera> camera);
 
-    //const std::unique_ptr<Interface>& interface() const;
+    const std::unique_ptr<Interface>& interface() const;
     void setInterface(CameraType type);
 
 public:
