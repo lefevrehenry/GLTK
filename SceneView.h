@@ -5,15 +5,16 @@
 #include "Viewport.h"
 
 // Standard Library
-#include <functional>
+//#include <functional>
 #include <memory>
 
 
 namespace gl {
 
 class Camera;
-class Scene;
 class Interface;
+class SceneGraph;
+class Visitor;
 
 /**
  * @brief The SceneView class
@@ -31,8 +32,8 @@ public:
     void setViewport(const Viewport& viewport);
 
 public:
-    std::weak_ptr<Scene> scene() const;
-    void setScene(std::weak_ptr<Scene> scene);
+    std::weak_ptr<SceneGraph> scene() const;
+    void setScene(std::weak_ptr<SceneGraph> scene);
 
     std::weak_ptr<Camera> camera() const;
     void setCamera(std::weak_ptr<Camera> camera);
@@ -40,8 +41,8 @@ public:
     const std::unique_ptr<Interface>& interface() const;
     void setInterface(CameraType type);
 
-public:
-    void setDrawCallback(std::function<void()> drawCallback);
+//public:
+//    void setDrawCallback(std::function<void()> drawCallback);
 
 public:
     void draw() const;
@@ -49,11 +50,12 @@ public:
 private:
     Viewport    m_viewport;
 
-    std::shared_ptr<Scene>      m_scene;
+    std::shared_ptr<SceneGraph> m_scene;
     std::shared_ptr<Camera>     m_camera;
     std::unique_ptr<Interface>  m_interface;
+    std::shared_ptr<Visitor>    m_visitor;
 
-    std::function<void()>   m_drawCallback;
+//    std::function<void()>   m_drawCallback;
 
 };
 
