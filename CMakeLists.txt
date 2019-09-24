@@ -12,7 +12,6 @@ set(HEADER_FILES
     Data.h
     FileRepository.h
     Framebuffer.h
-    GLTK.h
     Helper.h
     Light.h
     Material.h
@@ -43,7 +42,6 @@ set(SOURCE_FILES
     Data.cpp
     FileRepository.cpp
     Framebuffer.cpp
-    GLTK.cpp
     Light.cpp
     Material.cpp
     Mesh.cpp

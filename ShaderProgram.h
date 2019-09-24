@@ -2,7 +2,6 @@
 #define SHADERPROGRAM_H
 
 #include "Data.h"
-#include "GLTK.h"
 #include "OpenGLAttribute.h"
 #include "OpenGLStateMachine.h"
 

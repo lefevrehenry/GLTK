@@ -1,12 +1,8 @@
 #ifndef OPENGLSTATEMACHINE_H
 #define OPENGLSTATEMACHINE_H
 
-#include "GLTK.h"
 #include "Message.h"
 #include "OpenGLAttribute.h"
-
-// Gl
-#include <GL/gl.h>
 
 // Standard Library
 #include <map>
