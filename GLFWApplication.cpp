@@ -186,6 +186,11 @@ void GLFWApplication::loop()
 //            lastTime += 1.0;
 //        }
 
+        double time = glfwGetTime();
+        float t = std::round(float(time) * 100) / 100;
+
+        VisualManager::UpdateUniformBufferTime(t);
+
         /* Call the drawing function */
         if (this->m_drawCallback)
             this->m_drawCallback();
