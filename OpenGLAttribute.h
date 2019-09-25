@@ -132,7 +132,6 @@ struct OpenGL<DepthTest>
     }
 };
 
-
 template<>
 struct OpenGL<Viewport>
 {

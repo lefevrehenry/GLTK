@@ -2,6 +2,7 @@
 
 #include "GLFWApplicationEvents.h"
 #include "Message.h"
+#include "SceneView.h"
 #include "VisualManager.h"
 
 // OpenGL
@@ -101,8 +102,9 @@ void GLFWApplication::FramebufferSizeCallback(GLFWwindow* handle, int width, int
 {
     static GLFWApplication* app = GLFWApplication::getInstance();
 
-    if (app->getInterface() != nullptr) {
-        app->getInterface()->framebufferSizeCallback(handle, width, height);
+    for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
+        if(sceneView && sceneView->interface())
+            sceneView->interface()->framebufferSizeCallback(handle, width, height);
     }
 
     GLFWApplication::ScreenWidth = uint(width);
@@ -113,8 +115,9 @@ void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int ac
 {
     static GLFWApplication* app = GLFWApplication::getInstance();
 
-    if (app->getInterface() != nullptr) {
-        app->getInterface()->mouseButtonCallback(handle, button, action, mods);
+    for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
+        if(sceneView && sceneView->interface())
+            sceneView->interface()->mouseButtonCallback(handle, button, action, mods);
     }
 }
 
@@ -122,8 +125,9 @@ void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double 
 {
     static GLFWApplication* app = GLFWApplication::getInstance();
 
-    if (app->getInterface() != nullptr) {
-        app->getInterface()->cursorPosCallback(handle, xpos, ypos);
+    for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
+        if(sceneView && sceneView->interface())
+            sceneView->interface()->cursorPosCallback(handle, xpos, ypos);
     }
 }
 
@@ -131,8 +135,9 @@ void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double 
 {
     static GLFWApplication* app = GLFWApplication::getInstance();
 
-    if (app->getInterface() != nullptr) {
-        app->getInterface()->scrollCallback(handle, xoffset, yoffset);
+    for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
+        if(sceneView && sceneView->interface())
+            sceneView->interface()->scrollCallback(handle, xoffset, yoffset);
     }
 }
 
@@ -140,15 +145,15 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 {
     static GLFWApplication* app = GLFWApplication::getInstance();
 
-    if (app->getInterface() != nullptr) {
-        app->getInterface()->keyCallback(handle, key, scancode, action, mods);
+    for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
+        if(sceneView && sceneView->interface())
+            sceneView->interface()->keyCallback(handle, key, scancode, action, mods);
     }
 }
 
 GLFWApplication::GLFWApplication() : Application(),
     windowHandle(nullptr),
-    m_interface(nullptr),
-    m_drawCallback(nullptr)
+    m_sceneViews()
 {
     OurInstance = this;
 }
@@ -192,8 +197,7 @@ void GLFWApplication::loop()
         VisualManager::UpdateUniformBufferTime(t);
 
         /* Call the drawing function */
-        if (this->m_drawCallback)
-            this->m_drawCallback();
+        this->draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(this->windowHandle);
@@ -233,17 +237,33 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
     }
 }
 
-Interface* GLFWApplication::getInterface() const
+Viewport GLFWApplication::windowSize() const
 {
-    return this->m_interface;
+    return Viewport(0,0,GLFWApplication::ScreenWidth,GLFWApplication::ScreenHeight);
 }
 
-void GLFWApplication::setInterface(Interface* interface)
+SceneView* GLFWApplication::createSceneView()
 {
-    this->m_interface = interface;
+    std::shared_ptr<SceneView> sceneView(new SceneView(windowSize()));
+    this->m_sceneViews.push_back( sceneView );
+
+    return sceneView.get();
 }
 
-void GLFWApplication::setDrawCallBack(void (*drawCallback)())
+SceneView* GLFWApplication::createSceneView(int x, int y, int width, int height)
 {
-    this->m_drawCallback = drawCallback;
+    std::shared_ptr<SceneView> sceneView(new SceneView(Viewport(x,y,width,height)));
+    this->m_sceneViews.push_back(sceneView);
+
+    return sceneView.get();
+}
+
+void GLFWApplication::draw()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    for (const std::shared_ptr<SceneView>& sceneView : m_sceneViews) {
+        if(sceneView)
+            sceneView->draw();
+    }
 }

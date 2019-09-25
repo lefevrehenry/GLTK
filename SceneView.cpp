@@ -10,24 +10,20 @@ using namespace gl;
 
 static DrawVisitor defaultVisitor;
 
-SceneView::SceneView(const class Viewport& viewport, CameraType type) :
+SceneView::SceneView(const class Viewport& viewport) :
     m_viewport(viewport),
-    m_scene(nullptr),
-    m_camera(nullptr),
+    m_scene(),
+    m_camera(new Camera()),
     m_interface(nullptr)
-//    m_drawCallback()
 {
-    this->setInterface(type);
 }
 
-SceneView::SceneView(int x, int y, int width, int height, CameraType type) :
+SceneView::SceneView(int x, int y, int width, int height) :
     m_viewport(x,y,width,height),
-    m_scene(nullptr),
-    m_camera(nullptr),
+    m_scene(),
+    m_camera(new Camera()),
     m_interface(nullptr)
-//    m_drawCallback()
 {
-    this->setInterface(type);
 }
 
 const class Viewport& SceneView::viewport() const
@@ -70,11 +66,6 @@ void SceneView::setInterface(CameraType type)
     this->m_interface.reset(CameraController::Create(type, camera()));
 }
 
-//void SceneView::setDrawCallback(std::function<void()> drawCallback)
-//{
-//    this->m_drawCallback = drawCallback;
-//}
-
 void SceneView::draw() const
 {
     OpenGLStateMachine::Push<Viewport>();
@@ -86,16 +77,14 @@ void SceneView::draw() const
 
     glViewport(x,y,width,height);
 
-//    if(m_camera)
-//        VisualManager::UpdateUniformBufferCamera(*m_camera);
+    if(this->m_camera)
+        VisualManager::UpdateUniformBufferCamera(*m_camera);
 
-//    if(this->m_drawCallback)
-//        this->m_drawCallback();
-
-    if(this->m_scene) {
+    std::shared_ptr<SceneGraph> scene(this->m_scene);
+    if(scene) {
         Visitor* visitor = (this->m_visitor ? this->m_visitor.get() : &defaultVisitor);
 
-        Node* node = m_scene->root();
+        Node* node = scene->root();
         node->executeVisitor(visitor);
     }
 

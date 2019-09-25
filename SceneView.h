@@ -5,7 +5,6 @@
 #include "Viewport.h"
 
 // Standard Library
-//#include <functional>
 #include <memory>
 
 
@@ -24,12 +23,12 @@ class SceneView
     using CameraType = CameraController::CameraType;
 
 public:
-    explicit SceneView(const Viewport& viewport, CameraType type = CameraType::None);
-    explicit SceneView(int x, int y, int width, int height, CameraType type = CameraType::None);
+    explicit SceneView(const class Viewport& viewport);
+    explicit SceneView(int x, int y, int width, int height);
 
 public:
-    const Viewport& viewport() const;
-    void setViewport(const Viewport& viewport);
+    const class Viewport& viewport() const;
+    void setViewport(const class Viewport& viewport);
 
 public:
     std::weak_ptr<SceneGraph> scene() const;
@@ -41,21 +40,16 @@ public:
     const std::unique_ptr<Interface>& interface() const;
     void setInterface(CameraType type);
 
-//public:
-//    void setDrawCallback(std::function<void()> drawCallback);
-
 public:
     void draw() const;
 
 private:
-    Viewport    m_viewport;
+    class Viewport    m_viewport;
 
-    std::shared_ptr<SceneGraph> m_scene;
+    std::weak_ptr<SceneGraph>   m_scene;
     std::shared_ptr<Camera>     m_camera;
     std::unique_ptr<Interface>  m_interface;
     std::shared_ptr<Visitor>    m_visitor;
-
-//    std::function<void()>   m_drawCallback;
 
 };
 

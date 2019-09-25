@@ -19,12 +19,13 @@
 
 using namespace gl;
 
-GLFWApplicationEvents::GLFWApplicationEvents(Camera* camera) : DefaultInterface(),
+GLFWApplicationEvents::GLFWApplicationEvents(std::weak_ptr<Camera> camera) : DefaultInterface (),
     mousePressed(false),
     last_x_position(-1),
     last_y_position(-1),
     m_camera(camera)
 {
+
 }
 
 GLFWApplicationEvents::~GLFWApplicationEvents()
@@ -37,8 +38,9 @@ void GLFWApplicationEvents::framebufferSizeCallback(GLFWwindow*, int width, int 
     // Compute the aspect ratio of the size of the window
     float screen_aspect_ratio = float(width) / float(height);
 
-    if (this->m_camera)
-        this->m_camera->setAspectRatio(screen_aspect_ratio);
+    std::shared_ptr<Camera> camera(this->m_camera);
+    if (camera)
+        camera->setAspectRatio(screen_aspect_ratio);
 
     glViewport(0, 0, width, height);
 }
@@ -59,7 +61,8 @@ void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, 
 
 void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
 {
-    if (this->mousePressed && this->m_camera)
+    std::shared_ptr<Camera> camera(this->m_camera);
+    if (this->mousePressed && camera)
     {
         float dx = float(xpos - this->last_x_position);
         float dy = float(ypos - this->last_y_position);
@@ -92,7 +95,7 @@ void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, d
         float pi = glm::pi<float>();
         float rx = ( dx / width) * (2.0f * pi);
         float ry = (-dy / height) * pi;
-        this->m_camera->rotate(rx, ry);
+        camera->rotate(rx, ry);
     }
 
     this->last_x_position = xpos;
@@ -101,90 +104,94 @@ void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, d
 
 void GLFWApplicationEvents::scrollCallback(GLFWwindow*, double, double ypos)
 {
-    glm::vec3 eye = this->m_camera->eye();
-    glm::vec3 target = this->m_camera->target();
-    glm::vec3 up = this->m_camera->up();
+    std::shared_ptr<Camera> camera(this->m_camera);
+    if(!camera)
+        return;
+
+    glm::vec3 eye = camera->eye();
+    glm::vec3 target = camera->target();
+    glm::vec3 up = camera->up();
 
     glm::vec3 newEye = eye + float(ypos) * 0.1f * (target - eye);
 
-    this->m_camera->lookAt(newEye, target, up);
+    camera->lookAt(newEye, target, up);
 }
 
-InterfacePicking::InterfacePicking(SceneGraph* sceneGraph, Camera* camera) : GLFWApplicationEvents (camera),
-    m_sceneGraph(sceneGraph),
-    m_pickingVisitor(nullptr),
-    m_cameraActive(false),
-    m_callback(nullptr)
-{
-    this->m_pickingVisitor = new PickingVisitor();
-}
+//InterfacePicking::InterfacePicking(SceneGraph* sceneGraph, Camera* camera) : GLFWApplicationEvents (camera),
+//    m_sceneGraph(sceneGraph),
+//    m_pickingVisitor(nullptr),
+//    m_cameraActive(false),
+//    m_callback(nullptr)
+//{
+//    this->m_pickingVisitor = new PickingVisitor();
+//}
 
-InterfacePicking::~InterfacePicking()
-{
-    delete m_pickingVisitor;
-    m_pickingVisitor = nullptr;
-}
+//InterfacePicking::~InterfacePicking()
+//{
+//    delete m_pickingVisitor;
+//    m_pickingVisitor = nullptr;
+//}
 
-void InterfacePicking::setCallback(void (*callback)(const VisualModel*, glm::vec4))
-{
-    this->m_callback = callback;
-}
+//void InterfacePicking::setCallback(void (*callback)(const VisualModel*, glm::vec4))
+//{
+//    this->m_callback = callback;
+//}
 
-void InterfacePicking::mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)
-{
-    if(m_cameraActive)
-    {
-        GLFWApplicationEvents::mouseButtonCallback(handle, button, action, mods);
-        return;
-    }
+//void InterfacePicking::mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)
+//{
+//    if(m_cameraActive)
+//    {
+//        GLFWApplicationEvents::mouseButtonCallback(handle, button, action, mods);
+//        return;
+//    }
 
-    if (m_callback == nullptr)
-        return;
+//    if (m_callback == nullptr)
+//        return;
 
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-    {
-        double x = 0;
-        double y = 0;
-        glfwGetCursorPos(handle, &x, &y);
+//    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+//    {
+//        double x = 0;
+//        double y = 0;
+//        glfwGetCursorPos(handle, &x, &y);
 
-        y = GLFWApplication::ScreenHeight - y;
+//        y = GLFWApplication::ScreenHeight - y;
 
-        m_pickingVisitor->set(int(x), int(y));
+//        m_pickingVisitor->set(int(x), int(y));
 
-        const Node* root = this->m_sceneGraph->root();
-        root->executeVisitor(m_pickingVisitor);
+//        const Node* root = this->m_sceneGraph->root();
+//        root->executeVisitor(m_pickingVisitor);
 
-        const VisualModel* visualModel = m_pickingVisitor->selectedVisualModel();
+//        const VisualModel* visualModel = m_pickingVisitor->selectedVisualModel();
 
-        const glm::vec3& ndc = m_pickingVisitor->selectedPosition();
-        const glm::mat4& projection = this->m_camera->projection();
+//        const glm::vec3& ndc = m_pickingVisitor->selectedPosition();
+//        const glm::mat4& projection = this->m_camera->projection();
 
-        glm::vec4 vs = glm::inverse(projection) * glm::vec4(ndc,1);
-        glm::vec4 ws = this->m_camera->model() * (vs / vs.w);
+//        glm::vec4 vs = glm::inverse(projection) * glm::vec4(ndc,1);
+//        glm::vec4 ws = this->m_camera->model() * (vs / vs.w);
 
-        this->m_callback(visualModel, ws);
-    }
-}
+//        this->m_callback(visualModel, ws);
+//    }
+//}
 
-void InterfacePicking::keyCallback(GLFWwindow* handle, int key, int, int action, int)
-{
-    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS)
-        this->m_cameraActive = true;
+//void InterfacePicking::keyCallback(GLFWwindow* handle, int key, int, int action, int)
+//{
+//    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS)
+//        this->m_cameraActive = true;
 
-    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE)
-        this->m_cameraActive = false;
+//    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE)
+//        this->m_cameraActive = false;
 
-    if (action == GLFW_PRESS)
-    {
-        switch(key) {
-//        case GLFW_KEY_Q:
-//            glfwSetWindowShouldClose(windowHandle, GL_TRUE);
+//    if (action == GLFW_PRESS)
+//    {
+//        switch(key) {
+////        case GLFW_KEY_Q:
+////            glfwSetWindowShouldClose(windowHandle, GL_TRUE);
+////            break;
+//        case GLFW_KEY_ESCAPE:
+//            glfwSetWindowShouldClose(handle, GL_TRUE);
 //            break;
-        case GLFW_KEY_ESCAPE:
-            glfwSetWindowShouldClose(handle, GL_TRUE);
-            break;
-        default:
-            break;
-        }
-    }
-}
+//        default:
+//            break;
+//        }
+//    }
+//}

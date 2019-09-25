@@ -2,14 +2,18 @@
 #define GLFWAPPLICATION_H
 
 #include "Application.h"
+#include "Viewport.h"
+
+// Standard Library
+#include <memory>
+#include <vector>
 
 
 class GLFWwindow;
 
 namespace gl {
 
-class GLFWApplicationEvents;
-class Interface;
+class SceneView;
 
 /**
  * @brief The GLFWApplication class
@@ -42,10 +46,13 @@ public:
     GLFWwindow* getWindow() const;
     void setWindow(GLFWwindow* newHandle);
 
-    Interface* getInterface() const;
-    void setInterface(Interface* interface);
+    Viewport windowSize() const;
 
-    void setDrawCallBack(void (*drawCallback)());
+    SceneView* createSceneView();
+    SceneView* createSceneView(int x, int y, int width, int height);
+
+private:
+    void draw();
 
 public:
     static unsigned int ScreenWidth;
@@ -58,12 +65,9 @@ private:
     static GLFWApplication* OurInstance;
 
 private:
-
     GLFWwindow* windowHandle;
 
-    Interface* m_interface;
-
-    void (*m_drawCallback)();
+    std::vector< std::shared_ptr<SceneView> > m_sceneViews;
 
 };
 

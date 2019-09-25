@@ -6,6 +6,10 @@
 // Glm
 #include <glm/glm.hpp>
 
+// Standard Library
+#include <memory>
+#include <utility>
+
 
 class GLFWwindow;
 
@@ -23,7 +27,7 @@ class GLFWApplicationEvents : public DefaultInterface
 {
 
 public:
-    GLFWApplicationEvents(Camera* camera);
+    GLFWApplicationEvents(std::weak_ptr<Camera>);
     virtual ~GLFWApplicationEvents();
 
 public:
@@ -38,34 +42,34 @@ private:
     double last_y_position;
 
 protected:
-    Camera* m_camera;
+    std::weak_ptr<Camera> m_camera;
 
 };
 
 /**
  * @brief The InterfacePicking class
  */
-class InterfacePicking : public GLFWApplicationEvents
-{
+//class InterfacePicking : public GLFWApplicationEvents
+//{
 
-public:
-    InterfacePicking(SceneGraph* sceneGraph, Camera* camera);
-    virtual ~InterfacePicking();
+//public:
+//    InterfacePicking(SceneGraph* sceneGraph, Camera* camera);
+//    virtual ~InterfacePicking();
 
-public:
-    void setCallback(void (*callback)(const VisualModel*, glm::vec4));
+//public:
+//    void setCallback(void (*callback)(const VisualModel*, glm::vec4));
 
-public:
-    virtual void mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods);
-    virtual void keyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods);
+//public:
+//    virtual void mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods);
+//    virtual void keyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods);
 
-private:
-    SceneGraph* m_sceneGraph;
-    PickingVisitor* m_pickingVisitor;
-    bool m_cameraActive;
+//private:
+//    SceneGraph* m_sceneGraph;
+//    PickingVisitor* m_pickingVisitor;
+//    bool m_cameraActive;
 
-    void (*m_callback)(const VisualModel*, glm::vec4);
-};
+//    void (*m_callback)(const VisualModel*, glm::vec4);
+//};
 
 }   // namespace gl
 

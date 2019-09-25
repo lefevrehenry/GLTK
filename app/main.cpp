@@ -6,12 +6,15 @@
 #include <Mesh.h>
 #include <Message.h>
 #include <Node.h>
-#include <Rendered.h>
 #include <Scene.h>
+#include <SceneView.h>
 #include <ShaderProgram.h>
 #include <Texture.h>
 #include <Visitor.h>
 #include <VisualModel.h>
+
+// Glm
+#include <glm/gtx/transform.hpp>
 
 // Glfw
 #include <GLFW/glfw3.h>
@@ -20,14 +23,20 @@
 #include <GL/gl.h>
 
 // Standard Library
-#include <cstdlib>
+#include <chrono>
 #include <exception>
 #include <iostream>
 #include <map>
 #include <string>
+#include <thread>
 
 using namespace gl;
 using namespace gl::helper;
+
+static GLFWApplication* app = nullptr;
+static GLFWApplicationEvents* interface = nullptr;
+static std::shared_ptr<SceneGraph> scene;
+static VisualModel* vm = nullptr;
 
 void addPiece(Node* node, Mesh* mesh, Material material, int i, int j)
 {
@@ -125,24 +134,52 @@ void createChessboard(Node* node)
     addPiece(nodeBlack, pawn,   materialBlack, 7, 6);
 }
 
-SceneGraph* createScene()
+void createScene(Node* rootNode)
 {
-    SceneGraph* scene = new SceneGraph();
+    vm = new VisualModel("dragon_low.obj", Material::Emerald());
+    rootNode->addVisual(vm);
 
-    Node* root = scene->root();
-    createChessboard(root);
+    Light light;
+    light.setDirection(glm::vec3(-1,-1,-1));
 
-    return scene;
+    VisualManager::UpdateUniformBufferLight(light);
+
+    ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::PhongShading);
+    rootNode->setShaderProgram(shaderProgram);
+
+//    Node* node1 = root->addChild();
+//    node1->setShaderProgram(helper::CreateShaderProgram(ShaderProgram::PhongShading));
+
+//    VisualModel* frame = new VisualModel("frame.obj", Material::Gold());
+//    node1->addVisual(frame);
+
+//    Node* node1 = root->addChild();
+//    node1->addVisual(vm);
+//    ShaderProgram* hightlightShading = helper::CreateShaderProgram(ShaderProgram::HighLight);
+//    node1->setShaderProgram(hightlightShading);
+
+//    Node* node2 = root->addChild();
+//    node2->addVisual(vm);
+//    ShaderProgram* normalShading = helper::CreateShaderProgram(ShaderProgram::Normal);
+//    node2->setShaderProgram(normalShading);
+
+    //createChessboard(root);
 }
 
-void fitView(SceneGraph* scene, Camera* camera)
+void fitView(SceneView* sceneView)
 {
+    std::shared_ptr<SceneGraph> scene(sceneView->scene());
+    std::shared_ptr<Camera> camera(sceneView->camera());
+
+    if(!scene || !camera)
+        return;
+
     glm::vec3 min;
     glm::vec3 max;
     scene->getBB(min, max);
 
     float diagonal = glm::length(max - min);
-    glm::vec3 direction(-1,-1,-1);
+    glm::vec3 direction(0,-1,0);
 
     // view
     glm::vec3 target = (min + max) / 2.0f;
@@ -159,15 +196,75 @@ void fitView(SceneGraph* scene, Camera* camera)
 }
 
 
-static GLFWApplication* app = nullptr;
-static GLFWApplicationEvents* interface = nullptr;
-static Rendered renderer;
-
 void initGL();
 void initGLTK();
-void displayCallback();
 void errorCallback(int error, const char* description);
 
+static bool stopThread = false;
+static glm::vec3 target_position(0,0,0);
+static unsigned int duration = 0;
+// number of frame per second
+static unsigned short fps = 20;
+
+void callback()
+{
+    // time waiting between each frame to achieve desired fps
+    double frameRate = 1000.0 / fps;
+
+    // number of frames counted this second
+    long int frameCount = 0;
+
+    // accumulate elapsed time over multiple frames
+    double totalElapsedTime = 0;
+
+    // the actual calculated framerate reported
+    long int reportedFramerate = 0;
+
+    while(!stopThread)
+    {
+        // time the frame began
+        double frameStart = glfwGetTime();
+
+        if (vm != nullptr) {
+            Transform& tr = vm->transform();
+//            float angle = ((90.f / 180.f) * glm::pi<float>()) / fps;
+//            glm::vec3 axis(0,1,0);
+//            glm::quat q = glm::angleAxis(angle,axis);
+//            tr.rotate(q);
+
+//            if (duration > 0) {
+//                float d = duration;
+//                glm::vec3& position = tr.m_translation;
+//                position = (position * (d-1) + target_position) / d;
+//                duration -= 1;
+//                tr.m_isDirty = true;
+//            }
+
+//            tr.translate(0.f,0.01f,0.f);
+        }
+
+        // time elapsed during one frame
+        double elapsedTime = glfwGetTime() - frameStart;
+
+        if (elapsedTime < frameRate) {
+            long int t = long(frameRate - elapsedTime);
+            std::chrono::milliseconds dt = std::chrono::milliseconds(t);
+            std::this_thread::sleep_for(dt);
+        }
+
+        frameCount += 1;
+        totalElapsedTime += glfwGetTime() - frameStart;
+
+        if (totalElapsedTime > 1) {
+            reportedFramerate = long(frameCount / totalElapsedTime);
+            //msg_info("Thread") << "fps: " << reportedFramerate;
+            frameCount = 0;
+            totalElapsedTime = 0;
+        }
+    }
+
+    msg_info("Thread") << "Terminate";
+}
 
 int main()
 {
@@ -181,6 +278,8 @@ int main()
 
     if (app == nullptr)
         return -1;
+
+//    std::thread t1(callback);
 
     try
     {
@@ -199,6 +298,9 @@ int main()
         std::cerr << error.what() << std::endl;
         return_code = EXIT_FAILURE;
     }
+
+//    stopThread = true;
+//    t1.join();
 
     /* Close the window and shut GLFW if needed */
     GLFWApplication::Terminate();
@@ -246,23 +348,33 @@ void initGLTK()
         msg_warning("FileRepository") << "No share/ directory added";
     }
 
-    renderer.scene = createScene();
-    renderer.camera = new Camera();
+    SceneView* sceneView = app->createSceneView();
 
-    fitView(renderer.scene, renderer.camera);
+    scene.reset(new SceneGraph());
+    createScene(scene->root());
 
-    interface = new GLFWApplicationEvents(renderer.camera);
-    app->setInterface(interface);
+    sceneView->setScene(scene);
+    sceneView->setInterface(CameraController::CameraType::ArcBall);
 
-    app->setDrawCallBack(displayCallback);
+    fitView(sceneView);
 }
 
-void displayCallback()
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//void displayCallback()
+//{
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    renderer.draw();
-}
+//    static bool first = true;
+//    double time = glfwGetTime();
+
+//    if (time > 4 && first) {
+//        msg_info("Test") << "Start";
+//        target_position = glm::vec3(4,0,0);
+//        duration = 4 * fps;
+//        first = false;
+//    }
+
+//    renderer.draw();
+//}
 
 void errorCallback(int, const char* description)
 {

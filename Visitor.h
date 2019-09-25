@@ -9,6 +9,7 @@
 #include <list>
 #include <stack>
 
+
 namespace gl {
 
 class Framebuffer;
