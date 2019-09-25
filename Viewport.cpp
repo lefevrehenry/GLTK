@@ -5,50 +5,50 @@ using namespace gl;
 Viewport::Viewport() :
     m_x(0),
     m_y(0),
-    m_rw(0),
-    m_rh(0)
+    m_width(0),
+    m_height(0)
 {
 
 }
 
-Viewport::Viewport(float x, float y, float rw, float rh) :
+Viewport::Viewport(int x, int y, int width, int height) :
     m_x(x),
     m_y(y),
-    m_rw(rw),
-    m_rh(rh)
+    m_width(width),
+    m_height(height)
 {
 
 }
 
-float Viewport::x() const
+int Viewport::x() const
 {
     return m_x;
 }
 
-float Viewport::y() const
+int Viewport::y() const
 {
     return m_y;
 }
 
-float Viewport::rw() const
+int Viewport::width() const
 {
-    return m_rw;
+    return m_width;
 }
 
-float Viewport::rh() const
+int Viewport::height() const
 {
-    return m_rh;
+    return m_height;
 }
 
-bool Viewport::contains(float x, float y) const
+bool Viewport::contains(int x, int y) const
 {
-    return (x >= this->m_x && x <= this->m_x + this->rw() && y >= this->m_y && y <= this->m_y + this->rh());
+    return (x >= this->m_x && x <= this->m_x + this->width() && y >= this->m_y && y <= this->m_y + this->height());
 }
 
-void Viewport::set(float x, float y, float rw, float rh)
+void Viewport::set(int x, int y, int width, int height)
 {
     this->m_x = x;
     this->m_y = y;
-    this->m_rw = rw;
-    this->m_rh = rh;
+    this->m_width = width;
+    this->m_height = height;
 }

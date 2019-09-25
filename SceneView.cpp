@@ -70,10 +70,10 @@ void SceneView::draw() const
 {
     OpenGLStateMachine::Push<Viewport>();
 
-    int x = static_cast<int>(m_viewport.x());
-    int y = static_cast<int>(m_viewport.y());
-    int width = static_cast<int>(m_viewport.rw());
-    int height = static_cast<int>(m_viewport.rh());
+    int x = m_viewport.x();
+    int y = m_viewport.y();
+    int width = m_viewport.width();
+    int height = m_viewport.height();
 
     glViewport(x,y,width,height);
 

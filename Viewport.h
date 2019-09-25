@@ -12,24 +12,24 @@ class Viewport
 
 public:
     Viewport();
-    Viewport(float x, float y, float rw, float rh);
+    Viewport(int x, int y, int width, int height);
 
 public:
-    float x() const;
-    float y() const;
-    float rw() const;
-    float rh() const;
+    int x() const;
+    int y() const;
+    int width() const;
+    int height() const;
 
-    bool contains(float x, float y) const;
+    bool contains(int x, int y) const;
 
 public:
-    void set(float x, float y, float rw, float rh);
+    void set(int x, int y, int width, int height);
 
 private:
-    float m_x;
-    float m_y;
-    float m_rw;
-    float m_rh;
+    int m_x;
+    int m_y;
+    int m_width;
+    int m_height;
 
 };
 
