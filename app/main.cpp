@@ -7,7 +7,7 @@
 #include <Mesh.h>
 #include <Message.h>
 #include <Node.h>
-#include <Scene.h>
+#include <SceneGraph.h>
 #include <SceneView.h>
 #include <ShaderProgram.h>
 #include <Texture.h>

@@ -5,7 +5,7 @@
 #include "Mesh.h"
 #include "Message.h"
 #include "Node.h"
-#include "Scene.h"
+#include "SceneGraph.h"
 #include "Selectable.h"
 #include "Visitor.h"
 #include "VisualModel.h"

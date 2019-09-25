@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "SceneGraph.h"
 
 #include "Camera.h"
 #include "Node.h"

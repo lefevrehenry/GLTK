@@ -1,7 +1,7 @@
 #include "SceneView.h"
 
 #include "Node.h"
-#include "Scene.h"
+#include "SceneGraph.h"
 #include "Visitor.h"
 #include "VisualManager.h"
 #include "OpenGLStateMachine.h"

@@ -4,7 +4,7 @@
 #include "Helper.h"
 #include "Mesh.h"
 #include "Message.h"
-#include "Scene.h"
+#include "SceneGraph.h"
 #include "Shader.h"
 #include "VisualManager.h"
 

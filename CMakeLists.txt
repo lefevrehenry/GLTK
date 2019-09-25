@@ -21,7 +21,7 @@ set(HEADER_FILES
     OpenGLAttribute.h
     OpenGLStateMachine.h
     Program.h
-    Scene.h
+    SceneGraph.h
     SceneView.h
     Selectable.h
     Shader.h
@@ -51,7 +51,7 @@ set(SOURCE_FILES
     OpenGLStateMachine.cpp
     OpenGLStateMachine.inl
     Program.cpp
-    Scene.cpp
+    SceneGraph.cpp
     SceneView.cpp
     Selectable.cpp
     Shader.cpp
