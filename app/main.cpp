@@ -3,6 +3,7 @@
 #include <GLFWApplication.h>
 #include <GLFWApplicationEvents.h>
 #include <Helper.h>
+#include <Light.h>
 #include <Mesh.h>
 #include <Message.h>
 #include <Node.h>
@@ -12,6 +13,7 @@
 #include <Texture.h>
 #include <Visitor.h>
 #include <VisualModel.h>
+#include <VisualManager.h>
 
 // Glm
 #include <glm/gtx/transform.hpp>
@@ -49,7 +51,7 @@ void addMatCapShader(Node* node, std::string filename) {
     Texture* matcapTexture = new Texture2D();
     matcapTexture->load(filename);
 
-    ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::MatCap);
+    ShaderProgram* shaderProgram = ShaderProgram::Create(ShaderProgram::MatCap);
     shaderProgram->addData<Texture>("matcap", *matcapTexture);
 
     node->setShaderProgram(shaderProgram);
@@ -70,7 +72,7 @@ void createChessboard(Node* node)
     Texture* boardColorTex = new Texture2D();
     boardColorTex->load("textures/chessboard2.jpg");
 
-    ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::BasicTexturing);
+    ShaderProgram* shaderProgram = ShaderProgram::Create(ShaderProgram::BasicTexturing);
     shaderProgram->addData<Texture>("colorMap", *boardColorTex);
 
     VisualModel* board = new VisualModel("mesh/flatQuad.obj");
@@ -85,7 +87,7 @@ void createChessboard(Node* node)
     Node* nodeWhite = node->addChild();
     addMatCapShader(nodeWhite, "textures/m8.jpg");
 
-//    ShaderProgram* sp = helper::CreateShaderProgram(ShaderProgram::PhongShading);
+//    ShaderProgram* sp = ShaderProgram::Create(ShaderProgram::PhongShading);
 //    nodeWhite->setShaderProgram(sp);
 
     Material materialWhite = Material::Brass();
@@ -144,23 +146,23 @@ void createScene(Node* rootNode)
 
     VisualManager::UpdateUniformBufferLight(light);
 
-    ShaderProgram* shaderProgram = helper::CreateShaderProgram(ShaderProgram::PhongShading);
+    ShaderProgram* shaderProgram = ShaderProgram::Create(ShaderProgram::PhongShading);
     rootNode->setShaderProgram(shaderProgram);
 
 //    Node* node1 = root->addChild();
-//    node1->setShaderProgram(helper::CreateShaderProgram(ShaderProgram::PhongShading));
+//    node1->setShaderProgram(ShaderProgram::Create(ShaderProgram::PhongShading));
 
 //    VisualModel* frame = new VisualModel("frame.obj", Material::Gold());
 //    node1->addVisual(frame);
 
 //    Node* node1 = root->addChild();
 //    node1->addVisual(vm);
-//    ShaderProgram* hightlightShading = helper::CreateShaderProgram(ShaderProgram::HighLight);
+//    ShaderProgram* hightlightShading = ShaderProgram::Create(ShaderProgram::HighLight);
 //    node1->setShaderProgram(hightlightShading);
 
 //    Node* node2 = root->addChild();
 //    node2->addVisual(vm);
-//    ShaderProgram* normalShading = helper::CreateShaderProgram(ShaderProgram::Normal);
+//    ShaderProgram* normalShading = ShaderProgram::Create(ShaderProgram::Normal);
 //    node2->setShaderProgram(normalShading);
 
     //createChessboard(root);
@@ -198,7 +200,7 @@ void fitView(SceneView* sceneView)
 
 void initGL();
 void initGLTK();
-void errorCallback(int error, const char* description);
+void errorCallback [[ noreturn ]] (int, const char* description);
 
 static bool stopThread = false;
 static glm::vec3 target_position(0,0,0);
@@ -359,25 +361,8 @@ void initGLTK()
     fitView(sceneView);
 }
 
-//void displayCallback()
-//{
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-//    static bool first = true;
-//    double time = glfwGetTime();
-
-//    if (time > 4 && first) {
-//        msg_info("Test") << "Start";
-//        target_position = glm::vec3(4,0,0);
-//        duration = 4 * fps;
-//        first = false;
-//    }
-
-//    renderer.draw();
-//}
-
 void errorCallback(int, const char* description)
 {
     // Throw an error
-    throw (description);
+    throw std::runtime_error(description);
 }

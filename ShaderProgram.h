@@ -58,6 +58,8 @@ public:
         EnvironmentMapping
     };
 
+    static ShaderProgram* Create(ShaderProgramType shaderProgramType);
+
 public:
     ShaderProgram();
     virtual ~ShaderProgram();

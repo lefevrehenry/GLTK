@@ -39,7 +39,7 @@ ShaderProgram* Program::getShaderProgram(unsigned int i) const
 
 ShaderProgram* Program::addShaderProgram(ShaderProgram::ShaderProgramType shaderProgramType)
 {
-    ShaderProgram* shaderProgram = helper::CreateShaderProgram(shaderProgramType);
+    ShaderProgram* shaderProgram = ShaderProgram::Create(shaderProgramType);
     m_shaderProgramList.push_back(shaderProgram);
     return shaderProgram;
 }

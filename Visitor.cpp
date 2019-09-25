@@ -138,7 +138,7 @@ DrawVisitorWithSelection::DrawVisitorWithSelection() : DrawVisitor(),
     m_outlineShader(nullptr),
     m_selected(nullptr)
 {
-    this->m_outlineShader = helper::CreateShaderProgram(ShaderProgram::OutLine);
+    this->m_outlineShader = ShaderProgram::Create(ShaderProgram::OutLine);
 
 //    Selectable* selected = GLFWApplication::getInstance()->selected();
 //    if (selected != nullptr) {
@@ -287,7 +287,7 @@ PickingVisitor::PickingVisitor() :
     this->m_pickingFramebuffer->attachTexture();
     this->m_pickingFramebuffer->attachDepthTexture();
 
-    this->m_shaderProgram = helper::CreateShaderProgram(ShaderProgram::Picking);
+    this->m_shaderProgram = ShaderProgram::Create(ShaderProgram::Picking);
 }
 
 PickingVisitor::~PickingVisitor()
