@@ -14,7 +14,7 @@
 namespace gl {
 
 class Camera;
-class Interface;
+class Controller;
 class SceneGraph;
 class Visitor;
 
@@ -36,13 +36,13 @@ public:
     void setBackgroundColor(const glm::vec4& backgroundColor);
 
 public:
-    std::weak_ptr<SceneGraph> scene() const;
+    SceneGraph* scene() const;
     void setScene(std::weak_ptr<SceneGraph> scene);
 
-    std::weak_ptr<Camera> camera() const;
+    Camera* camera() const;
     void setCamera(std::weak_ptr<Camera> camera);
 
-    const std::unique_ptr<Interface>& interface() const;
+    const std::unique_ptr<Controller>& interface() const;
     void setInterface(CameraType type);
 
 public:
@@ -54,7 +54,7 @@ private:
 
     std::weak_ptr<SceneGraph>   m_scene;
     std::shared_ptr<Camera>     m_camera;
-    std::unique_ptr<Interface>  m_interface;
+    std::unique_ptr<Controller> m_interface;
     std::shared_ptr<Visitor>    m_visitor;
 
 };

@@ -39,9 +39,11 @@ void SceneView::setBackgroundColor(const glm::vec4& backgroundColor)
     this->m_backgroundcolor = backgroundColor;
 }
 
-std::weak_ptr<SceneGraph> SceneView::scene() const
+SceneGraph* SceneView::scene() const
 {
-    return this->m_scene;
+    std::shared_ptr<SceneGraph> scene(this->m_scene);
+
+    return scene.get();
 }
 
 void SceneView::setScene(std::weak_ptr<SceneGraph> scene)
@@ -49,9 +51,11 @@ void SceneView::setScene(std::weak_ptr<SceneGraph> scene)
     this->m_scene = std::shared_ptr<SceneGraph>(scene);
 }
 
-std::weak_ptr<Camera> SceneView::camera() const
+Camera* SceneView::camera() const
 {
-    return this->m_camera;
+    std::shared_ptr<Camera> camera(this->m_camera);
+
+    return camera.get();
 }
 
 void SceneView::setCamera(std::weak_ptr<Camera> camera)
@@ -59,14 +63,14 @@ void SceneView::setCamera(std::weak_ptr<Camera> camera)
     this->m_camera = std::shared_ptr<Camera>(camera);
 }
 
-const std::unique_ptr<Interface>& SceneView::interface() const
+const std::unique_ptr<Controller>& SceneView::interface() const
 {
     return this->m_interface;
 }
 
 void SceneView::setInterface(CameraType type)
 {
-    this->m_interface.reset(CameraController::Create(type, camera()));
+//    this->m_interface.reset(CameraController::Create(type, this));
 }
 
 void SceneView::draw() const
