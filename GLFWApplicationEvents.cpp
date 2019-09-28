@@ -6,6 +6,7 @@
 #include "Message.h"
 #include "Node.h"
 #include "SceneGraph.h"
+#include "SceneView.h"
 #include "Selectable.h"
 #include "Visitor.h"
 #include "VisualModel.h"
@@ -19,11 +20,10 @@
 
 using namespace gl;
 
-GLFWApplicationEvents::GLFWApplicationEvents(std::weak_ptr<Camera> camera) : DefaultInterface (),
+GLFWApplicationEvents::GLFWApplicationEvents(std::weak_ptr<SceneView> sceneView) : DefaultController (sceneView),
     mousePressed(false),
     last_x_position(-1),
-    last_y_position(-1),
-    m_camera(camera)
+    last_y_position(-1)
 {
 
 }
@@ -35,12 +35,14 @@ GLFWApplicationEvents::~GLFWApplicationEvents()
 
 void GLFWApplicationEvents::framebufferSizeCallback(GLFWwindow*, int width, int height)
 {
-    // Compute the aspect ratio of the size of the window
-    float screen_aspect_ratio = float(width) / float(height);
+    Camera* camera = DefaultController::camera();
 
-    std::shared_ptr<Camera> camera(this->m_camera);
-    if (camera)
+    if(camera) {
+        // Compute the aspect ratio of the size of the window
+        float screen_aspect_ratio = float(width) / float(height);
+
         camera->setAspectRatio(screen_aspect_ratio);
+    }
 
     glViewport(0, 0, width, height);
 }
@@ -61,7 +63,8 @@ void GLFWApplicationEvents::mouseButtonCallback(GLFWwindow* handle, int button, 
 
 void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
 {
-    std::shared_ptr<Camera> camera(this->m_camera);
+    Camera* camera = DefaultController::camera();
+
     if (this->mousePressed && camera)
     {
         float dx = float(xpos - this->last_x_position);
@@ -104,7 +107,8 @@ void GLFWApplicationEvents::cursorPosCallback(GLFWwindow* handle, double xpos, d
 
 void GLFWApplicationEvents::scrollCallback(GLFWwindow*, double, double ypos)
 {
-    std::shared_ptr<Camera> camera(this->m_camera);
+    Camera* camera = DefaultController::camera();
+
     if(!camera)
         return;
 

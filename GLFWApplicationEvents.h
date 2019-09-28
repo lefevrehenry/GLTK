@@ -23,11 +23,11 @@ class VisualModel;
 /**
  * @brief The GLFWApplicationEvents class
  */
-class GLFWApplicationEvents : public DefaultInterface
+class GLFWApplicationEvents : public DefaultController
 {
 
 public:
-    GLFWApplicationEvents(std::weak_ptr<Camera>);
+    GLFWApplicationEvents(std::weak_ptr<SceneView> sceneView);
     virtual ~GLFWApplicationEvents();
 
 public:
@@ -40,9 +40,6 @@ private:
     bool mousePressed;
     double last_x_position;
     double last_y_position;
-
-protected:
-    std::weak_ptr<Camera> m_camera;
 
 };
 

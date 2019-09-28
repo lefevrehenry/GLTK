@@ -241,6 +241,7 @@ Viewport GLFWApplication::windowSize() const
 {
     int width = static_cast<int>(GLFWApplication::ScreenWidth);
     int height = static_cast<int>(GLFWApplication::ScreenHeight);
+
     return Viewport(0,0,width,height);
 }
 
