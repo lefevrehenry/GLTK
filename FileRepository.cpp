@@ -48,7 +48,6 @@ void FileRepository::addLastPath(const std::string& path)
 void FileRepository::removePath(const std::string&)
 {
     // not implemented yet
-    assert(false);
 }
 
 bool FileRepository::findFile(std::string& filename)
@@ -74,9 +73,3 @@ bool FileRepository::findFile(std::string& filename)
     return false;
 }
 
-void FileRepository::print()
-{
-    for (std::string& path : m_paths) {
-        msg_info("FileRepo") << path;
-    }
-}

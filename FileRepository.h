@@ -27,7 +27,6 @@ public:
 
 public:
     bool findFile(std::string& filename);
-    void print();
 
 private:
     std::list< std::string > m_paths;
