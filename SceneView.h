@@ -4,6 +4,9 @@
 #include "CameraController.h"
 #include "Viewport.h"
 
+// Glm
+#include <glm/glm.hpp>
+
 // Standard Library
 #include <memory>
 
@@ -23,12 +26,14 @@ class SceneView
     using CameraType = CameraController::CameraType;
 
 public:
-    explicit SceneView(const class Viewport& viewport);
-    explicit SceneView(int x, int y, int width, int height);
+    explicit SceneView();
 
 public:
     const class Viewport& viewport() const;
     void setViewport(const class Viewport& viewport);
+
+    glm::vec4 backgroundColor() const;
+    void setBackgroundColor(const glm::vec4& backgroundColor);
 
 public:
     std::weak_ptr<SceneGraph> scene() const;
@@ -44,7 +49,8 @@ public:
     void draw() const;
 
 private:
-    class Viewport    m_viewport;
+    class Viewport  m_viewport;
+    glm::vec4       m_backgroundcolor;
 
     std::weak_ptr<SceneGraph>   m_scene;
     std::shared_ptr<Camera>     m_camera;

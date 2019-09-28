@@ -10,16 +10,9 @@ using namespace gl;
 
 static DrawVisitor defaultVisitor;
 
-SceneView::SceneView(const class Viewport& viewport) :
-    m_viewport(viewport),
-    m_scene(),
-    m_camera(new Camera()),
-    m_interface(nullptr)
-{
-}
-
-SceneView::SceneView(int x, int y, int width, int height) :
-    m_viewport(x,y,width,height),
+SceneView::SceneView() :
+    m_viewport(),
+    m_backgroundcolor(0.2f,0.2f,0.2f,1.0f),
     m_scene(),
     m_camera(new Camera()),
     m_interface(nullptr)
@@ -34,6 +27,16 @@ const class Viewport& SceneView::viewport() const
 void SceneView::setViewport(const class Viewport& viewport)
 {
     this->m_viewport = viewport;
+}
+
+glm::vec4 SceneView::backgroundColor() const
+{
+    return this->m_backgroundcolor;
+}
+
+void SceneView::setBackgroundColor(const glm::vec4& backgroundColor)
+{
+    this->m_backgroundcolor = backgroundColor;
 }
 
 std::weak_ptr<SceneGraph> SceneView::scene() const
@@ -69,6 +72,7 @@ void SceneView::setInterface(CameraType type)
 void SceneView::draw() const
 {
     OpenGLStateMachine::Push<Viewport>();
+    OpenGLStateMachine::Push<ClearColor>();
 
     int x = m_viewport.x();
     int y = m_viewport.y();
@@ -76,6 +80,14 @@ void SceneView::draw() const
     int height = m_viewport.height();
 
     glViewport(x,y,width,height);
+
+    float r = m_backgroundcolor.r;
+    float g = m_backgroundcolor.g;
+    float b = m_backgroundcolor.b;
+    float a = m_backgroundcolor.a;
+
+    glClearColor(r,g,b,a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if(this->m_camera)
         VisualManager::UpdateUniformBufferCamera(*m_camera);
@@ -88,5 +100,6 @@ void SceneView::draw() const
         node->executeVisitor(visitor);
     }
 
+    OpenGLStateMachine::Pop<ClearColor>();
     OpenGLStateMachine::Pop<Viewport>();
 }
