@@ -42,8 +42,8 @@ public:
     Camera* camera() const;
     void setCamera(std::weak_ptr<Camera> camera);
 
-    const std::unique_ptr<Controller>& interface() const;
-    void setInterface(CameraType type);
+    const std::shared_ptr<Controller>& interface() const;
+    void setInterface(const std::shared_ptr<Controller>& interface);
 
 public:
     void draw() const;
@@ -54,7 +54,7 @@ private:
 
     std::weak_ptr<SceneGraph>   m_scene;
     std::shared_ptr<Camera>     m_camera;
-    std::unique_ptr<Controller> m_interface;
+    std::shared_ptr<Controller> m_interface;
     std::shared_ptr<Visitor>    m_visitor;
 
 };

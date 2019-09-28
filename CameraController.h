@@ -6,6 +6,8 @@
 
 namespace gl {
 
+class SceneView;
+
 /**
  * @brief The CameraController class
  */
@@ -21,14 +23,14 @@ public:
 
 public:
     template <typename... Args>
-    static Interface* Create(CameraType type, Args&&... args)
+    static Controller* Create(CameraType type, std::weak_ptr<SceneView> sceneView, Args&&... args)
     {
         switch(type)
         {
         case Static:
-            return new DefaultInterface();
+            return new DefaultController(sceneView);
         case ArcBall:
-            return new GLFWApplicationEvents(std::forward<Args>(args)...);
+            return new GLFWApplicationEvents(sceneView, std::forward<Args>(args)...);
         default:
             return nullptr;
         }

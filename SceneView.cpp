@@ -63,14 +63,14 @@ void SceneView::setCamera(std::weak_ptr<Camera> camera)
     this->m_camera = std::shared_ptr<Camera>(camera);
 }
 
-const std::unique_ptr<Controller>& SceneView::interface() const
+const std::shared_ptr<Controller>& SceneView::interface() const
 {
     return this->m_interface;
 }
 
-void SceneView::setInterface(CameraType type)
+void SceneView::setInterface(const std::shared_ptr<Controller>& interface)
 {
-//    this->m_interface.reset(CameraController::Create(type, this));
+    this->m_interface = interface;
 }
 
 void SceneView::draw() const
