@@ -13,6 +13,7 @@ class GLFWwindow;
 
 namespace gl {
 
+class SceneGraph;
 class SceneView;
 
 /**
@@ -48,8 +49,7 @@ public:
 
     Viewport windowSize() const;
 
-    SceneView* createSceneView();
-    SceneView* createSceneView(int x, int y, int width, int height);
+    SceneView* createSceneView(std::weak_ptr<SceneGraph> sceneGraph);
 
 private:
     void draw();
@@ -67,7 +67,7 @@ private:
 private:
     GLFWwindow* windowHandle;
 
-    std::vector< std::shared_ptr<SceneView> > m_sceneViews;
+    std::vector< std::unique_ptr<SceneView> > m_sceneViews;
 
 };
 
