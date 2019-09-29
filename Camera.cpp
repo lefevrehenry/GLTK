@@ -4,28 +4,26 @@
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/quaternion.hpp>
-
 
 using namespace gl;
 
 Camera::Camera() :
     m_projectionType(Perspective),
-    m_left(0),
-    m_right(0),
-    m_bottom(0),
-    m_top(0),
-    m_fovy(0),
-    m_aspectRatio(0),
-    m_zNear(0),
-    m_zFar(0),
+    m_left(0.f),
+    m_right(0.f),
+    m_bottom(0.f),
+    m_top(0.f),
+    m_fovy(0.f),
+    m_aspectRatio(0.f),
+    m_zNear(0.f),
+    m_zFar(0.f),
+    m_eye(),
+    m_target(),
     m_model(),
     m_view(),
     m_proj(),
     m_mvp(),
     m_normal(),
-    m_eye(),
-    m_target(),
     m_mvpDirty(true),
     m_normalDirty(true)
 {
@@ -267,14 +265,14 @@ bool Camera::isMvpDirty() const
     return this->m_mvpDirty;
 }
 
-bool Camera::isNormalDirty() const
-{
-    return this->m_normalDirty;
-}
-
 void Camera::setMvpDirty(bool dirty) const
 {
     this->m_mvpDirty = dirty;
+}
+
+bool Camera::isNormalDirty() const
+{
+    return this->m_normalDirty;
 }
 
 void Camera::setNormalDirty(bool dirty) const
