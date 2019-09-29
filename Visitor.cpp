@@ -140,7 +140,7 @@ DrawVisitorWithSelection::DrawVisitorWithSelection() : DrawVisitor(),
 {
     this->m_outlineShader = ShaderProgram::Create(ShaderProgram::OutLine);
 
-//    Selectable* selected = GLFWApplication::getInstance()->selected();
+//    Selectable* selected = GLFWApplication::Instance()->selected();
 //    if (selected != nullptr) {
 //        this->m_selected = selected->visualModel();
 //    }

@@ -1,6 +1,6 @@
 #include "GLFWApplication.h"
 
-#include "GLFWCameraController.h"
+#include "Controller.h"
 #include "Message.h"
 #include "SceneView.h"
 #include "VisualManager.h"
@@ -10,6 +10,9 @@
 
 // GLFW
 #include <GLFW/glfw3.h>
+
+// Standard Library
+#include <memory>
 
 using namespace gl;
 
@@ -21,7 +24,7 @@ int GLFWApplication::OpenGLMinorVersion = 3;
 
 GLFWApplication* GLFWApplication::OurInstance = nullptr;
 
-GLFWApplication* GLFWApplication::getInstance()
+GLFWApplication* GLFWApplication::Instance()
 {
     return OurInstance;
 }
@@ -49,7 +52,7 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow* windowHandle = glfwCreateWindow(width, height, "OpenGL", nullptr, nullptr);
 
-    if (!windowHandle)
+    if (windowHandle == nullptr)
     {
         // Problem: window creation failed, something went wrong.
         glfwTerminate();
@@ -69,8 +72,7 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
         return nullptr;
     }
 
-    GLFWApplication* app = new GLFWApplication();
-    app->setWindow(windowHandle);
+    GLFWApplication* app = new GLFWApplication(windowHandle);
 
     VisualManager::Init();
 
@@ -87,11 +89,11 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
 
 void GLFWApplication::Terminate()
 {
-    GLFWApplication* app = GLFWApplication::getInstance();
+    GLFWApplication* app = GLFWApplication::Instance();
     VisualManager::Clean();
 
-    if (app && !app->windowHandle) {
-        glfwDestroyWindow(app->windowHandle);
+    if (app && !app->m_windowHandle) {
+        glfwDestroyWindow(app->m_windowHandle);
         app->setWindow(nullptr);
     }
 
@@ -100,7 +102,7 @@ void GLFWApplication::Terminate()
 
 void GLFWApplication::FramebufferSizeCallback(GLFWwindow* handle, int width, int height)
 {
-    static GLFWApplication* app = GLFWApplication::getInstance();
+    static GLFWApplication* app = GLFWApplication::Instance();
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface())
@@ -113,7 +115,7 @@ void GLFWApplication::FramebufferSizeCallback(GLFWwindow* handle, int width, int
 
 void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)
 {
-    static GLFWApplication* app = GLFWApplication::getInstance();
+    static GLFWApplication* app = GLFWApplication::Instance();
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface()) {
@@ -129,7 +131,7 @@ void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int ac
 
 void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
 {
-    static GLFWApplication* app = GLFWApplication::getInstance();
+    static GLFWApplication* app = GLFWApplication::Instance();
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface()) {
@@ -148,7 +150,7 @@ void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double 
 
 void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double yoffset)
 {
-    static GLFWApplication* app = GLFWApplication::getInstance();
+    static GLFWApplication* app = GLFWApplication::Instance();
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface()) {
@@ -164,7 +166,7 @@ void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double 
 
 void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods)
 {
-    static GLFWApplication* app = GLFWApplication::getInstance();
+    static GLFWApplication* app = GLFWApplication::Instance();
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface())
@@ -172,10 +174,12 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
     }
 }
 
-GLFWApplication::GLFWApplication() : Application(),
-    windowHandle(nullptr),
+GLFWApplication::GLFWApplication(GLFWwindow* handle) : Application(),
+    m_windowHandle(nullptr),
     m_sceneViews()
 {
+    setWindow(handle);
+
     OurInstance = this;
 }
 
@@ -190,7 +194,7 @@ void GLFWApplication::init()
 
 void GLFWApplication::loop()
 {
-    if (this->windowHandle == nullptr) {
+    if (this->m_windowHandle == nullptr) {
         msg_error("App") << "Can't loop, set window first";
         return;
     }
@@ -199,7 +203,7 @@ void GLFWApplication::loop()
 //    unsigned int nbFrames = 0;
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(this->windowHandle))
+    while (!glfwWindowShouldClose(this->m_windowHandle))
     {
 //        // Measure speed
 //        double currentTime = glfwGetTime();
@@ -221,7 +225,7 @@ void GLFWApplication::loop()
         this->draw();
 
         /* Swap front and back buffers */
-        glfwSwapBuffers(this->windowHandle);
+        glfwSwapBuffers(this->m_windowHandle);
 
         /* Poll for and process events */
         glfwPollEvents();
@@ -230,12 +234,12 @@ void GLFWApplication::loop()
 
 GLFWwindow* GLFWApplication::getWindow() const
 {
-    return this->windowHandle;
+    return this->m_windowHandle;
 }
 
 void GLFWApplication::setWindow(GLFWwindow* newHandle)
 {
-    GLFWwindow* oldHandle = this->windowHandle;
+    GLFWwindow* oldHandle = this->m_windowHandle;
 
     /* Remove callbacks set to the old handle */
     if (oldHandle != nullptr) {
@@ -246,7 +250,7 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
         glfwSetKeyCallback(oldHandle, nullptr);
     }
 
-    this->windowHandle = newHandle;
+    this->m_windowHandle = newHandle;
 
     /* Add callbacks to the new handle */
     if (newHandle != nullptr) {

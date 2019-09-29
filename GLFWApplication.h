@@ -13,7 +13,6 @@ class GLFWwindow;
 
 namespace gl {
 
-class SceneGraph;
 class SceneView;
 
 /**
@@ -23,7 +22,7 @@ class GLFWApplication : public Application
 {
 
 public:
-    static GLFWApplication* getInstance();
+    static GLFWApplication* Instance();
 
     static GLFWApplication* CreateWindow(int width, int height);
     static void Terminate();
@@ -36,7 +35,7 @@ public:
 
 protected:
 
-    GLFWApplication();
+    GLFWApplication(GLFWwindow* handle);
     virtual ~GLFWApplication();
 
 public:
@@ -65,7 +64,7 @@ private:
     static GLFWApplication* OurInstance;
 
 private:
-    GLFWwindow* windowHandle;
+    GLFWwindow* m_windowHandle;
 
     std::vector< std::shared_ptr<SceneView> > m_sceneViews;
 
