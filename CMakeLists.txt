@@ -147,8 +147,8 @@ endif()
 if(${BUILD_WITH_GLFW})
     find_package(glfw3 REQUIRED)
 
-    set(HEADER_FILES ${HEADER_FILES} GLFWApplication.h GLFWCameraController.h)
-    set(SOURCE_FILES ${SOURCE_FILES} GLFWApplication.cpp GLFWCameraController.cpp)
+    set(HEADER_FILES ${HEADER_FILES} GLFWApplication.h GLFWCameraController.h GLFWPickingController.h)
+    set(SOURCE_FILES ${SOURCE_FILES} GLFWApplication.cpp GLFWCameraController.cpp GLFWPickingController.cpp)
 endif()
 
 set(STB_IMAGE_INCLUDE_DIR

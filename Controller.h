@@ -38,6 +38,7 @@ class DefaultController : public Controller
 
 public:
     DefaultController(std::weak_ptr<SceneView> sceneView);
+    virtual ~DefaultController() = default;
 
 public:
     virtual void framebufferSizeCallback(GLFWwindow*, int, int) {}
