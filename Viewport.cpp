@@ -42,7 +42,7 @@ int Viewport::height() const
 
 bool Viewport::contains(int x, int y) const
 {
-    return (x >= this->m_x && x <= this->m_x + this->width() && y >= this->m_y && y <= this->m_y + this->height());
+    return (x >= this->m_x && x <= this->m_x + this->m_width - 1 && y >= this->m_y && y <= this->m_y + this->m_height - 1);
 }
 
 void Viewport::set(int x, int y, int width, int height)

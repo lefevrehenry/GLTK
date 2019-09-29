@@ -116,8 +116,14 @@ void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int ac
     static GLFWApplication* app = GLFWApplication::getInstance();
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
-        if(sceneView && sceneView->interface())
-            sceneView->interface()->mouseButtonCallback(handle, button, action, mods);
+        if(sceneView && sceneView->interface()) {
+            const Viewport& viewport = sceneView->viewport();
+            double xpos = -1;
+            double ypos = -1;
+            glfwGetCursorPos(handle, &xpos, &ypos);
+            if (viewport.contains(int(xpos), int(ypos)))
+                sceneView->interface()->mouseButtonCallback(handle, button, action, mods);
+        }
     }
 }
 
@@ -126,8 +132,17 @@ void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double 
     static GLFWApplication* app = GLFWApplication::getInstance();
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
-        if(sceneView && sceneView->interface())
-            sceneView->interface()->cursorPosCallback(handle, xpos, ypos);
+        if(sceneView && sceneView->interface()) {
+            const Viewport& viewport = sceneView->viewport();
+            if (viewport.contains(int(xpos), int(ypos))) {
+                const Viewport& viewport = sceneView->viewport();
+                double xpos = -1;
+                double ypos = -1;
+                glfwGetCursorPos(handle, &xpos, &ypos);
+                if (viewport.contains(int(xpos), int(ypos)))
+                    sceneView->interface()->cursorPosCallback(handle, xpos, ypos);
+            }
+        }
     }
 }
 
@@ -136,8 +151,14 @@ void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double 
     static GLFWApplication* app = GLFWApplication::getInstance();
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
-        if(sceneView && sceneView->interface())
-            sceneView->interface()->scrollCallback(handle, xoffset, yoffset);
+        if(sceneView && sceneView->interface()) {
+            const Viewport& viewport = sceneView->viewport();
+            double xpos = -1;
+            double ypos = -1;
+            glfwGetCursorPos(handle, &xpos, &ypos);
+            if (viewport.contains(int(xpos), int(ypos)))
+                sceneView->interface()->scrollCallback(handle, xoffset, yoffset);
+        }
     }
 }
 
