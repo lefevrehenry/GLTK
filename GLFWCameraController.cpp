@@ -1,4 +1,4 @@
-#include "CameraController.h"
+#include "GLFWCameraController.h"
 
 #include "Camera.h"
 #include "GLFWApplication.h"
@@ -20,7 +20,7 @@
 
 using namespace gl;
 
-CameraController::CameraController(std::weak_ptr<SceneView> sceneView) : DefaultController (sceneView),
+GLFWCameraController::GLFWCameraController(std::weak_ptr<SceneView> sceneView) : DefaultController (sceneView),
     mousePressed(false),
     last_x_position(-1),
     last_y_position(-1)
@@ -28,12 +28,12 @@ CameraController::CameraController(std::weak_ptr<SceneView> sceneView) : Default
 
 }
 
-CameraController::~CameraController()
+GLFWCameraController::~GLFWCameraController()
 {
 
 }
 
-void CameraController::framebufferSizeCallback(GLFWwindow*, int width, int height)
+void GLFWCameraController::framebufferSizeCallback(GLFWwindow*, int width, int height)
 {
     Camera* camera = DefaultController::camera();
 
@@ -47,7 +47,7 @@ void CameraController::framebufferSizeCallback(GLFWwindow*, int width, int heigh
     glViewport(0, 0, width, height);
 }
 
-void CameraController::mouseButtonCallback(GLFWwindow* handle, int button, int action, int)
+void GLFWCameraController::mouseButtonCallback(GLFWwindow* handle, int button, int action, int)
 {
     this->mousePressed = (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS);
 
@@ -61,7 +61,7 @@ void CameraController::mouseButtonCallback(GLFWwindow* handle, int button, int a
     }
 }
 
-void CameraController::cursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
+void GLFWCameraController::cursorPosCallback(GLFWwindow* handle, double xpos, double ypos)
 {
     Camera* camera = DefaultController::camera();
 
@@ -105,7 +105,7 @@ void CameraController::cursorPosCallback(GLFWwindow* handle, double xpos, double
     this->last_y_position = ypos;
 }
 
-void CameraController::scrollCallback(GLFWwindow*, double, double ypos)
+void GLFWCameraController::scrollCallback(GLFWwindow*, double, double ypos)
 {
     Camera* camera = DefaultController::camera();
 
@@ -121,7 +121,7 @@ void CameraController::scrollCallback(GLFWwindow*, double, double ypos)
     camera->lookAt(newEye, target, up);
 }
 
-//InterfacePicking::InterfacePicking(SceneGraph* sceneGraph, Camera* camera) : CameraController (camera),
+//InterfacePicking::InterfacePicking(SceneGraph* sceneGraph, Camera* camera) : GLFWCameraController (camera),
 //    m_sceneGraph(sceneGraph),
 //    m_pickingVisitor(nullptr),
 //    m_cameraActive(false),
@@ -145,7 +145,7 @@ void CameraController::scrollCallback(GLFWwindow*, double, double ypos)
 //{
 //    if(m_cameraActive)
 //    {
-//        CameraController::mouseButtonCallback(handle, button, action, mods);
+//        GLFWCameraController::mouseButtonCallback(handle, button, action, mods);
 //        return;
 //    }
 

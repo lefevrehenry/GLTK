@@ -1,7 +1,6 @@
 #ifndef SCENEVIEW_H
 #define SCENEVIEW_H
 
-#include "CameraController.h"
 #include "Viewport.h"
 
 // Glm

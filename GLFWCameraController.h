@@ -1,5 +1,5 @@
-#ifndef CAMERACONTROLLER_H
-#define CAMERACONTROLLER_H
+#ifndef GLFWCAMERACONTROLLER_H
+#define GLFWCAMERACONTROLLER_H
 
 #include "Controller.h"
 
@@ -23,12 +23,12 @@ class VisualModel;
 /**
  * @brief The CameraController class
  */
-class CameraController : public DefaultController
+class GLFWCameraController : public DefaultController
 {
 
 public:
-    CameraController(std::weak_ptr<SceneView> sceneView);
-    virtual ~CameraController();
+    GLFWCameraController(std::weak_ptr<SceneView> sceneView);
+    virtual ~GLFWCameraController();
 
 public:
     virtual void framebufferSizeCallback(GLFWwindow* handle, int width, int height);

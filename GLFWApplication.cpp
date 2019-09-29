@@ -1,6 +1,6 @@
 #include "GLFWApplication.h"
 
-#include "CameraController.h"
+#include "GLFWCameraController.h"
 #include "Message.h"
 #include "SceneView.h"
 #include "VisualManager.h"
