@@ -1,11 +1,7 @@
 #include "SceneGraph.h"
 
-#include "Camera.h"
 #include "Node.h"
 #include "Visitor.h"
-
-// Glm
-#include <glm/glm.hpp>
 
 using namespace gl;
 
@@ -35,7 +31,7 @@ void SceneGraph::getBB(glm::vec3& min, glm::vec3& max) const
 {
     BoundingBoxVisitor boundingBoxVisitor;
 
-    m_rootNode->executeVisitor(&boundingBoxVisitor);
+    this->executeVisitor(&boundingBoxVisitor);
 
     min = boundingBoxVisitor.getMin();
     max = boundingBoxVisitor.getMax();

@@ -1,5 +1,5 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef SCENEGRAPH_H
+#define SCENEGRAPH_H
 
 // Glm
 #include <glm/glm.hpp>
@@ -7,12 +7,11 @@
 
 namespace gl {
 
-class Camera;
 class Node;
 class Visitor;
 
 /**
- * @brief The Scene class
+ * @brief The SceneGraph class
  */
 class SceneGraph
 {
