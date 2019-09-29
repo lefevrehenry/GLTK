@@ -6,25 +6,18 @@
 using namespace gl;
 
 SceneGraph::SceneGraph() :
-    m_rootNode(nullptr)
+    m_rootNode(new Node())
 {
-    this->m_rootNode = new Node();
-}
-
-SceneGraph::~SceneGraph()
-{
-    delete m_rootNode;
-    m_rootNode = nullptr;
 }
 
 Node* SceneGraph::root()
 {
-    return m_rootNode;
+    return m_rootNode.get();
 }
 
 const Node* SceneGraph::root() const
 {
-    return m_rootNode;
+    return m_rootNode.get();
 }
 
 void SceneGraph::getBB(glm::vec3& min, glm::vec3& max) const

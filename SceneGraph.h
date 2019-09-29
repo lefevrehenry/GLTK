@@ -4,6 +4,9 @@
 // Glm
 #include <glm/glm.hpp>
 
+// Standard Library
+#include <memory>
+
 
 namespace gl {
 
@@ -18,7 +21,7 @@ class SceneGraph
 
 public:
     SceneGraph();
-    virtual ~SceneGraph();
+    virtual ~SceneGraph() = default;
 
 public:
     Node* root();
@@ -31,7 +34,7 @@ public:
     void executeVisitor(Visitor* visitor) const;
 
 private:
-    Node* m_rootNode;
+    std::shared_ptr<Node> m_rootNode;
 
 };
 
