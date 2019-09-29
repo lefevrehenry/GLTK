@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit
 
 set(HEADER_FILES
     Camera.h
-    CameraController.h
+    Controller.h
     Data.h
     FileRepository.h
     Framebuffer.h
@@ -37,7 +37,7 @@ set(HEADER_FILES
 
 set(SOURCE_FILES
     Camera.cpp
-    CameraController.cpp
+    Controller.cpp
     Data.cpp
     FileRepository.cpp
     Framebuffer.cpp
@@ -145,8 +145,8 @@ endif()
 if(${BUILD_WITH_GLFW})
     find_package(glfw3 REQUIRED)
 
-    set(HEADER_FILES ${HEADER_FILES} Application.h GLFWApplication.h GLFWApplicationEvents.h Interface.h)
-    set(SOURCE_FILES ${SOURCE_FILES} Application.cpp GLFWApplication.cpp GLFWApplicationEvents.cpp Interface.cpp)
+    set(HEADER_FILES ${HEADER_FILES} Application.h GLFWApplication.h CameraController.h)
+    set(SOURCE_FILES ${SOURCE_FILES} Application.cpp GLFWApplication.cpp CameraController.cpp)
 endif()
 
 set(STB_IMAGE_INCLUDE_DIR

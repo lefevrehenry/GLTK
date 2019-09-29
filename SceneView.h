@@ -23,7 +23,6 @@ class Visitor;
  */
 class SceneView
 {
-    using CameraType = CameraController::CameraType;
 
 public:
     explicit SceneView();
