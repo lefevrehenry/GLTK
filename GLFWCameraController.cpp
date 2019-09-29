@@ -1,22 +1,14 @@
 #include "GLFWCameraController.h"
 
 #include "Camera.h"
-#include "GLFWApplication.h"
-#include "Mesh.h"
-#include "Message.h"
-#include "Node.h"
-#include "SceneGraph.h"
 #include "SceneView.h"
-#include "Selectable.h"
-#include "Visitor.h"
-#include "VisualModel.h"
 
 // GLFW
 #include <GLFW/glfw3.h>
 
 // Glm
+#include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
-
 
 using namespace gl;
 
