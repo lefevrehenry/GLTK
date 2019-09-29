@@ -49,7 +49,7 @@ public:
 
     Viewport windowSize() const;
 
-    std::weak_ptr<SceneView> createSceneView(std::weak_ptr<SceneGraph> sceneGraph);
+    void addSceneView(std::shared_ptr<SceneView> sceneView);
 
 private:
     void draw();

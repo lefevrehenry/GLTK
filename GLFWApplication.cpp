@@ -266,21 +266,9 @@ Viewport GLFWApplication::windowSize() const
     return Viewport(0,0,width,height);
 }
 
-std::weak_ptr<SceneView> GLFWApplication::createSceneView(std::weak_ptr<SceneGraph> sceneGraph)
+void GLFWApplication::addSceneView(std::shared_ptr<SceneView> sceneView)
 {
-    std::shared_ptr<SceneView> sceneView(new SceneView());
-
-    if(sceneView) {
-        int width = static_cast<int>(GLFWApplication::ScreenWidth);
-        int height = static_cast<int>(GLFWApplication::ScreenHeight);
-
-        sceneView->setViewport(Viewport(0,0,width,height));
-        sceneView->setScene(sceneGraph);
-    }
-
     this->m_sceneViews.push_back(sceneView);
-
-    return this->m_sceneViews.back();
 }
 
 void GLFWApplication::draw()
