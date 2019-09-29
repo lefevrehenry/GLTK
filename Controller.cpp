@@ -1,6 +1,7 @@
 #include "Controller.h"
 
 #include "Camera.h"
+#include "SceneGraph.h"
 #include "SceneView.h"
 
 using namespace gl;
@@ -24,6 +25,16 @@ SceneView* DefaultController::sceneView() const
         return sceneView.get();
 
     return nullptr;
+}
+
+SceneGraph* DefaultController::sceneGraph() const
+{
+    SceneView* sceneView = DefaultController::sceneView();
+
+    if(sceneView)
+        return sceneView->scene();
+
+    return  nullptr;
 }
 
 Camera* DefaultController::camera() const

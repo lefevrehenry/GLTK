@@ -45,13 +45,8 @@ void GLFWPickingController::mouseButtonCallback(GLFWwindow* handle, int button, 
 
         m_pickingVisitor->set(int(x), int(y));
 
-        SceneView* sceneView = DefaultController::sceneView();
-
-        if(!sceneView)
-            return;
-
-        SceneGraph* sceneGraph = sceneView->scene();
-        Camera* camera = sceneView->camera();
+        SceneGraph* sceneGraph = DefaultController::sceneGraph();
+        Camera* camera = DefaultController::camera();
 
         if(!sceneGraph || !camera)
             return;

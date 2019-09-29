@@ -10,6 +10,7 @@ class GLFWwindow;
 namespace gl {
 
 class Camera;
+class SceneGraph;
 class SceneView;
 
 /**
@@ -49,6 +50,7 @@ public:
 
 public:
     SceneView* sceneView() const;
+    SceneGraph* sceneGraph() const;
     Camera* camera() const;
 
 private:
