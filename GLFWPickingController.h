@@ -42,6 +42,6 @@ private:
 
 };
 
-}
+}   // namespace gl
 
 #endif

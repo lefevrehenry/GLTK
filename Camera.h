@@ -5,8 +5,7 @@
 #include <glm/glm.hpp>
 
 
-namespace gl
-{
+namespace gl {
 
 /**
  * @brief The Camera class

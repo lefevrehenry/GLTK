@@ -195,6 +195,6 @@ protected:
 
 };
 
-}   // namespace
+}   // namespace gl
 
 #endif
