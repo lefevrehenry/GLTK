@@ -24,26 +24,24 @@ public:
         Fragment
     };
 
+public:
     Shader(ShaderType shaderType);
     virtual ~Shader();
 
 public:
+    GLuint getShaderID() const;
+    ShaderType getShaderType() const;
 
-    GLuint getShaderID() const { return m_shaderId; }
-
-    ShaderType getShaderType() const { return m_shaderType; }
-
-    bool isCompiled() const { return m_isCompiled; }
-
+    bool isCompiled() const;
     void compileSourceCode(const std::string& sourceCode);
 
 private:
+    GLuint      m_shaderId;
+    ShaderType  m_shaderType;
 
-    GLuint m_shaderId;
-    ShaderType m_shaderType;
+    bool        m_isCompiled;
     const char* m_sourceCode;
 
-    bool m_isCompiled;
 
 };
 

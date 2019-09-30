@@ -8,8 +8,8 @@ using namespace gl;
 Shader::Shader(ShaderType shaderType) :
     m_shaderId(0),
     m_shaderType(shaderType),
-    m_sourceCode(""),
-    m_isCompiled(false)
+    m_isCompiled(false),
+    m_sourceCode("")
 {
     GLenum type = 0;
 
@@ -29,8 +29,24 @@ Shader::Shader(ShaderType shaderType) :
     m_shaderId = glCreateShader(type);
 }
 
-Shader::~Shader() {
+Shader::~Shader()
+{
     glDeleteShader(m_shaderId);
+}
+
+GLuint Shader::getShaderID() const
+{
+    return this->m_shaderId;
+}
+
+Shader::ShaderType Shader::getShaderType() const
+{
+    return this->m_shaderType;
+}
+
+bool Shader::isCompiled() const
+{
+    return this->m_isCompiled;
 }
 
 void Shader::compileSourceCode(const std::string& sourceCode)
