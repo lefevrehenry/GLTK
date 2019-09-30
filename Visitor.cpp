@@ -15,6 +15,8 @@
 
 using namespace gl;
 
+using ShaderProgramType = GLTK::ShaderProgramType;
+
 Visitor::~Visitor()
 {
 
@@ -138,18 +140,12 @@ DrawVisitorWithSelection::DrawVisitorWithSelection() : DrawVisitor(),
     m_outlineShader(nullptr),
     m_selected(nullptr)
 {
-    this->m_outlineShader = ShaderProgram::Create(ShaderProgram::OutLine);
+    this->m_outlineShader.reset(ShaderProgram::Create(GLTK::ShaderProgramType::OutLine));
 
 //    Selectable* selected = GLFWApplication::Instance()->selected();
 //    if (selected != nullptr) {
 //        this->m_selected = selected->visualModel();
 //    }
-}
-
-DrawVisitorWithSelection::~DrawVisitorWithSelection()
-{
-    delete m_outlineShader;
-    m_outlineShader = nullptr;
 }
 
 void DrawVisitorWithSelection::start()
@@ -283,20 +279,11 @@ PickingVisitor::PickingVisitor() :
     unsigned int width = GLFWApplication::ScreenWidth;
     unsigned int height = GLFWApplication::ScreenHeight;
 
-    this->m_pickingFramebuffer = new Framebuffer(width, height);
+    this->m_pickingFramebuffer.reset(new Framebuffer(width, height));
     this->m_pickingFramebuffer->attachTexture();
     this->m_pickingFramebuffer->attachDepthTexture();
 
-    this->m_shaderProgram = ShaderProgram::Create(ShaderProgram::Picking);
-}
-
-PickingVisitor::~PickingVisitor()
-{
-    delete m_pickingFramebuffer;
-    m_pickingFramebuffer = nullptr;
-
-    delete m_shaderProgram;
-    m_shaderProgram = nullptr;
+    this->m_shaderProgram.reset(ShaderProgram::Create(GLTK::ShaderProgramType::Picking));
 }
 
 void PickingVisitor::set(int x, int y)
@@ -482,21 +469,21 @@ ShaderVisitor::ShaderVisitor() :
 
 }
 
-ShaderVisitor::ShaderVisitor(ShaderProgram* shaderProgram) :
-    m_shaderProgram(shaderProgram)
+ShaderVisitor::ShaderVisitor(ShaderProgramType shaderProgramType) :
+    m_shaderProgram(nullptr)
 {
-
+    this->setShaderProgram(shaderProgramType);
 }
 
-void ShaderVisitor::setShaderProgram(ShaderProgram* shaderProgram)
+void ShaderVisitor::setShaderProgram(ShaderProgramType shaderProgramType)
 {
-    this->m_shaderProgram = shaderProgram;
+    this->m_shaderProgram.reset(ShaderProgram::Create(shaderProgramType));
 }
 
 void ShaderVisitor::processNode(const Node* node)
 {
     ShaderProgram* oldShaderProgram = m_currentShader;
-    m_currentShader = this->m_shaderProgram;
+    m_currentShader = this->m_shaderProgram.get();
 
     DrawVisitor::processNode(node);
 

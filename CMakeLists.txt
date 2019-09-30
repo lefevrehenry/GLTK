@@ -13,6 +13,7 @@ set(HEADER_FILES
     Data.h
     FileRepository.h
     Framebuffer.h
+    gltk.h
     Helper.h
     Light.h
     Material.h
@@ -21,7 +22,6 @@ set(HEADER_FILES
     Node.h
     OpenGLAttribute.h
     OpenGLStateMachine.h
-    Program.h
     SceneGraph.h
     SceneView.h
     Selectable.h
@@ -52,7 +52,6 @@ set(SOURCE_FILES
     OpenGLAttribute.inl
     OpenGLStateMachine.cpp
     OpenGLStateMachine.inl
-    Program.cpp
     SceneGraph.cpp
     SceneView.cpp
     Selectable.cpp

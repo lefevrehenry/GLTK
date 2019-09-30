@@ -9,9 +9,6 @@
 
 namespace gl {
 
-class Mesh;
-class ShaderProgram;
-
 /**
  * @brief The Framebuffer class
  */

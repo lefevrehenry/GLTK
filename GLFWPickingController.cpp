@@ -4,6 +4,7 @@
 #include "Node.h"
 #include "SceneGraph.h"
 #include "SceneView.h"
+#include "Framebuffer.h"    // why ?? (Visitor.h should be suffisant)
 #include "Visitor.h"
 #include "VisualModel.h"
 

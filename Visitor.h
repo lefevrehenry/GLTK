@@ -1,12 +1,15 @@
 #ifndef VISITOR_H
 #define VISITOR_H
 
+#include "gltk.h"
+
 // Glm
 #include <glm/glm.hpp>
 
 // Standard Library
 #include <deque>
 #include <list>
+#include <memory>
 #include <stack>
 
 
@@ -70,7 +73,6 @@ class DrawVisitorWithSelection : public DrawVisitor
 
 public:
     DrawVisitorWithSelection();
-    ~DrawVisitorWithSelection();
 
 public:
     virtual void start();
@@ -78,8 +80,8 @@ public:
     virtual void backwardNode(const Node* node);
 
 private:
-    ShaderProgram*      m_outlineShader;
-    const VisualModel*  m_selected;
+    std::unique_ptr<ShaderProgram>  m_outlineShader;
+    const VisualModel*              m_selected;
 
 };
 
@@ -91,7 +93,6 @@ class PickingVisitor : public Visitor
 
 public:
     PickingVisitor();
-    virtual ~PickingVisitor();
 
 public:
     void set(int x, int y);
@@ -106,8 +107,8 @@ public:
     virtual void processNode(const Node* node);
 
 private:
-    Framebuffer*    m_pickingFramebuffer;
-    ShaderProgram*  m_shaderProgram;
+    std::unique_ptr<Framebuffer>    m_pickingFramebuffer;
+    std::unique_ptr<ShaderProgram>  m_shaderProgram;
 
     std::deque<const VisualModel*>  m_visualModels;
 
@@ -174,16 +175,16 @@ class ShaderVisitor : public DrawVisitor
 
 public:
     ShaderVisitor();
-    ShaderVisitor(ShaderProgram* shaderProgram);
+    ShaderVisitor(GLTK::ShaderProgramType shaderProgramType);
 
 public:
     virtual void processNode(const Node* node);
 
 public:
-   void setShaderProgram(ShaderProgram* shaderProgram);
+   void setShaderProgram(GLTK::ShaderProgramType shaderProgramType);
 
 private:
-    ShaderProgram* m_shaderProgram;
+    std::unique_ptr<ShaderProgram> m_shaderProgram;
 
 };
 

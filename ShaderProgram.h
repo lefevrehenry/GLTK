@@ -2,6 +2,7 @@
 #define SHADERPROGRAM_H
 
 #include "Data.h"
+#include "gltk.h"
 #include "OpenGLAttribute.h"
 #include "OpenGLStateMachine.h"
 
@@ -33,31 +34,9 @@ enum PrimitiveMode {
  */
 class ShaderProgram
 {
+    using ShaderProgramType = GLTK::ShaderProgramType;
 
 public:
-
-    enum ShaderProgramType {
-        Basic,
-        Normal,
-        FlatShading,
-        GouraudShading,
-        PhongShading,
-        Frame,
-        HighLight,
-        BasicTexturing,
-        Texturing,
-        TangentSpace,
-        Picking,
-        OutLine,
-        MatCap,
-        VaoQuad,
-        Deferred,
-        ShadowMapping,
-        NormalMapping,
-        CubeMap,
-        EnvironmentMapping
-    };
-
     static ShaderProgram* Create(ShaderProgramType shaderProgramType);
 
 public:

@@ -81,9 +81,8 @@ protected:
     };
 
 protected:
-
-    std::vector<const MeshEntry*> m_meshEntries;
-    std::string m_name;
+    std::vector<const MeshEntry*>   m_meshEntries;
+    std::string                     m_name;
 
 };
 
