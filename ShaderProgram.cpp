@@ -1,7 +1,6 @@
 #include "ShaderProgram.h"
 
 #include "FileRepository.h"
-#include "Helper.h"
 #include "Mesh.h"
 #include "Message.h"
 #include "SceneGraph.h"
@@ -9,10 +8,33 @@
 #include "VisualManager.h"
 
 // Standard Library
+#include <fstream>
 #include <memory>
 
 using namespace gl;
 using namespace gl::helper;
+
+static bool getStringFromFile(const std::string& filename, std::string& dest)
+{
+    std::ifstream filestream(filename, std::ios::in);
+
+    if(!filestream.is_open()) {
+        msg_error("Helper") << "File " << filename << " not found";
+        return false;
+    }
+
+    dest = "";
+    std::string line;
+
+    while(getline(filestream, line)) {
+        dest += line + "\n";
+    }
+
+    filestream.close();
+
+    return true;
+}
+
 
 ShaderProgram* ShaderProgram::Create(ShaderProgramType shaderProgramType)
 {
