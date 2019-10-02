@@ -1,6 +1,5 @@
 #include "FileRepository.h"
 
-#include "Helper.h"
 #include "Message.h"
 
 // Standard Library

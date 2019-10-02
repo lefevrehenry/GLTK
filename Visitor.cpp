@@ -2,7 +2,6 @@
 
 #include "Framebuffer.h"
 #include "GLFWApplication.h"
-#include "Helper.h"
 #include "Mesh.h"
 #include "Node.h"
 #include "OpenGLStateMachine.h"
