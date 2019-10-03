@@ -55,10 +55,10 @@ public:
     void setPrimitiveMode(PrimitiveMode primitiveMode);
 
 public:
-    template< AttributName N >
-    void set(typename OpenGL<N>::Type value)
+    template< statemachine::AttributeName N >
+    void set(typename statemachine::OpenGL<N>::Type value)
     {
-        this->m_attributeStack[N] = OpenGLAttribut<N>::Create(value);
+        this->m_attributeStack[N] = statemachine::OpenGLAttribut<N>::Create(value);
     }
 
     void pushAttribute() const;
@@ -165,7 +165,7 @@ private:
     unsigned int m_nbInstance;
     PrimitiveMode m_primitiveMode;
 
-    std::map< AttributName, BaseOpenGLAttribut::SPtr > m_attributeStack;
+    std::map< statemachine::AttributeName, statemachine::BaseOpenGLAttribut::SPtr > m_attributeStack;
 
 };
 

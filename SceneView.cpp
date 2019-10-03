@@ -7,6 +7,8 @@
 #include "OpenGLStateMachine.h"
 
 using namespace gl;
+using namespace gl::misc;
+using namespace gl::statemachine;
 
 static DrawVisitor defaultVisitor;
 
@@ -19,12 +21,12 @@ SceneView::SceneView() :
 {
 }
 
-const class Viewport& SceneView::viewport() const
+const misc::Rect& SceneView::viewport() const
 {
     return this->m_viewport;
 }
 
-void SceneView::setViewport(const class Viewport& viewport)
+void SceneView::setViewport(const misc::Rect& viewport)
 {
     this->m_viewport = viewport;
 }

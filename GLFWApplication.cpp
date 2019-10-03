@@ -15,6 +15,7 @@
 #include <memory>
 
 using namespace gl;
+using namespace gl::misc;
 
 unsigned int GLFWApplication::ScreenWidth = 0;
 unsigned int GLFWApplication::ScreenHeight = 0;
@@ -119,7 +120,7 @@ void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int ac
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface()) {
-            const Viewport& viewport = sceneView->viewport();
+            const Rect& viewport = sceneView->viewport();
             double xpos = -1;
             double ypos = -1;
             glfwGetCursorPos(handle, &xpos, &ypos);
@@ -135,9 +136,9 @@ void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double 
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface()) {
-            const Viewport& viewport = sceneView->viewport();
+            const Rect& viewport = sceneView->viewport();
             if (viewport.contains(int(xpos), int(ypos))) {
-                const Viewport& viewport = sceneView->viewport();
+                const Rect& viewport = sceneView->viewport();
                 double xpos = -1;
                 double ypos = -1;
                 glfwGetCursorPos(handle, &xpos, &ypos);
@@ -154,7 +155,7 @@ void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double 
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface()) {
-            const Viewport& viewport = sceneView->viewport();
+            const Rect& viewport = sceneView->viewport();
             double xpos = -1;
             double ypos = -1;
             glfwGetCursorPos(handle, &xpos, &ypos);
@@ -262,12 +263,12 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
     }
 }
 
-Viewport GLFWApplication::windowSize() const
+Rect GLFWApplication::windowSize() const
 {
     int width = static_cast<int>(GLFWApplication::ScreenWidth);
     int height = static_cast<int>(GLFWApplication::ScreenHeight);
 
-    return Viewport(0,0,width,height);
+    return Rect(0,0,width,height);
 }
 
 void GLFWApplication::addSceneView(std::shared_ptr<SceneView> sceneView)

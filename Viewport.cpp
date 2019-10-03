@@ -1,8 +1,9 @@
 #include "Viewport.h"
 
 using namespace gl;
+using namespace gl::misc;
 
-Viewport::Viewport() :
+Rect::Rect() :
     m_x(0),
     m_y(0),
     m_width(0),
@@ -11,7 +12,7 @@ Viewport::Viewport() :
 
 }
 
-Viewport::Viewport(int x, int y, int width, int height) :
+Rect::Rect(int x, int y, int width, int height) :
     m_x(x),
     m_y(y),
     m_width(width),
@@ -20,32 +21,32 @@ Viewport::Viewport(int x, int y, int width, int height) :
 
 }
 
-int Viewport::x() const
+int Rect::x() const
 {
     return m_x;
 }
 
-int Viewport::y() const
+int Rect::y() const
 {
     return m_y;
 }
 
-int Viewport::width() const
+int Rect::width() const
 {
     return m_width;
 }
 
-int Viewport::height() const
+int Rect::height() const
 {
     return m_height;
 }
 
-bool Viewport::contains(int x, int y) const
+bool Rect::contains(int x, int y) const
 {
     return (x >= this->m_x && x <= this->m_x + this->m_width - 1 && y >= this->m_y && y <= this->m_y + this->m_height - 1);
 }
 
-void Viewport::set(int x, int y, int width, int height)
+void Rect::set(int x, int y, int width, int height)
 {
     this->m_x = x;
     this->m_y = y;

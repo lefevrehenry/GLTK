@@ -13,6 +13,7 @@
 #include "VisualOption.h"
 
 using namespace gl;
+using namespace gl::statemachine;
 
 using ShaderProgramType = GLTK::ShaderProgramType;
 

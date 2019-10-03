@@ -27,8 +27,8 @@ public:
     explicit SceneView();
 
 public:
-    const class Viewport& viewport() const;
-    void setViewport(const class Viewport& viewport);
+    const misc::Rect& viewport() const;
+    void setViewport(const misc::Rect& viewport);
 
     glm::vec4 backgroundColor() const;
     void setBackgroundColor(const glm::vec4& backgroundColor);
@@ -47,7 +47,7 @@ public:
     void draw() const;
 
 private:
-    class Viewport  m_viewport;
+    misc::Rect  m_viewport;
     glm::vec4       m_backgroundcolor;
 
     std::weak_ptr<SceneGraph>   m_scene;

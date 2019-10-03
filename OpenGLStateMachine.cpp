@@ -1,5 +1,6 @@
 #include "OpenGLStateMachine.inl"
 
 using namespace gl;
+using namespace gl::statemachine;
 
-std::map< AttributName, std::stack<BaseOpenGLAttribut::SPtr> > OpenGLStateMachine::MapOpenGLStateMachineAttribute;
+std::map< AttributeName, std::stack<BaseOpenGLAttribut::SPtr> > OpenGLStateMachine::MapOpenGLStateMachineAttribute;

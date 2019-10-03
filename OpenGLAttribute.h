@@ -11,21 +11,22 @@
 
 namespace gl {
 
-enum AttributName
+namespace statemachine {
+
+enum AttributeName
 {
     ClearColor,
     CullFace,
     DepthFunc,
     DepthMask,
     DepthTest,
-    Viewport,
-    Count
+    Viewport
 };
 
 /**
  * @brief The OpenGL class
  */
-template <AttributName N>
+template< AttributeName N >
 struct OpenGL
 {
     using Type = void;
@@ -165,7 +166,7 @@ public:
 /**
  * @brief The OpenGLAttribut class
  */
-template< AttributName N >
+template< AttributeName N >
 class OpenGLAttribut : public BaseOpenGLAttribut
 {
     friend class OpenGLStateMachine;
@@ -203,6 +204,8 @@ private:
 
 };
 
-}  // namespace gl
+}   // namespace statemachine
+
+}   // namespace gl
 
 #endif

@@ -1,18 +1,20 @@
-#ifndef VIEWPORT_H
-#define VIEWPORT_H
+#ifndef RECT_H
+#define RECT_H
 
 
 namespace gl {
 
+namespace misc {
+
 /**
- * @brief The Viewport class
+ * @brief The Rect class
  */
-class Viewport
+class Rect
 {
 
 public:
-    Viewport();
-    Viewport(int x, int y, int width, int height);
+    Rect();
+    Rect(int x, int y, int width, int height);
 
 public:
     int x() const;
@@ -32,6 +34,8 @@ private:
     int m_height;
 
 };
+
+}   // namespace misc;
 
 }   // namespace gl
 

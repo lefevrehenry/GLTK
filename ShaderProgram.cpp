@@ -13,6 +13,7 @@
 
 using namespace gl;
 using namespace gl::helper;
+using namespace gl::statemachine;
 
 static bool getStringFromFile(const std::string& filename, std::string& dest)
 {
@@ -391,7 +392,7 @@ void ShaderProgram::setPrimitiveMode(PrimitiveMode primitiveMode)
     this->m_primitiveMode = primitiveMode;
 }
 
-template< AttributName N >
+template< AttributeName N >
 void PushAndApply(BaseOpenGLAttribut::SPtr baseAttribut)
 {
     OpenGLStateMachine::Push<N>();
@@ -406,7 +407,7 @@ void ShaderProgram::pushAttribute() const
     // but probably a bad idea to use template in this case
 
     for (auto it : this->m_attributeStack) {
-        AttributName attribute = it.first;
+        AttributeName attribute = it.first;
         BaseOpenGLAttribut::SPtr value = it.second;
 
         switch (attribute) {
@@ -428,9 +429,6 @@ void ShaderProgram::pushAttribute() const
         case Viewport:
             PushAndApply<Viewport>(value);
             break;
-        default:
-            msg_error("ShaderProgram") << "Unknown AttributName" << attribute;
-            break;
         }
     }
 }
@@ -440,7 +438,7 @@ void ShaderProgram::popAttribute() const
     // same as above, ugly idea
 
     for (auto it : this->m_attributeStack) {
-        AttributName attribute = it.first;
+        AttributeName attribute = it.first;
 
         switch (attribute) {
         case ClearColor:
@@ -460,9 +458,6 @@ void ShaderProgram::popAttribute() const
             break;
         case Viewport:
             OpenGLStateMachine::Pop<Viewport>();
-            break;
-        default:
-            msg_error("ShaderProgram") << "Unknown AttributName" << attribute;
             break;
         }
     }

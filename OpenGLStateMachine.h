@@ -11,6 +11,8 @@
 
 namespace gl {
 
+namespace statemachine {
+
 /**
  * @brief The OpenGLStateMachine class
  */
@@ -21,7 +23,7 @@ public:
     OpenGLStateMachine() = delete;
 
 public:
-    template< AttributName N >
+    template< AttributeName N >
     static void Push()
     {
         // create an OpenGLAttribut with the current OpenGL state and store it
@@ -29,7 +31,7 @@ public:
 
         MapOpenGLStateMachineAttribute[N].push(attribut);
     }
-    template< AttributName N >
+    template< AttributeName N >
     static void Pop()
     {
         // cast the top item of the stack and set it
@@ -42,7 +44,7 @@ public:
     }
 
 public:
-    template< AttributName N >
+    template< AttributeName N >
     static typename OpenGLAttribut<N>::SPtr Get()
     {
         // get an OpenGLAttribut with the current OpenGL state
@@ -50,7 +52,7 @@ public:
 
         return OpenGLAttribut<N>::Create(value);
     }
-    template< AttributName N >
+    template< AttributeName N >
     static void Set(typename OpenGLAttribut<N>::SPtr attribut)
     {
         // set the OpenGL state with the OpenGLAttribut
@@ -58,9 +60,11 @@ public:
     }
 
 public:
-    static std::map< AttributName, std::stack<BaseOpenGLAttribut::SPtr> > MapOpenGLStateMachineAttribute;
+    static std::map< AttributeName, std::stack<BaseOpenGLAttribut::SPtr> > MapOpenGLStateMachineAttribute;
 
 };
+
+}   // namespace statemachine
 
 }   // namespace gl
 
