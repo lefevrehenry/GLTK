@@ -1,7 +1,7 @@
 #ifndef SCENEVIEW_H
 #define SCENEVIEW_H
 
-#include "Viewport.h"
+#include "Rect.h"
 
 // Glm
 #include <glm/glm.hpp>
@@ -27,8 +27,8 @@ public:
     explicit SceneView();
 
 public:
-    const misc::Rect& viewport() const;
-    void setViewport(const misc::Rect& viewport);
+    const misc::Rect& rect() const;
+    void setRect(const misc::Rect& rect);
 
     glm::vec4 backgroundColor() const;
     void setBackgroundColor(const glm::vec4& backgroundColor);
@@ -47,8 +47,8 @@ public:
     void draw() const;
 
 private:
-    misc::Rect  m_viewport;
-    glm::vec4       m_backgroundcolor;
+    misc::Rect  m_rect;
+    glm::vec4   m_backgroundcolor;
 
     std::weak_ptr<SceneGraph>   m_scene;
     std::shared_ptr<Camera>     m_camera;

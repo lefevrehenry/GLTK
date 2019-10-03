@@ -21,6 +21,7 @@ set(HEADER_FILES
     Node.h
     OpenGLAttribute.h
     OpenGLStateMachine.h
+    Rect.h
     SceneGraph.h
     SceneView.h
     Selectable.h
@@ -28,7 +29,6 @@ set(HEADER_FILES
     ShaderProgram.h
     Texture.h
     Transform.h
-    Viewport.h
     Visitor.h
     VisualManager.h
     VisualModel.h
@@ -52,6 +52,7 @@ set(SOURCE_FILES
     OpenGLAttribute.inl
     OpenGLStateMachine.cpp
     OpenGLStateMachine.inl
+    Rect.cpp
     SceneGraph.cpp
     SceneView.cpp
     Selectable.cpp
@@ -59,7 +60,6 @@ set(SOURCE_FILES
     ShaderProgram.cpp
     Texture.cpp
     Transform.cpp
-    Viewport.cpp
     Visitor.cpp
     VisualManager.cpp
     VisualModel.cpp

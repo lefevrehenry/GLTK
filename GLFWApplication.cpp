@@ -120,11 +120,11 @@ void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int ac
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface()) {
-            const Rect& viewport = sceneView->viewport();
+            const Rect& rect = sceneView->rect();
             double xpos = -1;
             double ypos = -1;
             glfwGetCursorPos(handle, &xpos, &ypos);
-            if (viewport.contains(int(xpos), int(ypos)))
+            if (rect.contains(int(xpos), int(ypos)))
                 sceneView->interface()->mouseButtonCallback(handle, button, action, mods);
         }
     }
@@ -136,13 +136,13 @@ void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double 
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface()) {
-            const Rect& viewport = sceneView->viewport();
-            if (viewport.contains(int(xpos), int(ypos))) {
-                const Rect& viewport = sceneView->viewport();
+            const Rect& rect = sceneView->rect();
+            if (rect.contains(int(xpos), int(ypos))) {
+                const Rect& rect = sceneView->rect();
                 double xpos = -1;
                 double ypos = -1;
                 glfwGetCursorPos(handle, &xpos, &ypos);
-                if (viewport.contains(int(xpos), int(ypos)))
+                if (rect.contains(int(xpos), int(ypos)))
                     sceneView->interface()->cursorPosCallback(handle, xpos, ypos);
             }
         }
@@ -155,11 +155,11 @@ void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double 
 
     for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
         if(sceneView && sceneView->interface()) {
-            const Rect& viewport = sceneView->viewport();
+            const Rect& rect = sceneView->rect();
             double xpos = -1;
             double ypos = -1;
             glfwGetCursorPos(handle, &xpos, &ypos);
-            if (viewport.contains(int(xpos), int(ypos)))
+            if (rect.contains(int(xpos), int(ypos)))
                 sceneView->interface()->scrollCallback(handle, xoffset, yoffset);
         }
     }

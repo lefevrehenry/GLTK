@@ -13,7 +13,7 @@ using namespace gl::statemachine;
 static DrawVisitor defaultVisitor;
 
 SceneView::SceneView() :
-    m_viewport(),
+    m_rect(),
     m_backgroundcolor(0.2f,0.2f,0.2f,1.0f),
     m_scene(),
     m_camera(new Camera()),
@@ -21,14 +21,14 @@ SceneView::SceneView() :
 {
 }
 
-const misc::Rect& SceneView::viewport() const
+const misc::Rect& SceneView::rect() const
 {
-    return this->m_viewport;
+    return this->m_rect;
 }
 
-void SceneView::setViewport(const misc::Rect& viewport)
+void SceneView::setRect(const misc::Rect& rect)
 {
-    this->m_viewport = viewport;
+    this->m_rect = rect;
 }
 
 glm::vec4 SceneView::backgroundColor() const
@@ -80,10 +80,10 @@ void SceneView::draw() const
     OpenGLStateMachine::Push<Viewport>();
     OpenGLStateMachine::Push<ClearColor>();
 
-    int x = m_viewport.x();
-    int y = m_viewport.y();
-    int width = m_viewport.width();
-    int height = m_viewport.height();
+    int x = m_rect.x();
+    int y = m_rect.y();
+    int width = m_rect.width();
+    int height = m_rect.height();
 
     glViewport(x,y,width,height);
 

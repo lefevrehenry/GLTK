@@ -2,7 +2,7 @@
 #define GLFWAPPLICATION_H
 
 #include "Application.h"
-#include "Viewport.h"
+#include "Rect.h"
 
 // Standard Library
 #include <memory>
