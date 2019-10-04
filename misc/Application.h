@@ -15,10 +15,12 @@ protected:
     virtual ~Application();
 
 public:
-
     virtual void init() = 0;
-
     virtual void loop() = 0;
+
+public:
+    static unsigned int ScreenWidth;
+    static unsigned int ScreenHeight;
 
 private:
     // C++ 11

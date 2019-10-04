@@ -54,9 +54,6 @@ private:
     void draw();
 
 public:
-    static unsigned int ScreenWidth;
-    static unsigned int ScreenHeight;
-
     static int OpenGLMajorVersion;
     static int OpenGLMinorVersion;
 

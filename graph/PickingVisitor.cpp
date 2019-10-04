@@ -1,6 +1,6 @@
 #include "PickingVisitor.h"
 
-#include <glfw/GLFWApplication.h>
+#include <misc/Application.h>
 #include <opengl/Framebuffer.h>
 #include <graph/Node.h>
 #include <opengl/ShaderProgram.h>
@@ -43,8 +43,8 @@ PickingVisitor::PickingVisitor() :
     m_y(0),
     m_id(0)
 {
-    unsigned int width = GLFWApplication::ScreenWidth;
-    unsigned int height = GLFWApplication::ScreenHeight;
+    unsigned int width = Application::ScreenWidth;
+    unsigned int height = Application::ScreenHeight;
 
     this->m_pickingFramebuffer.reset(new Framebuffer(width, height));
     this->m_pickingFramebuffer->attachTexture();
@@ -111,8 +111,8 @@ void PickingVisitor::end()
         float z = 1.0;
         glReadPixels(this->m_x, this->m_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
 
-        float w = GLFWApplication::ScreenWidth;
-        float h = GLFWApplication::ScreenHeight;
+        float w = Application::ScreenWidth;
+        float h = Application::ScreenHeight;
 
         float ndc_x = (this->m_x / w) * 2.f - 1;
         float ndc_y = (this->m_y / h) * 2.f - 1;
