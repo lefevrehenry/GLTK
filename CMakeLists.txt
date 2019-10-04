@@ -26,12 +26,14 @@ set(HEADER_FILES
     misc/Rect.h
     misc/Transform.h
 
+    opengl/CubeMapTexture.h
     opengl/Data.h
     opengl/Framebuffer.h
     opengl/Mesh.h
     opengl/Shader.h
     opengl/ShaderProgram.h
     opengl/Texture.h
+    opengl/Texture2D.h
     opengl/VisualManager.h
     opengl/VisualModel.h
     opengl/VisualOption.h
@@ -62,12 +64,14 @@ set(SOURCE_FILES
     misc/Rect.cpp
     misc/Transform.cpp
 
+    opengl/CubeMapTexture.cpp
     opengl/Data.cpp
     opengl/Framebuffer.cpp
     opengl/Mesh.cpp
     opengl/Shader.cpp
     opengl/ShaderProgram.cpp
     opengl/Texture.cpp
+    opengl/Texture2D.cpp
     opengl/VisualManager.cpp
     opengl/VisualModel.cpp
     opengl/VisualOption.cpp

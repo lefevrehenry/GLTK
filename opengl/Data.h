@@ -2,8 +2,9 @@
 #define DATA_H
 
 #include <misc/Camera.h>
+#include <opengl/CubeMapTexture.h>
 #include <helper/Message.h>
-#include <opengl/Texture.h>
+#include <opengl/Texture2D.h>
 
 // Glew
 #include <GL/glew.h>
