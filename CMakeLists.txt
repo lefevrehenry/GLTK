@@ -7,63 +7,77 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer -g")
 
 set(HEADER_FILES
-    Application.h
-    Camera.h
-    Controller.h
-    Data.h
-    FileRepository.h
-    Framebuffer.h
+    controller/Controller.h
+
+    graph/Node.h
+    graph/SceneGraph.h
+    graph/Selectable.h
+    graph/Visitor.h
+
+    gui/SceneView.h
+
+    helper/FileRepository.h
+    helper/Message.h
+
+    misc/Application.h
+    misc/Camera.h
+    misc/Light.h
+    misc/Material.h
+    misc/Rect.h
+    misc/Transform.h
+
+    opengl/Data.h
+    opengl/Framebuffer.h
+    opengl/Mesh.h
+    opengl/Shader.h
+    opengl/ShaderProgram.h
+    opengl/Texture.h
+    opengl/VisualManager.h
+    opengl/VisualModel.h
+    opengl/VisualOption.h
+
+    statemachine/OpenGLAttribute.h
+    statemachine/OpenGLStateMachine.h
+
     gltk.h
-    Light.h
-    Material.h
-    Mesh.h
-    Message.h
-    Node.h
-    OpenGLAttribute.h
-    OpenGLStateMachine.h
-    Rect.h
-    SceneGraph.h
-    SceneView.h
-    Selectable.h
-    Shader.h
-    ShaderProgram.h
-    Texture.h
-    Transform.h
-    Visitor.h
-    VisualManager.h
-    VisualModel.h
-    VisualOption.h
 )
 
 set(SOURCE_FILES
-    Application.cpp
-    Camera.cpp
-    Controller.cpp
-    Data.cpp
-    FileRepository.cpp
-    Framebuffer.cpp
+    controller/Controller.cpp
+
+    graph/Node.cpp
+    graph/SceneGraph.cpp
+    graph/Selectable.cpp
+    graph/Visitor.cpp
+
+    gui/SceneView.cpp
+
+    helper/FileRepository.cpp
+    helper/Message.cpp
+
+    misc/Application.cpp
+    misc/Camera.cpp
+    misc/Light.cpp
+    misc/Material.cpp
+    misc/Rect.cpp
+    misc/Transform.cpp
+
+    opengl/Data.cpp
+    opengl/Framebuffer.cpp
+    opengl/Mesh.cpp
+    opengl/Shader.cpp
+    opengl/ShaderProgram.cpp
+    opengl/Texture.cpp
+    opengl/VisualManager.cpp
+    opengl/VisualModel.cpp
+    opengl/VisualOption.cpp
+
+    statemachine/OpenGLAttribute.cpp
+    statemachine/OpenGLAttribute.inl
+    statemachine/OpenGLStateMachine.cpp
+    statemachine/OpenGLStateMachine.inl
+
     gltk.cpp
-    Light.cpp
-    Material.cpp
-    Mesh.cpp
-    Message.cpp
-    Node.cpp
-    OpenGLAttribute.cpp
-    OpenGLAttribute.inl
-    OpenGLStateMachine.cpp
-    OpenGLStateMachine.inl
-    Rect.cpp
-    SceneGraph.cpp
-    SceneView.cpp
-    Selectable.cpp
-    Shader.cpp
-    ShaderProgram.cpp
-    Texture.cpp
-    Transform.cpp
-    Visitor.cpp
-    VisualManager.cpp
-    VisualModel.cpp
-    VisualOption.cpp
 )
 
 set(SHADER_FILES
@@ -146,8 +160,18 @@ endif()
 if(${BUILD_WITH_GLFW})
     find_package(glfw3 REQUIRED)
 
-    set(HEADER_FILES ${HEADER_FILES} GLFWApplication.h GLFWCameraController.h GLFWPickingController.h)
-    set(SOURCE_FILES ${SOURCE_FILES} GLFWApplication.cpp GLFWCameraController.cpp GLFWPickingController.cpp)
+    set(HEADER_FILES
+        ${HEADER_FILES}
+        glfw/GLFWApplication.h
+        glfw/GLFWCameraController.h
+        glfw/GLFWPickingController.h
+    )
+    set(SOURCE_FILES
+        ${SOURCE_FILES}
+        glfw/GLFWApplication.cpp
+        glfw/GLFWCameraController.cpp
+        glfw/GLFWPickingController.cpp
+    )
 endif()
 
 set(STB_IMAGE_INCLUDE_DIR
@@ -157,6 +181,7 @@ set(STB_IMAGE_INCLUDE_DIR
 #========== Creation of the library ==========#
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES})
 
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${STB_IMAGE_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES})
 
