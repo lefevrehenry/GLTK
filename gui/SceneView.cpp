@@ -2,7 +2,7 @@
 
 #include <graph/Node.h>
 #include <graph/SceneGraph.h>
-#include <graph/Visitor.h>
+#include <graph/DrawVisitor.h>
 #include <opengl/VisualManager.h>
 #include <statemachine/OpenGLStateMachine.h>
 

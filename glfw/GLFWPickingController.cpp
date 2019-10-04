@@ -5,7 +5,7 @@
 #include <graph/SceneGraph.h>
 #include <gui/SceneView.h>
 #include <opengl/Framebuffer.h>    // why ?? (Visitor.h should be suffisant)
-#include <graph/Visitor.h>
+#include <graph/PickingVisitor.h>
 #include <opengl/VisualModel.h>
 
 // Glfw

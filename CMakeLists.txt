@@ -9,9 +9,15 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit
 set(HEADER_FILES
     controller/Controller.h
 
+    graph/BoundingBoxVisitor.h
+    graph/DrawVisitor.h
+    graph/DrawWithSelectionVisitor.h
+    graph/FetchVisualModelVisitor.h
     graph/Node.h
+    graph/PickingVisitor.h
     graph/SceneGraph.h
     graph/Selectable.h
+    graph/ShaderVisitor.h
     graph/Visitor.h
 
     gui/SceneView.h
@@ -47,9 +53,15 @@ set(HEADER_FILES
 set(SOURCE_FILES
     controller/Controller.cpp
 
+    graph/BoundingBoxVisitor.cpp
+    graph/DrawVisitor.cpp
+    graph/DrawWithSelectionVisitor.cpp
+    graph/FetchVisualModelVisitor.cpp
     graph/Node.cpp
+    graph/PickingVisitor.cpp
     graph/SceneGraph.cpp
     graph/Selectable.cpp
+    graph/ShaderVisitor.cpp
     graph/Visitor.cpp
 
     gui/SceneView.cpp
