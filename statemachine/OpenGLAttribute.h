@@ -185,7 +185,7 @@ public:
        return this->m_value;
     }
 
-private:
+public:
     void setValue(const Type& value)
     {
         this->m_value = value;

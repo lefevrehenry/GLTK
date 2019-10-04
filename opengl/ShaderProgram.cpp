@@ -394,8 +394,10 @@ void ShaderProgram::setPrimitiveMode(PrimitiveMode primitiveMode)
 template< AttributeName N >
 void PushAndApply(BaseOpenGLAttribut::SPtr baseAttribut)
 {
+    typename OpenGLAttribut<N>::SPtr attribut = std::static_pointer_cast< OpenGLAttribut<N> >(baseAttribut);
+
     OpenGLStateMachine::Push<N>();
-    OpenGLStateMachine::Set<N>( std::static_pointer_cast<OpenGLAttribut<N>>(baseAttribut) );
+    OpenGLStateMachine::Set<N>(*attribut);
 }
 
 void ShaderProgram::pushAttribute() const

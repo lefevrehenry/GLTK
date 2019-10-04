@@ -2,4 +2,4 @@
 
 using namespace gl;
 
-std::map< AttributeName, std::stack<BaseOpenGLAttribut::SPtr> > OpenGLStateMachine::MapOpenGLStateMachineAttribute;
+std::map< AttributeName, std::stack<BaseOpenGLAttribut::SPtr> > OpenGLStateMachine::OpenGLStateMachineStackAttribute;

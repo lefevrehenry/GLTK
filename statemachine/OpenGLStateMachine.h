@@ -25,40 +25,40 @@ public:
     static void Push()
     {
         // create an OpenGLAttribut with the current OpenGL state and store it
-        typename OpenGLAttribut<N>::SPtr attribut = OpenGLStateMachine::Get<N>();
+        typename OpenGLAttribut<N>::SPtr attribut( new OpenGLAttribut<N>(OpenGLStateMachine::Get<N>()) );
 
-        MapOpenGLStateMachineAttribute[N].push(attribut);
+        OpenGLStateMachineStackAttribute[N].push(attribut);
     }
     template< AttributeName N >
     static void Pop()
     {
         // cast the top item of the stack and set it
-        BaseOpenGLAttribut::SPtr baseAttribut = MapOpenGLStateMachineAttribute[N].top();
+        BaseOpenGLAttribut::SPtr baseAttribut = OpenGLStateMachineStackAttribute[N].top();
         typename OpenGLAttribut<N>::SPtr attribut = std::static_pointer_cast< OpenGLAttribut<N> >(baseAttribut);
 
-        MapOpenGLStateMachineAttribute[N].pop();
+        OpenGLStateMachineStackAttribute[N].pop();
 
-        OpenGLStateMachine::Set<N>(attribut);
+        OpenGLStateMachine::Set<N>(*attribut);
     }
 
 public:
     template< AttributeName N >
-    static typename OpenGLAttribut<N>::SPtr Get()
+    static OpenGLAttribut<N> Get()
     {
         // get an OpenGLAttribut with the current OpenGL state
         typename OpenGL<N>::Type value = OpenGL<N>::Get();
 
-        return OpenGLAttribut<N>::Create(value);
+        return OpenGLAttribut<N>(value);
     }
     template< AttributeName N >
-    static void Set(typename OpenGLAttribut<N>::SPtr attribut)
+    static void Set(const OpenGLAttribut<N>& attribut)
     {
         // set the OpenGL state with the OpenGLAttribut
-        OpenGL<N>::Set(attribut->value());
+        OpenGL<N>::Set(attribut.value());
     }
 
 public:
-    static std::map< AttributeName, std::stack<BaseOpenGLAttribut::SPtr> > MapOpenGLStateMachineAttribute;
+    static std::map< AttributeName, std::stack<BaseOpenGLAttribut::SPtr> > OpenGLStateMachineStackAttribute;
 
 };
 
