@@ -4,8 +4,6 @@
 
 namespace gl {
 
-namespace misc {
-
 /**
  * @brief The Rect class
  */
@@ -34,8 +32,6 @@ private:
     int m_height;
 
 };
-
-}   // namespace misc;
 
 }   // namespace gl
 

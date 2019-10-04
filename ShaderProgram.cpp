@@ -13,7 +13,6 @@
 
 using namespace gl;
 using namespace gl::helper;
-using namespace gl::statemachine;
 
 static bool getStringFromFile(const std::string& filename, std::string& dest)
 {

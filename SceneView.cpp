@@ -7,8 +7,6 @@
 #include "OpenGLStateMachine.h"
 
 using namespace gl;
-using namespace gl::misc;
-using namespace gl::statemachine;
 
 static DrawVisitor defaultVisitor;
 
@@ -21,12 +19,12 @@ SceneView::SceneView() :
 {
 }
 
-const misc::Rect& SceneView::rect() const
+const Rect& SceneView::rect() const
 {
     return this->m_rect;
 }
 
-void SceneView::setRect(const misc::Rect& rect)
+void SceneView::setRect(const Rect& rect)
 {
     this->m_rect = rect;
 }

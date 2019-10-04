@@ -15,7 +15,6 @@
 #include <memory>
 
 using namespace gl;
-using namespace gl::misc;
 
 unsigned int GLFWApplication::ScreenWidth = 0;
 unsigned int GLFWApplication::ScreenHeight = 0;

@@ -1,7 +1,6 @@
 #include "Rect.h"
 
 using namespace gl;
-using namespace gl::misc;
 
 Rect::Rect() :
     m_x(0),

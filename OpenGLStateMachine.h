@@ -11,8 +11,6 @@
 
 namespace gl {
 
-namespace statemachine {
-
 /**
  * @brief The OpenGLStateMachine class
  */
@@ -63,8 +61,6 @@ public:
     static std::map< AttributeName, std::stack<BaseOpenGLAttribut::SPtr> > MapOpenGLStateMachineAttribute;
 
 };
-
-}   // namespace statemachine
 
 }   // namespace gl
 

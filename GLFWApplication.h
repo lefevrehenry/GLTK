@@ -46,7 +46,7 @@ public:
     GLFWwindow* getWindow() const;
     void setWindow(GLFWwindow* newHandle);
 
-    misc::Rect windowSize() const;
+    Rect windowSize() const;
 
     void addSceneView(std::shared_ptr<SceneView> sceneView);
 

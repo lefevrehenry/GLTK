@@ -11,8 +11,6 @@
 
 namespace gl {
 
-namespace statemachine {
-
 enum AttributeName
 {
     ClearColor,
@@ -203,8 +201,6 @@ private:
     Type m_value;
 
 };
-
-}   // namespace statemachine
 
 }   // namespace gl
 
