@@ -279,7 +279,7 @@ ShaderProgram* ShaderProgram::Create(ShaderProgramType shaderProgramType)
         break;
     case ShaderProgramType::TangentSpace:
 
-        shaderProgram->setPrimitiveMode(PrimitiveMode::POINTS);
+        shaderProgram->setPrimitiveType(PrimitiveType::POINTS);
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
 
@@ -350,7 +350,7 @@ ShaderProgram::ShaderProgram() :
     m_dataList(),
     m_isLinked(false),
     m_nbInstance(1),
-    m_primitiveMode(TRIANGLES),
+    m_primitiveType(TRIANGLES),
     m_attributeStack()
 {
     m_programId = glCreateProgram();
@@ -381,14 +381,14 @@ void ShaderProgram::setNbInstance(unsigned int n)
     this->m_nbInstance = n;
 }
 
-PrimitiveMode ShaderProgram::getPrimitiveMode() const
+PrimitiveType ShaderProgram::getPrimitiveType() const
 {
-    return this->m_primitiveMode;
+    return this->m_primitiveType;
 }
 
-void ShaderProgram::setPrimitiveMode(PrimitiveMode primitiveMode)
+void ShaderProgram::setPrimitiveType(PrimitiveType primitiveType)
 {
-    this->m_primitiveMode = primitiveMode;
+    this->m_primitiveType = primitiveType;
 }
 
 template< AttributeName N >

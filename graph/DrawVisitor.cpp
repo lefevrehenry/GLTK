@@ -67,7 +67,7 @@ void DrawVisitor::processNode(const Node* node)
 
         VisualParam param;
         param.nbInstance = m_currentShader->getNbInstance();
-        param.primitiveMode = m_currentShader->getPrimitiveMode();
+        param.primitiveType = m_currentShader->getPrimitiveType();
 
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {

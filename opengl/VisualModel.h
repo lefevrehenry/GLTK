@@ -14,12 +14,12 @@ struct VisualParam {
     static VisualParam DefaultInstance() {
         VisualParam param;
         param.nbInstance = 1;
-        param.primitiveMode = TRIANGLES;
+        param.primitiveType = TRIANGLES;
         return param;
     }
 
     unsigned int nbInstance;
-    PrimitiveMode primitiveMode;
+    PrimitiveType primitiveType;
 
 };
 

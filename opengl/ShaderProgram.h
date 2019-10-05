@@ -23,7 +23,7 @@ class BaseData;
 class Shader;
 
 // Specifies what kind of primives has to be rendered
-enum PrimitiveMode {
+enum PrimitiveType {
     POINTS = GL_POINTS,
     LINES = GL_LINES,
     TRIANGLES = GL_TRIANGLES
@@ -51,8 +51,8 @@ public:
     void setNbInstance(unsigned int n);
 
 public:
-    PrimitiveMode getPrimitiveMode() const;
-    void setPrimitiveMode(PrimitiveMode primitiveMode);
+    PrimitiveType getPrimitiveType() const;
+    void setPrimitiveType(PrimitiveType primitiveType);
 
 public:
     template< AttributeName N >
@@ -163,7 +163,7 @@ private:
     bool m_isLinked;
 
     unsigned int m_nbInstance;
-    PrimitiveMode m_primitiveMode;
+    PrimitiveType m_primitiveType;
 
     std::map< AttributeName, BaseOpenGLAttribut::SPtr > m_attributeStack;
 

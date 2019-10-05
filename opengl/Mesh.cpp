@@ -217,20 +217,20 @@ void Mesh::MeshEntry::draw(const VisualParam& param) const
 
     glBindVertexArray(vao.id);
 
-    switch (param.primitiveMode) {
-    case PrimitiveMode::POINTS:
+    switch (param.primitiveType) {
+    case PrimitiveType::POINTS:
         primitiveType = GL_POINTS;
         count = m_numVertices;
         offset = 0;
 
         break;
-    case PrimitiveMode::LINES:
+    case PrimitiveType::LINES:
         primitiveType = GL_LINES;
         count = 2 * m_numEdges;
         offset = m_numVertices;
 
         break;
-    case PrimitiveMode::TRIANGLES:
+    case PrimitiveType::TRIANGLES:
         primitiveType = GL_TRIANGLES;
         count = 3 * m_numTriangles;
         offset = m_numVertices + (2 * m_numEdges);
