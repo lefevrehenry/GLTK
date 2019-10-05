@@ -61,11 +61,6 @@ public:
         this->m_attributeStack[N] = OpenGLAttribut<N>::Create(value);
     }
 
-    void set(AttributeName N, BaseOpenGLAttribut value)
-    {
-        this->m_attributeStack[N] = OpenGLAttribut<N>::Create(value);
-    }
-
     void pushAttribute() const;
     void popAttribute() const;
 
