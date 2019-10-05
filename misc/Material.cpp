@@ -1,4 +1,4 @@
-#include <misc/Material.h>
+#include "Material.h"
 
 // Glm
 #include <glm/gtc/matrix_access.hpp>

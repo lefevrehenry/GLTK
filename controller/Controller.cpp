@@ -1,4 +1,4 @@
-#include <controller/Controller.h>
+#include "Controller.h"
 
 #include <misc/Camera.h>
 #include <graph/SceneGraph.h>

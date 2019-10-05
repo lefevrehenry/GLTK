@@ -158,6 +158,7 @@ class OpenGLStateMachine;
 class BaseOpenGLAttribut
 {
 public:
+    using Type = void;
     using SPtr = std::shared_ptr< BaseOpenGLAttribut >;
 };
 

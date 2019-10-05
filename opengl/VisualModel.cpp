@@ -1,4 +1,4 @@
-#include <opengl/VisualModel.h>
+#include "VisualModel.h"
 
 #include <helper/FileRepository.h>
 #include <opengl/Mesh.h>

@@ -1,4 +1,4 @@
-#include <misc/Camera.h>
+#include "Camera.h"
 
 // Glm
 #include <glm/gtc/matrix_access.hpp>

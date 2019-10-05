@@ -1,4 +1,4 @@
-#include <opengl/Texture.h>
+#include "Texture.h"
 
 #include <helper/FileRepository.h>
 #include <helper/Message.h>

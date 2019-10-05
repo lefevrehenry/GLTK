@@ -1,4 +1,4 @@
-#include <graph/Node.h>
+#include "Node.h"
 
 #include <opengl/ShaderProgram.h>
 #include <graph/Visitor.h>

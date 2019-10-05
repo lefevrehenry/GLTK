@@ -1,4 +1,4 @@
-#include <opengl/VisualOption.h>
+#include "VisualOption.h"
 
 using namespace gl;
 

@@ -1,10 +1,10 @@
-#include <opengl/ShaderProgram.h>
+#include "ShaderProgram.h"
 
 #include <helper/FileRepository.h>
 #include <opengl/Mesh.h>
 #include <helper/Message.h>
 #include <graph/SceneGraph.h>
-#include "Shader.h"
+#include <opengl/Shader.h>
 #include <opengl/VisualManager.h>
 
 // Standard Library

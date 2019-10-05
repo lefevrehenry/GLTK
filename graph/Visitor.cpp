@@ -1,4 +1,4 @@
-#include <graph/Visitor.h>
+#include "Visitor.h"
 
 #include <graph/Node.h>
 

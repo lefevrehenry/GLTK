@@ -2,7 +2,7 @@
 #define SHADERVISITOR_H
 
 #include "DrawVisitor.h"
-#include "gltk.h"
+#include <gltk.h>
 
 // Standard Library
 #include <memory>

@@ -1,4 +1,4 @@
-#include <opengl/VisualManager.h>
+#include "VisualManager.h"
 
 #include <glm/gtc/type_ptr.hpp>
 

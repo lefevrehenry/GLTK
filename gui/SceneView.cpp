@@ -1,4 +1,4 @@
-#include <gui/SceneView.h>
+#include "SceneView.h"
 
 #include <graph/Node.h>
 #include <graph/SceneGraph.h>

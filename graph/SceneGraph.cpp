@@ -1,4 +1,4 @@
-#include <graph/SceneGraph.h>
+#include "SceneGraph.h"
 
 #include <graph/Node.h>
 #include <graph/BoundingBoxVisitor.h>

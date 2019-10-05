@@ -2,7 +2,7 @@
 #define SHADERPROGRAM_H
 
 #include <opengl/Data.h>
-#include "gltk.h"
+#include <gltk.h>
 #include <statemachine/OpenGLAttribute.h>
 #include <statemachine/OpenGLStateMachine.h>
 
@@ -57,6 +57,11 @@ public:
 public:
     template< AttributeName N >
     void set(typename OpenGL<N>::Type value)
+    {
+        this->m_attributeStack[N] = OpenGLAttribut<N>::Create(value);
+    }
+
+    void set(AttributeName N, BaseOpenGLAttribut value)
     {
         this->m_attributeStack[N] = OpenGLAttribut<N>::Create(value);
     }

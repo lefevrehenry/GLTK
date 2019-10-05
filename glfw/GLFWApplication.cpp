@@ -1,4 +1,4 @@
-#include <glfw/GLFWApplication.h>
+#include "GLFWApplication.h"
 
 #include <controller/Controller.h>
 #include <helper/Message.h>

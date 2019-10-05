@@ -1,4 +1,4 @@
-#include <misc/Light.h>
+#include "Light.h"
 
 // Glm
 #include <glm/gtc/matrix_access.hpp>

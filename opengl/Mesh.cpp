@@ -1,4 +1,4 @@
-#include <opengl/Mesh.h>
+#include "Mesh.h"
 
 #include <helper/FileRepository.h>
 #include <helper/Message.h>
