@@ -32,7 +32,7 @@ public:
     Node* addChild();
     Node* removeChild(unsigned int i);
 
-    unsigned int getNbChild() const;
+    size_t getNbChild() const;
     Node* getChild(unsigned int i) const;
 
     /* add iterator(s) node/mesh ? */
@@ -41,20 +41,18 @@ public:
     void addVisual(const VisualModel* visual);
     void removeVisual(unsigned int i);
 
-    unsigned int getNbVisual() const;
+    size_t getNbVisual() const;
     const VisualModel* getVisual(unsigned int i) const;
 
 public:
+    ShaderProgram* shaderProgram() const;
     void setShaderProgram(ShaderProgram* shaderProgram);
     void removeShaderProgram();
 
-    ShaderProgram* shaderProgram() const;
-
 public:
+    VisualOption* visualOption() const;
     void setVisualOption(VisualOption* visualOption);
     void removeVisualOption();
-
-    VisualOption* visualOption() const;
 
 private:
     std::vector<Node*>              m_children;

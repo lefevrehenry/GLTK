@@ -59,7 +59,7 @@ Node* Node::removeChild(unsigned int i)
     return node;
 }
 
-unsigned int Node::getNbChild() const
+size_t Node::getNbChild() const
 {
     return this->m_children.size();
 }
@@ -88,7 +88,7 @@ void Node::removeVisual(unsigned int i)
     this->m_visuals.erase(this->m_visuals.begin() + i);
 }
 
-unsigned int Node::getNbVisual() const
+size_t Node::getNbVisual() const
 {
     return this->m_visuals.size();
 }

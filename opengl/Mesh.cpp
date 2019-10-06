@@ -78,7 +78,7 @@ void Mesh::getBbox(glm::vec3 &min, glm::vec3 &max) const
     // query each meshEntry
     for (unsigned int x = 0; x < m_meshEntries.size(); ++x) {
         const floatVector& vertices = m_meshEntries[x]->m_vertices;
-        unsigned int nbVertices = vertices.size() / 3.0;
+        size_t nbVertices = vertices.size() / size_t(3.0);
         // loop over all vertices
         for (unsigned int i = 0; i < nbVertices; ++i) {
             float vx = vertices[i * 3];
@@ -238,12 +238,10 @@ void Mesh::MeshEntry::draw(const VisualParam& param) const
         break;
     }
 
-    unsigned int nbInstance = param.nbInstance;
-
-    if (nbInstance > 1)
-        glDrawElementsInstanced(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), nbInstance);
+    if (param.nbInstance > 1)
+        glDrawElementsInstanced(primitiveType, int(count), GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), int(param.nbInstance));
     else
-        glDrawElements(primitiveType, count, GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
+        glDrawElements(primitiveType, int(count), GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
     glBindVertexArray(0);
 }
@@ -263,13 +261,13 @@ void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVect
     // Activate VAO
     glBindVertexArray(id);
 
-    size_t verticesBufferSize = vertices.size() * sizeof(float);
-    size_t normalsBufferSize = normals.size() * sizeof(float);
-    size_t tangentsBufferSize = tangents.size() * sizeof(float);
-    size_t bitangentsBufferSize = bitangents.size() * sizeof(float);
-    size_t uvcoordsBufferSize = uvcoords.size() * sizeof(float);
+    GLsizeiptr verticesBufferSize   = static_cast<GLsizeiptr>(vertices.size() * sizeof(float));
+    GLsizeiptr normalsBufferSize    = static_cast<GLsizeiptr>(normals.size() * sizeof(float));
+    GLsizeiptr tangentsBufferSize   = static_cast<GLsizeiptr>(tangents.size() * sizeof(float));
+    GLsizeiptr bitangentsBufferSize = static_cast<GLsizeiptr>(bitangents.size() * sizeof(float));
+    GLsizeiptr uvcoordsBufferSize   = static_cast<GLsizeiptr>(uvcoords.size() * sizeof(float));
 
-    size_t bufferSize = verticesBufferSize + normalsBufferSize + tangentsBufferSize + bitangentsBufferSize + uvcoordsBufferSize;
+    GLsizeiptr bufferSize = verticesBufferSize + normalsBufferSize + tangentsBufferSize + bitangentsBufferSize + uvcoordsBufferSize;
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
     glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, mode);
@@ -281,7 +279,7 @@ void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVect
     glBufferSubData(GL_ARRAY_BUFFER, verticesBufferSize + normalsBufferSize + tangentsBufferSize + bitangentsBufferSize, uvcoordsBufferSize, uvcoords.data());
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*) nullptr);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, (void*) verticesBufferSize);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize + normalsBufferSize));
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_TRUE, 0, (void*) (verticesBufferSize + normalsBufferSize + tangentsBufferSize));
     glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 0, (void*) (verticesBufferSize + normalsBufferSize + tangentsBufferSize + bitangentsBufferSize));
