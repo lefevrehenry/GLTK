@@ -16,7 +16,6 @@ set(HEADER_FILES
     src/graph/Node.h
     src/graph/PickingVisitor.h
     src/graph/SceneGraph.h
-    src/graph/Selectable.h
     src/graph/ShaderVisitor.h
     src/graph/Visitor.h
 
@@ -45,7 +44,6 @@ set(SOURCE_FILES
     src/graph/Node.cpp
     src/graph/PickingVisitor.cpp
     src/graph/SceneGraph.cpp
-    src/graph/Selectable.cpp
     src/graph/ShaderVisitor.cpp
     src/graph/Visitor.cpp
 

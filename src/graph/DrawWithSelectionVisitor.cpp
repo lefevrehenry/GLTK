@@ -12,11 +12,6 @@ DrawVisitorWithSelection::DrawVisitorWithSelection() : DrawVisitor(),
     m_selected(nullptr)
 {
     this->m_outlineShader.reset(ShaderProgram::Create(GLTK::ShaderProgramType::OutLine));
-
-//    Selectable* selected = GLFWApplication::Instance()->selected();
-//    if (selected != nullptr) {
-//        this->m_selected = selected->visualModel();
-//    }
 }
 
 void DrawVisitorWithSelection::start()
