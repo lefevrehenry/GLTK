@@ -1,6 +1,9 @@
 #ifndef OPENGLATTRIBUT_H
 #define OPENGLATTRIBUT_H
 
+#include <misc/Light.h>
+#include <opengl/VisualManager.h>
+
 // OpenGL
 #include <GL/gl.h>
 
@@ -18,7 +21,8 @@ enum AttributeName
     DepthFunc,
     DepthMask,
     DepthTest,
-    Viewport
+    Viewport,
+    SceneLight
 };
 
 /**
@@ -147,6 +151,23 @@ struct OpenGL<Viewport>
     static void Set(Type value)
     {
         glViewport(value[0],value[1],value[2],value[3]);
+    }
+};
+
+template<>
+struct OpenGL<SceneLight>
+{
+    using Type = Light;
+
+    static Type Get()
+    {
+        Type value = VisualManager::GetLight();
+
+        return value;
+    }
+    static void Set(Type value)
+    {
+        VisualManager::UpdateUniformBufferLight(value);
     }
 };
 
