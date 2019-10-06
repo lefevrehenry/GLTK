@@ -35,9 +35,16 @@ public:
     static void Clean();
 
 public:
-    static void UpdateUniformBufferTransform(const gl::Transform& transform);
-    static void UpdateUniformBufferMaterial(const gl::Material& material);
-    static void UpdateUniformBufferCamera(const gl::Camera& camera);
+    static Transform GetTransform();
+    static Material GetMaterial();
+    static Camera GetCamera();
+    static Light GetLight();
+    static float GetTime();
+
+public:
+    static void UpdateUniformBufferTransform(const Transform& transform);
+    static void UpdateUniformBufferMaterial(const Material& material);
+    static void UpdateUniformBufferCamera(const Camera& camera);
     static void UpdateUniformBufferLight(const Light& light);
     static void UpdateUniformBufferTime(float time);
 
@@ -47,6 +54,12 @@ private:
     static GLuint m_uboCamera;
     static GLuint m_uboLight;
     static GLuint m_uboTime;
+
+    static Transform CurrentTransform;      // tracks the last data that have been uploaded on the GPU
+    static Material CurrentMaterial;
+    static Camera CurrentCamera;
+    static Light CurrentLight;
+    static float CurrentTime;
 
 };
 

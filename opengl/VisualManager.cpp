@@ -10,6 +10,12 @@ GLuint VisualManager::m_uboCamera = 0;
 GLuint VisualManager::m_uboLight = 0;
 GLuint VisualManager::m_uboTime = 0;
 
+Transform VisualManager::CurrentTransform = Transform();
+Material VisualManager::CurrentMaterial = Material();
+Camera VisualManager::CurrentCamera = Camera();
+Light VisualManager::CurrentLight = Light();
+float VisualManager::CurrentTime = 0;
+
 void VisualManager::Init()
 {
     // Uniform Buffer Object Transform
@@ -80,6 +86,31 @@ void VisualManager::Clean()
     glDeleteBuffers(1, &m_uboCamera);
     glDeleteBuffers(1, &m_uboLight);
     glDeleteBuffers(1, &m_uboTime);
+}
+
+Transform VisualManager::GetTransform()
+{
+    return VisualManager::CurrentTransform;
+}
+
+Material VisualManager::GetMaterial()
+{
+    return VisualManager::CurrentMaterial;
+}
+
+Camera VisualManager::GetCamera()
+{
+    return VisualManager::CurrentCamera;
+}
+
+Light VisualManager::GetLight()
+{
+    return VisualManager::CurrentLight;
+}
+
+float VisualManager::GetTime()
+{
+    return VisualManager::CurrentTime;
 }
 
 void VisualManager::UpdateUniformBufferTransform(const Transform& transform)
