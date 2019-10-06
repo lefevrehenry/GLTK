@@ -78,7 +78,7 @@ void DrawVisitor::processNode(const Node* node)
             VisualManager::UpdateUniformBufferTransform(transform);
             VisualManager::UpdateUniformBufferMaterial(material);
 
-            visual->draw(param);
+            visual->draw(&param);
         }
 
         // unbind the current ShaderProgram

@@ -29,6 +29,20 @@ enum PrimitiveType {
     TRIANGLES = GL_TRIANGLES
 };
 
+struct VisualParam {
+
+    static VisualParam DefaultInstance() {
+        VisualParam param;
+        param.nbInstance = 1;
+        param.primitiveType = TRIANGLES;
+        return param;
+    }
+
+    unsigned int nbInstance;
+    PrimitiveType primitiveType;
+
+};
+
 /**
  * @brief The ShaderProgram class
  */

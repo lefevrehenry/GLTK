@@ -7,22 +7,8 @@
 // Standard Library
 #include <string>
 
+
 namespace gl {
-
-struct VisualParam {
-
-    static VisualParam DefaultInstance() {
-        VisualParam param;
-        param.nbInstance = 1;
-        param.primitiveType = TRIANGLES;
-        return param;
-    }
-
-    unsigned int nbInstance;
-    PrimitiveType primitiveType;
-
-};
-
 
 class Mesh;
 class VisualParam;
@@ -50,7 +36,7 @@ public:
     const Material& material() const;
 
 public:
-    void draw(const VisualParam& param) const;
+    void draw(const VisualParam* param) const;
 
 private:
     const Mesh* m_mesh;

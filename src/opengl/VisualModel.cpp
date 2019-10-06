@@ -61,7 +61,7 @@ const Material& VisualModel::material() const
     return this->m_material;
 }
 
-void VisualModel::draw(const VisualParam& param) const
+void VisualModel::draw(const VisualParam* param) const
 {
     if (this->m_mesh)
         this->m_mesh->draw(param);

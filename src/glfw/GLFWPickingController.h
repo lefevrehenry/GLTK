@@ -35,7 +35,7 @@ public:
     virtual void keyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods);
 
 private:
-    std::shared_ptr<PickingVisitor> m_pickingVisitor;
+    std::unique_ptr<PickingVisitor> m_pickingVisitor;
     bool                            m_cameraActive;
 
     void (*m_callback)(const VisualModel*, glm::vec4);

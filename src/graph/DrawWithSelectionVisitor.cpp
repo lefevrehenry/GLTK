@@ -51,7 +51,7 @@ void DrawVisitorWithSelection::forwardNode(const Node* node)
                 const Transform& transform = visual->transform();
                 VisualManager::UpdateUniformBufferTransform(transform);
 
-                visual->draw(param);
+                visual->draw(&param);
 
                 // enable color buffer
                 glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
@@ -96,7 +96,7 @@ void DrawVisitorWithSelection::backwardNode(const Node* node)
                 const Transform& transform = visual->transform();
                 VisualManager::UpdateUniformBufferTransform(transform);
 
-                visual->draw(param);
+                visual->draw(&param);
 
                 // deactivate stencil buffer test
                 glDisable(GL_STENCIL_TEST);

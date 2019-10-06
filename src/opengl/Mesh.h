@@ -16,6 +16,8 @@ class aiScene;
 
 namespace gl {
 
+class VisualParam;
+
 /**
  * @brief The Mesh class
  */
@@ -30,7 +32,7 @@ public:
 
     static Mesh* FromFile(const std::string& filename);
 
-    void draw(const VisualParam& param) const;
+    void draw(const VisualParam* param) const;
 
     void getBbox(glm::vec3 &min, glm::vec3 &max) const;
 
@@ -73,7 +75,7 @@ protected:
         floatVector m_uvcoord;
         uintVector m_indices;
 
-        void draw(const VisualParam& param) const;
+        void draw(const VisualParam* param) const;
 
         MeshEntry(const aiMesh *mesh);
         virtual ~MeshEntry();

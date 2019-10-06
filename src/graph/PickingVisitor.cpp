@@ -140,7 +140,7 @@ void PickingVisitor::processNode(const Node* node)
         this->m_shaderProgram->setUniformValue("index", packIndex(this->m_id));
         this->m_visualModels.push_back(visual);
 
-        visual->draw(param);
+        visual->draw(&param);
 
         this->m_id += 1;
     }
