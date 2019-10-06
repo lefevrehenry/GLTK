@@ -25,11 +25,6 @@ Light::Light(const glm::vec3& position, const glm::vec3& direction, const glm::v
 
 }
 
-Light::~Light()
-{
-
-}
-
 const glm::mat3& Light::matrix() const
 {
     if (this->m_isDirty) {

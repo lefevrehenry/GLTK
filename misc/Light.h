@@ -16,7 +16,7 @@ class Light
 public:
     Light();
     Light(const glm::vec3& position, const glm::vec3& direction, const glm::vec3& color);
-    virtual ~Light();
+    virtual ~Light() = default;
 
 public:
     const glm::mat3& matrix() const;
