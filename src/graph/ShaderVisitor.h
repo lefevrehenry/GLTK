@@ -1,7 +1,7 @@
 #ifndef SHADERVISITOR_H
 #define SHADERVISITOR_H
 
-#include "DrawVisitor.h"
+#include <graph/DrawVisitor.h>
 #include <gltk.h>
 
 // Standard Library

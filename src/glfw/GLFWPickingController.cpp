@@ -1,11 +1,13 @@
 #include "GLFWPickingController.h"
 
+#include <misc/Camera.h>
+#include <opengl/Framebuffer.h>
 #include <glfw/GLFWApplication.h>
 #include <graph/Node.h>
 #include <graph/SceneGraph.h>
 #include <gui/SceneView.h>
-#include <opengl/Framebuffer.h>    // why ?? (Visitor.h should be suffisant)
 #include <graph/PickingVisitor.h>
+#include <opengl/ShaderProgram.h>
 #include <opengl/VisualModel.h>
 
 // Glfw

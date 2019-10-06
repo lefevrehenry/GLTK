@@ -2,6 +2,7 @@
 
 #include <helper/FileRepository.h>
 #include <helper/Message.h>
+#include <opengl/ShaderProgram.h>
 
 // Assimp
 #include <assimp/Importer.hpp>

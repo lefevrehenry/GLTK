@@ -1,7 +1,6 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <opengl/ShaderProgram.h>
 #include <opengl/VisualModel.h>
 
 // Standard Library

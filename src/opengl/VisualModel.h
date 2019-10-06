@@ -2,10 +2,10 @@
 #define VISUALMODEL_H
 
 #include <misc/Material.h>
-#include <opengl/ShaderProgram.h>
-#include <opengl/Texture.h>
 #include <misc/Transform.h>
 
+// Standard Library
+#include <string>
 
 namespace gl {
 
@@ -25,6 +25,8 @@ struct VisualParam {
 
 
 class Mesh;
+class VisualParam;
+class Texture;
 
 /**
  * @brief The VisualModel class

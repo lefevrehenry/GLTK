@@ -35,7 +35,6 @@ static bool getStringFromFile(const std::string& filename, std::string& dest)
     return true;
 }
 
-
 ShaderProgram* ShaderProgram::Create(ShaderProgramType shaderProgramType)
 {
     typedef Shader::ShaderType ShaderType;

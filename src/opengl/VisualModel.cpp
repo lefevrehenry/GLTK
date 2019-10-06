@@ -2,6 +2,8 @@
 
 #include <helper/FileRepository.h>
 #include <opengl/Mesh.h>
+#include <opengl/ShaderProgram.h>
+#include <opengl/Texture.h>
 
 
 using namespace gl;
