@@ -168,7 +168,6 @@ public:
 template< AttributeName N >
 class OpenGLAttribut : public BaseOpenGLAttribut
 {
-    friend class OpenGLStateMachine;
 
 public:
     using Type = typename OpenGL<N>::Type;
@@ -185,8 +184,6 @@ public:
     {
        return this->m_value;
     }
-
-public:
     void setValue(const Type& value)
     {
         this->m_value = value;
