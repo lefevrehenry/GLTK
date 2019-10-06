@@ -7,93 +7,97 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer -g")
 
 set(HEADER_FILES
-    controller/Controller.h
+    src/controller/Controller.h
 
-    graph/BoundingBoxVisitor.h
-    graph/DrawVisitor.h
-    graph/DrawWithSelectionVisitor.h
-    graph/FetchVisualModelVisitor.h
-    graph/Node.h
-    graph/PickingVisitor.h
-    graph/SceneGraph.h
-    graph/Selectable.h
-    graph/ShaderVisitor.h
-    graph/Visitor.h
+    src/graph/BoundingBoxVisitor.h
+    src/graph/DrawVisitor.h
+    src/graph/DrawWithSelectionVisitor.h
+    src/graph/FetchVisualModelVisitor.h
+    src/graph/Node.h
+    src/graph/PickingVisitor.h
+    src/graph/SceneGraph.h
+    src/graph/Selectable.h
+    src/graph/ShaderVisitor.h
+    src/graph/Visitor.h
 
-    gui/SceneView.h
+    src/gui/SceneView.h
 
-    helper/FileRepository.h
-    helper/Message.h
+    src/helper/Message.h
+    src/helper/FileRepository.h
 
-    misc/Application.h
-    misc/Camera.h
-    misc/Light.h
-    misc/Material.h
-    misc/Rect.h
-    misc/Transform.h
+    src/misc/Application.h
+    src/misc/Camera.h
+    src/misc/Light.h
+    src/misc/Material.h
+    src/misc/Rect.h
+    src/misc/Transform.h
 
-    opengl/CubeMapTexture.h
-    opengl/Data.h
-    opengl/Framebuffer.h
-    opengl/Mesh.h
-    opengl/Shader.h
-    opengl/ShaderProgram.h
-    opengl/Texture.h
-    opengl/Texture2D.h
-    opengl/VisualManager.h
-    opengl/VisualModel.h
-    opengl/VisualOption.h
-
-    statemachine/OpenGLAttribute.h
-    statemachine/OpenGLStateMachine.h
-
-    gltk.h
+    src/gltk.h
 )
 
 set(SOURCE_FILES
-    controller/Controller.cpp
+    src/controller/Controller.cpp
 
-    graph/BoundingBoxVisitor.cpp
-    graph/DrawVisitor.cpp
-    graph/DrawWithSelectionVisitor.cpp
-    graph/FetchVisualModelVisitor.cpp
-    graph/Node.cpp
-    graph/PickingVisitor.cpp
-    graph/SceneGraph.cpp
-    graph/Selectable.cpp
-    graph/ShaderVisitor.cpp
-    graph/Visitor.cpp
+    src/graph/BoundingBoxVisitor.cpp
+    src/graph/DrawVisitor.cpp
+    src/graph/DrawWithSelectionVisitor.cpp
+    src/graph/FetchVisualModelVisitor.cpp
+    src/graph/Node.cpp
+    src/graph/PickingVisitor.cpp
+    src/graph/SceneGraph.cpp
+    src/graph/Selectable.cpp
+    src/graph/ShaderVisitor.cpp
+    src/graph/Visitor.cpp
 
-    gui/SceneView.cpp
+    src/gui/SceneView.cpp
 
-    helper/FileRepository.cpp
-    helper/Message.cpp
+    src/helper/FileRepository.cpp
+    src/helper/Message.cpp
 
-    misc/Application.cpp
-    misc/Camera.cpp
-    misc/Light.cpp
-    misc/Material.cpp
-    misc/Rect.cpp
-    misc/Transform.cpp
+    src/misc/Application.cpp
+    src/misc/Camera.cpp
+    src/misc/Light.cpp
+    src/misc/Material.cpp
+    src/misc/Rect.cpp
+    src/misc/Transform.cpp
 
-    opengl/CubeMapTexture.cpp
-    opengl/Data.cpp
-    opengl/Framebuffer.cpp
-    opengl/Mesh.cpp
-    opengl/Shader.cpp
-    opengl/ShaderProgram.cpp
-    opengl/Texture.cpp
-    opengl/Texture2D.cpp
-    opengl/VisualManager.cpp
-    opengl/VisualModel.cpp
-    opengl/VisualOption.cpp
+    src/gltk.cpp
+)
 
-    statemachine/OpenGLAttribute.cpp
-    statemachine/OpenGLAttribute.inl
-    statemachine/OpenGLStateMachine.cpp
-    statemachine/OpenGLStateMachine.inl
+set(PRIVATE_HEADER_FILES
+    src/opengl/CubeMapTexture.h
+    src/opengl/Data.h
+    src/opengl/Framebuffer.h
+    src/opengl/Mesh.h
+    src/opengl/Shader.h
+    src/opengl/ShaderProgram.h
+    src/opengl/Texture.h
+    src/opengl/Texture2D.h
+    src/opengl/VisualManager.h
+    src/opengl/VisualModel.h
+    src/opengl/VisualOption.h
 
-    gltk.cpp
+    src/statemachine/OpenGLAttribute.h
+    src/statemachine/OpenGLStateMachine.h
+)
+
+set(PRIVATE_SOURCE_FILES
+    src/opengl/CubeMapTexture.cpp
+    src/opengl/Data.cpp
+    src/opengl/Framebuffer.cpp
+    src/opengl/Mesh.cpp
+    src/opengl/Shader.cpp
+    src/opengl/ShaderProgram.cpp
+    src/opengl/Texture.cpp
+    src/opengl/Texture2D.cpp
+    src/opengl/VisualManager.cpp
+    src/opengl/VisualModel.cpp
+    src/opengl/VisualOption.cpp
+
+    src/statemachine/OpenGLAttribute.cpp
+    src/statemachine/OpenGLAttribute.inl
+    src/statemachine/OpenGLStateMachine.cpp
+    src/statemachine/OpenGLStateMachine.inl
 )
 
 set(SHADER_FILES
@@ -178,15 +182,15 @@ if(${BUILD_WITH_GLFW})
 
     set(HEADER_FILES
         ${HEADER_FILES}
-        glfw/GLFWApplication.h
-        glfw/GLFWCameraController.h
-        glfw/GLFWPickingController.h
+        src/glfw/GLFWApplication.h
+        src/glfw/GLFWCameraController.h
+        src/glfw/GLFWPickingController.h
     )
     set(SOURCE_FILES
         ${SOURCE_FILES}
-        glfw/GLFWApplication.cpp
-        glfw/GLFWCameraController.cpp
-        glfw/GLFWPickingController.cpp
+        src/glfw/GLFWApplication.cpp
+        src/glfw/GLFWCameraController.cpp
+        src/glfw/GLFWPickingController.cpp
     )
 endif()
 
@@ -195,11 +199,22 @@ set(STB_IMAGE_INCLUDE_DIR
 )
 
 #========== Creation of the library ==========#
-add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES})
+add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${PRIVATE_HEADER_FILES} ${PRIVATE_SOURCE_FILES} ${SHADER_FILES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_INCLUDE_DIR} ${STB_IMAGE_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/controller)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/graph)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/gui)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/helper)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/misc)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/statemachine)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${STB_IMAGE_INCLUDE_DIR})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
 
 if(${BUILD_WITH_GLFW})
     target_include_directories(${PROJECT_NAME} PUBLIC ${GLFW3_INCLUDE_DIR})
@@ -235,5 +250,18 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
 endif()
 
+#install(TARGETS ${PROJECT_NAME}
+#        EXPORT ${PROJECT_NAME}Targets
+#        RUNTIME DESTINATION bin #COMPONENT Runtime
+#        LIBRARY DESTINATION lib #COMPONENT Runtime
+#        ARCHIVE DESTINATION lib #COMPONENT Runtime
+#)
+
+## install <project_name>Targets.cmake
+#install(EXPORT ${PROJECT_NAME}Targets DESTINATION lib/cmake/${PROJECT_NAME})
+
+## install header files
 install(FILES ${HEADER_FILES} DESTINATION include/GLTK)
+
+## install binary
 install(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/lib${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX} DESTINATION lib)

@@ -81,6 +81,24 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
     // etc ...
     glfwSwapInterval(2);
 
+    // Specifies background color
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    // Enable depth buffer test
+    glEnable(GL_DEPTH_TEST);
+    // Enable eliminaton of hidden faces
+    glEnable(GL_CULL_FACE);
+    // Specifies whether front or back facing facets are candidates for culling
+    glCullFace(GL_BACK);
+    // Specifies the orientation of front-facing polygons
+    glFrontFace(GL_CCW);
+
+    int glMajor;
+    int glMinor;
+    glGetIntegerv(GL_MAJOR_VERSION, &glMajor);
+    glGetIntegerv(GL_MINOR_VERSION, &glMinor);
+
+    msg_info("OpenGL") << "Congrat's ! You're running OpenGL " << glMajor << "." << glMinor;
+
     return app;
 }
 
