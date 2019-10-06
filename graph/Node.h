@@ -7,7 +7,6 @@
 
 namespace gl {
 
-class Light;
 class ShaderProgram;
 class Visitor;
 class VisualModel;
@@ -62,7 +61,6 @@ private:
     std::vector<const VisualModel*> m_visuals;
     ShaderProgram*                  m_shaderProgram;
     VisualOption*                   m_visualOption;
-    Light*                          m_light;
 
 };
 
