@@ -2,7 +2,7 @@
 
 #include <graph/Node.h>
 #include <opengl/ShaderProgram.h>
-#include <opengl/VisualModel.h>
+#include <graph/VisualModel.h>
 #include <opengl/VisualManager.h>
 
 using namespace gl;

@@ -2,7 +2,7 @@
 
 #include <opengl/ShaderProgram.h>
 #include <graph/Visitor.h>
-#include <opengl/VisualModel.h>
+#include <graph/VisualModel.h>
 #include <opengl/VisualOption.h>
 
 using namespace gl;

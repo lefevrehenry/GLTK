@@ -6,7 +6,7 @@
 #include <opengl/ShaderProgram.h>
 #include <misc/Transform.h>
 #include <opengl/VisualManager.h>
-#include <opengl/VisualModel.h>
+#include <graph/VisualModel.h>
 
 // OpenGL
 #include <GL/glew.h>

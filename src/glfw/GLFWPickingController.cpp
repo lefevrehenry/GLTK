@@ -8,7 +8,7 @@
 #include <gui/SceneView.h>
 #include <graph/PickingVisitor.h>
 #include <opengl/ShaderProgram.h>
-#include <opengl/VisualModel.h>
+#include <graph/VisualModel.h>
 
 // Glfw
 #include <GLFW/glfw3.h>

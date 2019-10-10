@@ -18,6 +18,7 @@ set(HEADER_FILES
     src/graph/SceneGraph.h
     src/graph/ShaderVisitor.h
     src/graph/Visitor.h
+    src/graph/VisualModel.h
 
     src/gui/SceneView.h
 
@@ -46,6 +47,7 @@ set(SOURCE_FILES
     src/graph/SceneGraph.cpp
     src/graph/ShaderVisitor.cpp
     src/graph/Visitor.cpp
+    src/graph/VisualModel.cpp
 
     src/gui/SceneView.cpp
 
@@ -72,7 +74,6 @@ set(PRIVATE_HEADER_FILES
     src/opengl/Texture.h
     src/opengl/Texture2D.h
     src/opengl/VisualManager.h
-    src/opengl/VisualModel.h
     src/opengl/VisualOption.h
 
     src/statemachine/OpenGLAttribute.h
@@ -89,7 +90,6 @@ set(PRIVATE_SOURCE_FILES
     src/opengl/Texture.cpp
     src/opengl/Texture2D.cpp
     src/opengl/VisualManager.cpp
-    src/opengl/VisualModel.cpp
     src/opengl/VisualOption.cpp
 
     src/statemachine/OpenGLAttribute.cpp
