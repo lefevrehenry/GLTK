@@ -34,7 +34,7 @@ public:
 
     void draw(const VisualParam* param) const;
 
-    void getBbox(glm::vec3 &min, glm::vec3 &max) const;
+    void getBBox(glm::vec3 &min, glm::vec3 &max) const;
 
     std::string name() const;
 

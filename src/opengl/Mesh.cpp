@@ -69,7 +69,7 @@ void Mesh::draw(const VisualParam* param) const
     }
 }
 
-void Mesh::getBbox(glm::vec3 &min, glm::vec3 &max) const
+void Mesh::getBBox(glm::vec3 &min, glm::vec3 &max) const
 {
     float minf = std::numeric_limits<float>::lowest();
     float maxf = std::numeric_limits<float>::max();

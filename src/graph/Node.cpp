@@ -10,8 +10,7 @@ using namespace gl;
 Node::Node() :
     m_children(0),
     m_visuals(0),
-    m_shaderProgram(nullptr),
-    m_visualOption(nullptr)
+    m_shaderProgram(nullptr)
 {
 
 }
@@ -101,32 +100,17 @@ const VisualModel* Node::getVisual(unsigned int i) const
     return this->m_visuals[i];
 }
 
-void Node::setShaderProgram(ShaderProgram* shaderProgram)
+void Node::setShaderProgram(ShaderProgramType shaderProgramType)
 {
-    this->m_shaderProgram = shaderProgram;
+    this->m_shaderProgram.reset(ShaderProgram::Create(shaderProgramType));
 }
 
 void Node::removeShaderProgram()
 {
-    this->m_shaderProgram = nullptr;
+    this->m_shaderProgram.reset(nullptr);
 }
 
 ShaderProgram* Node::shaderProgram() const
 {
-    return this->m_shaderProgram;
-}
-
-void Node::setVisualOption(VisualOption* visualOption)
-{
-    this->m_visualOption = visualOption;
-}
-
-void Node::removeVisualOption()
-{
-    this->m_visualOption= nullptr;
-}
-
-VisualOption* Node::visualOption() const
-{
-    return this->m_visualOption;
+    return this->m_shaderProgram.get();
 }

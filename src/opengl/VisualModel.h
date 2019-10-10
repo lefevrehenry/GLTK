@@ -5,6 +5,7 @@
 #include <misc/Transform.h>
 
 // Standard Library
+#include <memory>
 #include <string>
 
 
@@ -21,12 +22,8 @@ class VisualModel
 {
 
 public:
-    VisualModel(const Mesh* mesh, const Material& material = Material::DefaultMaterial());
     VisualModel(const std::string& filename, const Material& material = Material::DefaultMaterial());
-    virtual ~VisualModel();
-
-public:
-    const Mesh* mesh() const;
+    VisualModel(const VisualModel& other);
 
 public:
     Transform& transform();
@@ -36,12 +33,15 @@ public:
     const Material& material() const;
 
 public:
+    void getBBox(glm::vec3& min, glm::vec3& max) const;
+
+public:
     void draw(const VisualParam* param) const;
 
 private:
-    const Mesh* m_mesh;
-    Transform m_transform;
-    Material m_material;
+    std::shared_ptr<Mesh>   m_mesh;
+    Transform               m_transform;
+    Material                m_material;
 
 };
 

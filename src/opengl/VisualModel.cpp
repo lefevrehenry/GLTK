@@ -9,14 +9,6 @@
 using namespace gl;
 using namespace gl::helper;
 
-VisualModel::VisualModel(const Mesh *mesh, const Material &material) :
-    m_mesh(mesh),
-    m_transform(),
-    m_material(material)
-{
-
-}
-
 VisualModel::VisualModel(const std::string& filename, const Material& material) :
     m_mesh(nullptr),
     m_transform(),
@@ -27,18 +19,15 @@ VisualModel::VisualModel(const std::string& filename, const Material& material) 
     if (!DataRepository.findFile(path))
         msg_error("Mesh") << "File " << filename << " not found";
     else
-        this->m_mesh = new Mesh(path);
+        this->m_mesh.reset(new Mesh(path));
 }
 
-VisualModel::~VisualModel()
+VisualModel::VisualModel(const VisualModel& other) :
+    m_mesh(other.m_mesh),
+    m_transform(other.m_transform),
+    m_material(other.m_material)
 {
-    delete m_mesh;
-    m_mesh = nullptr;
-}
 
-const Mesh* VisualModel::mesh() const
-{
-    return this->m_mesh;
 }
 
 Transform& VisualModel::transform()
@@ -59,6 +48,14 @@ Material& VisualModel::material()
 const Material& VisualModel::material() const
 {
     return this->m_material;
+}
+
+void VisualModel::getBBox(glm::vec3 &min, glm::vec3 &max) const
+{
+    if(!this->m_mesh)
+        return;
+
+    this->m_mesh->getBBox(min, max);
 }
 
 void VisualModel::draw(const VisualParam* param) const

@@ -31,10 +31,7 @@ void BoundingBoxVisitor::processNode(const Node* node)
         glm::vec3 max;
 
         const VisualModel* visual = node->getVisual(i);
-        const Mesh* mesh = visual->mesh();
-
-        if (mesh)
-            mesh->getBbox(min, max);
+        visual->getBBox(min, max);
 
         const Transform& transform = visual->transform();
         min = glm::vec3(transform.matrix() * glm::vec4(min, 1.0));

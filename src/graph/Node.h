@@ -1,7 +1,10 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <gltk.h>
+
 // Standard Library
+#include <memory>
 #include <vector>
 
 
@@ -10,13 +13,15 @@ namespace gl {
 class ShaderProgram;
 class Visitor;
 class VisualModel;
-class VisualOption;
 
 /**
  * @brief The Node class
  */
 class Node
 {
+    friend class DrawVisitor;
+
+    using ShaderProgramType = GLTK::ShaderProgramType;
 
 public:
     Node();
@@ -45,20 +50,16 @@ public:
     const VisualModel* getVisual(unsigned int i) const;
 
 public:
-    ShaderProgram* shaderProgram() const;
-    void setShaderProgram(ShaderProgram* shaderProgram);
+    void setShaderProgram(ShaderProgramType shaderProgramType);
     void removeShaderProgram();
 
-public:
-    VisualOption* visualOption() const;
-    void setVisualOption(VisualOption* visualOption);
-    void removeVisualOption();
+private:
+    ShaderProgram* shaderProgram() const;
 
 private:
     std::vector<Node*>              m_children;
     std::vector<const VisualModel*> m_visuals;
-    ShaderProgram*                  m_shaderProgram;
-    VisualOption*                   m_visualOption;
+    std::unique_ptr<ShaderProgram>  m_shaderProgram;
 
 };
 
