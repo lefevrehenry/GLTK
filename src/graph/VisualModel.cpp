@@ -2,9 +2,9 @@
 
 #include <helper/FileRepository.h>
 #include <opengl/Mesh.h>
+#include <helper/Message.h>
 #include <opengl/ShaderProgram.h>
 #include <opengl/Texture.h>
-
 
 using namespace gl;
 using namespace gl::helper;
@@ -63,29 +63,3 @@ void VisualModel::draw(const VisualParam* param) const
     if (this->m_mesh)
         this->m_mesh->draw(param);
 }
-
-TexturedVisualModel::TexturedVisualModel(const std::string& filename, const Texture* texture) : VisualModel(filename),
-    m_texture(texture)
-{
-
-}
-
-TexturedVisualModel::~TexturedVisualModel()
-{
-
-}
-
-const Texture* TexturedVisualModel::texture() const
-{
-    return this->m_texture;
-}
-
-//Texture& TexturedVisualModel::texture()
-//{
-//    return this->m_texture;
-//}
-
-//const Texture& TexturedVisualModel::texture() const
-//{
-//    return this->m_texture;
-//}

@@ -13,7 +13,6 @@ namespace gl {
 
 class Mesh;
 class VisualParam;
-class Texture;
 
 /**
  * @brief The VisualModel class
@@ -42,28 +41,6 @@ private:
     std::shared_ptr<Mesh>   m_mesh;
     Transform               m_transform;
     Material                m_material;
-
-};
-
-/**
- * @brief The TexturedVisualModel class
- */
-class TexturedVisualModel : public VisualModel
-{
-
-public:
-    TexturedVisualModel(const std::string& filename, const Texture* texture);
-    virtual ~TexturedVisualModel();
-
-public:
-    const Texture* texture() const;
-
-//public:
-//    Texture& texture();
-//    const Texture& texture() const;
-
-private:
-    const Texture* m_texture;
 
 };
 

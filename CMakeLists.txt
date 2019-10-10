@@ -17,6 +17,7 @@ set(HEADER_FILES
     src/graph/PickingVisitor.h
     src/graph/SceneGraph.h
     src/graph/ShaderVisitor.h
+    src/graph/TexturedVisualModel.h
     src/graph/Visitor.h
     src/graph/VisualModel.h
 
@@ -46,6 +47,7 @@ set(SOURCE_FILES
     src/graph/PickingVisitor.cpp
     src/graph/SceneGraph.cpp
     src/graph/ShaderVisitor.cpp
+    src/graph/TexturedVisualModel.cpp
     src/graph/Visitor.cpp
     src/graph/VisualModel.cpp
 
