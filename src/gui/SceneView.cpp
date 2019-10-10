@@ -13,6 +13,7 @@ static DrawVisitor defaultVisitor;
 SceneView::SceneView() :
     m_rect(),
     m_backgroundcolor(0.2f,0.2f,0.2f,1.0f),
+    m_light(),
     m_scene(),
     m_camera(new Camera()),
     m_interface(nullptr)
@@ -37,6 +38,16 @@ glm::vec4 SceneView::backgroundColor() const
 void SceneView::setBackgroundColor(const glm::vec4& backgroundColor)
 {
     this->m_backgroundcolor = backgroundColor;
+}
+
+Light SceneView::light() const
+{
+    return this->m_light;
+}
+
+void SceneView::setLight(const Light& light)
+{
+    this->m_light = light;
 }
 
 SceneGraph* SceneView::scene() const
@@ -77,6 +88,7 @@ void SceneView::draw() const
 {
     OpenGLStateMachine::Push<Viewport>();
     OpenGLStateMachine::Push<ClearColor>();
+    OpenGLStateMachine::Push<SceneLight>();
 
     int x = m_rect.x();
     int y = m_rect.y();
@@ -96,6 +108,8 @@ void SceneView::draw() const
     if(this->m_camera)
         VisualManager::UpdateUniformBufferCamera(*m_camera);
 
+    VisualManager::UpdateUniformBufferLight(this->m_light);
+
     std::shared_ptr<SceneGraph> scene(this->m_scene);
     if(scene) {
         Visitor* visitor = (this->m_visitor ? this->m_visitor.get() : &defaultVisitor);
@@ -104,6 +118,7 @@ void SceneView::draw() const
         node->executeVisitor(visitor);
     }
 
+    OpenGLStateMachine::Pop<SceneLight>();
     OpenGLStateMachine::Pop<ClearColor>();
     OpenGLStateMachine::Pop<Viewport>();
 }

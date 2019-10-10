@@ -1,6 +1,7 @@
 #ifndef SCENEVIEW_H
 #define SCENEVIEW_H
 
+#include <misc/Light.h>
 #include <misc/Rect.h>
 
 // Glm
@@ -33,6 +34,9 @@ public:
     glm::vec4 backgroundColor() const;
     void setBackgroundColor(const glm::vec4& backgroundColor);
 
+    Light light() const;
+    void setLight(const Light& light);
+
 public:
     SceneGraph* scene() const;
     void setScene(std::weak_ptr<SceneGraph> scene);
@@ -47,8 +51,9 @@ public:
     void draw() const;
 
 private:
-    Rect  m_rect;
+    Rect        m_rect;
     glm::vec4   m_backgroundcolor;
+    Light       m_light;
 
     std::weak_ptr<SceneGraph>   m_scene;
     std::shared_ptr<Camera>     m_camera;
