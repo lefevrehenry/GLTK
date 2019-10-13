@@ -426,6 +426,12 @@ void ShaderProgram::pushAttribute() const
         case DepthTest:
             PushAndApply<DepthTest>(value);
             break;
+        case LineWidth:
+            PushAndApply<LineWidth>(value);
+            break;
+        case PolygonMode:
+            PushAndApply<PolygonMode>(value);
+            break;
         case Viewport:
             PushAndApply<Viewport>(value);
             break;
@@ -455,6 +461,12 @@ void ShaderProgram::popAttribute() const
             break;
         case DepthTest:
             OpenGLStateMachine::Pop<DepthTest>();
+            break;
+        case LineWidth:
+            OpenGLStateMachine::Pop<LineWidth>();
+            break;
+        case PolygonMode:
+            OpenGLStateMachine::Pop<PolygonMode>();
             break;
         case Viewport:
             OpenGLStateMachine::Pop<Viewport>();

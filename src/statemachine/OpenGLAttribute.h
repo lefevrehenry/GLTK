@@ -22,6 +22,8 @@ enum AttributeName
     DepthFunc,
     DepthMask,
     DepthTest,
+    LineWidth,
+    PolygonMode,
     Viewport,
     SceneLight
 };
@@ -136,6 +138,44 @@ struct OpenGL<DepthTest>
             glEnable(GL_DEPTH_TEST);
         else
             glDisable(GL_DEPTH_TEST);
+    }
+};
+
+template<>
+struct OpenGL<LineWidth>
+{
+    using Type = GLfloat;
+
+    static Type Get()
+    {
+        Type value;
+
+        glGetFloatv(GL_LINE_WIDTH, &value);
+
+        return value;
+    }
+    static void Set(Type value)
+    {
+        glLineWidth(value);
+    }
+};
+
+template<>
+struct OpenGL<PolygonMode>
+{
+    using Type = GLenum;
+
+    static Type Get()
+    {
+        int value;
+
+        glGetIntegerv(GL_POLYGON_MODE, &value);
+
+        return Type(value);
+    }
+    static void Set(Type value)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, value);
     }
 };
 
