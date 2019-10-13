@@ -257,9 +257,9 @@ ShaderProgram* ShaderProgram::Create(ShaderProgramType shaderProgramType)
         shaderProgram->addData<glm::vec3>("color", glm::vec3(1.0,0.8,0.0));
         shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->set<CullFace>(GL_TRUE);
-        shaderProgram->set<DepthMask>(GL_FALSE);
-        shaderProgram->set<DepthFunc>(GL_LESS);
+        shaderProgram->set<DepthFunc>(GL_LEQUAL);
+        shaderProgram->set<LineWidth>(2.0f);
+        shaderProgram->set<PolygonMode>(GL_LINE);
 
         break;
     case ShaderProgramType::BasicTexturing:
