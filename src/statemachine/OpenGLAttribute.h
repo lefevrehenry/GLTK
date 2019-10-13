@@ -1,6 +1,7 @@
 #ifndef OPENGLATTRIBUT_H
 #define OPENGLATTRIBUT_H
 
+#include <gltk.h>
 #include <misc/Light.h>
 #include <opengl/VisualManager.h>
 
@@ -24,6 +25,9 @@ enum AttributeName
     Viewport,
     SceneLight
 };
+
+GLTK::OpenGLDepthFunc OpenGLToGLTKDepthFunc(GLenum);
+GLenum GLTKToOpenglDepthFunc(GLTK::OpenGLDepthFunc);
 
 /**
  * @brief The OpenGL class

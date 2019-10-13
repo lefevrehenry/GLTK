@@ -37,6 +37,16 @@ public:
         EnvironmentMapping
     };
 
+    enum class OpenGLDepthFunc {
+        Never,
+        Less,
+        Equal,
+        Lequal,
+        Greater,
+        NotEqual,
+        Gequal,
+        Always
+    };
 };
 
 }   // namespace gl
