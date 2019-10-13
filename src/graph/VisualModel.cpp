@@ -3,7 +3,7 @@
 #include <helper/FileRepository.h>
 #include <opengl/Mesh.h>
 #include <helper/Message.h>
-#include <opengl/ShaderProgram.h>
+#include <opengl/ShaderProgramPrivate.h>
 #include <opengl/Texture.h>
 
 using namespace gl;

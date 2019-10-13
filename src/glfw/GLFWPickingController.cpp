@@ -7,7 +7,7 @@
 #include <graph/SceneGraph.h>
 #include <gui/SceneView.h>
 #include <graph/PickingVisitor.h>
-#include <opengl/ShaderProgram.h>
+#include <opengl/ShaderProgramPrivate.h>
 #include <graph/VisualModel.h>
 
 // Glfw

@@ -1,4 +1,4 @@
-#include "ShaderProgram.h"
+#include "ShaderProgramPrivate.h"
 
 #include <helper/FileRepository.h>
 #include <opengl/Mesh.h>

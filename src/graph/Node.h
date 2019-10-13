@@ -2,7 +2,7 @@
 #define NODE_H
 
 #include <gltk.h>
-#include <opengl/ShaderProgram.h>
+#include <opengl/ShaderProgramPrivate.h>
 
 // Standard Library
 #include <memory>

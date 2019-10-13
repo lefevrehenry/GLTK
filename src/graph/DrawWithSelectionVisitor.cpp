@@ -1,7 +1,7 @@
 #include "DrawWithSelectionVisitor.h"
 
 #include <graph/Node.h>
-#include <opengl/ShaderProgram.h>
+#include <opengl/ShaderProgramPrivate.h>
 #include <graph/VisualModel.h>
 #include <opengl/VisualManager.h>
 

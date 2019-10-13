@@ -1,6 +1,6 @@
 #include "ShaderVisitor.h"
 
-#include <opengl/ShaderProgram.h>
+#include <opengl/ShaderProgramPrivate.h>
 
 using namespace gl;
 

@@ -3,7 +3,7 @@
 #include <misc/Application.h>
 #include <opengl/Framebuffer.h>
 #include <graph/Node.h>
-#include <opengl/ShaderProgram.h>
+#include <opengl/ShaderProgramPrivate.h>
 #include <misc/Transform.h>
 #include <opengl/VisualManager.h>
 #include <graph/VisualModel.h>

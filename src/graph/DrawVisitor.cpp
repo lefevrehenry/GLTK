@@ -2,7 +2,7 @@
 
 #include <misc/Material.h>
 #include <graph/Node.h>
-#include <opengl/ShaderProgram.h>
+#include <opengl/ShaderProgramPrivate.h>
 #include <misc/Transform.h>
 #include <graph/VisualModel.h>
 #include <opengl/VisualManager.h>

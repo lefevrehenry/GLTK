@@ -16,6 +16,7 @@ set(HEADER_FILES
     src/graph/Node.h
     src/graph/PickingVisitor.h
     src/graph/SceneGraph.h
+    src/graph/ShaderProgram.h
     src/graph/ShaderVisitor.h
     src/graph/TexturedVisualModel.h
     src/graph/Visitor.h
@@ -46,6 +47,7 @@ set(SOURCE_FILES
     src/graph/Node.cpp
     src/graph/PickingVisitor.cpp
     src/graph/SceneGraph.cpp
+    src/graph/ShaderProgram.cpp
     src/graph/ShaderVisitor.cpp
     src/graph/TexturedVisualModel.cpp
     src/graph/Visitor.cpp
@@ -72,7 +74,7 @@ set(PRIVATE_HEADER_FILES
     src/opengl/Framebuffer.h
     src/opengl/Mesh.h
     src/opengl/Shader.h
-    src/opengl/ShaderProgram.h
+    src/opengl/ShaderProgramPrivate.h
     src/opengl/Texture.h
     src/opengl/Texture2D.h
     src/opengl/VisualManager.h
@@ -88,7 +90,7 @@ set(PRIVATE_SOURCE_FILES
     src/opengl/Framebuffer.cpp
     src/opengl/Mesh.cpp
     src/opengl/Shader.cpp
-    src/opengl/ShaderProgram.cpp
+    src/opengl/ShaderProgramPrivate.cpp
     src/opengl/Texture.cpp
     src/opengl/Texture2D.cpp
     src/opengl/VisualManager.cpp

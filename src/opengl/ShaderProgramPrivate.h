@@ -1,5 +1,5 @@
-#ifndef SHADERPROGRAM_H
-#define SHADERPROGRAM_H
+#ifndef SHADERPROGRAMPRIVATE_H
+#define SHADERPROGRAMPRIVATE_H
 
 #include <opengl/Data.h>
 #include <gltk.h>
