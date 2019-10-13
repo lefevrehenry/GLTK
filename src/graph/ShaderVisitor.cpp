@@ -20,12 +20,12 @@ ShaderVisitor::ShaderVisitor(ShaderProgramType shaderProgramType) :
 
 void ShaderVisitor::setShaderProgram(ShaderProgramType shaderProgramType)
 {
-    this->m_shaderProgram.reset(ShaderProgram::Create(shaderProgramType));
+    this->m_shaderProgram.reset(ShaderProgramPrivate::Create(shaderProgramType));
 }
 
 void ShaderVisitor::processNode(const Node* node)
 {
-    ShaderProgram* oldShaderProgram = m_currentShader;
+    ShaderProgramPrivate* oldShaderProgram = m_currentShader;
     m_currentShader = this->m_shaderProgram.get();
 
     DrawVisitor::processNode(node);

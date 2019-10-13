@@ -31,7 +31,7 @@ void DrawVisitor::start()
 
 void DrawVisitor::forwardNode(const Node* node)
 {
-    ShaderProgram* shaderProgram = node->shaderProgram();
+    ShaderProgramPrivate* shaderProgram = node->shaderProgram();
 
     // stack the node's ShaderProgram
     if (shaderProgram != nullptr)
@@ -88,7 +88,7 @@ void DrawVisitor::processNode(const Node* node)
 
 void DrawVisitor::backwardNode(const Node* node)
 {
-    ShaderProgram* shaderProgram = node->shaderProgram();
+    ShaderProgramPrivate* shaderProgram = node->shaderProgram();
 
     // unstack the node's ShaderProgram
     if (shaderProgram != nullptr)

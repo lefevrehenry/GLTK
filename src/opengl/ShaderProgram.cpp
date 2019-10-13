@@ -35,11 +35,11 @@ static bool getStringFromFile(const std::string& filename, std::string& dest)
     return true;
 }
 
-ShaderProgram* ShaderProgram::Create(ShaderProgramType shaderProgramType)
+ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgramType)
 {
     typedef Shader::ShaderType ShaderType;
 
-    ShaderProgram* shaderProgram = new ShaderProgram();
+    ShaderProgramPrivate* shaderProgram = new ShaderProgramPrivate();
 
     std::string vertexFilename = "";
     std::string geometryFilename = "";
@@ -343,7 +343,7 @@ ShaderProgram* ShaderProgram::Create(ShaderProgramType shaderProgramType)
     return shaderProgram;
 }
 
-ShaderProgram::ShaderProgram() :
+ShaderProgramPrivate::ShaderProgramPrivate() :
     m_programId(0),
     m_shaderList(3),
     m_dataList(),
@@ -355,7 +355,7 @@ ShaderProgram::ShaderProgram() :
     m_programId = glCreateProgram();
 }
 
-ShaderProgram::~ShaderProgram()
+ShaderProgramPrivate::~ShaderProgramPrivate()
 {
     for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
         BaseData* baseData = it->second;
@@ -365,27 +365,27 @@ ShaderProgram::~ShaderProgram()
     glDeleteProgram(m_programId);
 }
 
-GLuint ShaderProgram::getProgramID() const
+GLuint ShaderProgramPrivate::getProgramID() const
 {
     return this->m_programId;
 }
 
-unsigned int ShaderProgram::getNbInstance() const
+unsigned int ShaderProgramPrivate::getNbInstance() const
 {
     return this->m_nbInstance;
 }
 
-void ShaderProgram::setNbInstance(unsigned int n)
+void ShaderProgramPrivate::setNbInstance(unsigned int n)
 {
     this->m_nbInstance = n;
 }
 
-PrimitiveType ShaderProgram::getPrimitiveType() const
+PrimitiveType ShaderProgramPrivate::getPrimitiveType() const
 {
     return this->m_primitiveType;
 }
 
-void ShaderProgram::setPrimitiveType(PrimitiveType primitiveType)
+void ShaderProgramPrivate::setPrimitiveType(PrimitiveType primitiveType)
 {
     this->m_primitiveType = primitiveType;
 }
@@ -399,7 +399,7 @@ void PushAndApply(BaseOpenGLAttribut::SPtr baseAttribut)
     OpenGLStateMachine::Set<N>(*attribut);
 }
 
-void ShaderProgram::pushAttribute() const
+void ShaderProgramPrivate::pushAttribute() const
 {
     // ugly as fuck !
     // mixing compile-time template compilation with runtime check :/
@@ -442,7 +442,7 @@ void ShaderProgram::pushAttribute() const
     }
 }
 
-void ShaderProgram::popAttribute() const
+void ShaderProgramPrivate::popAttribute() const
 {
     // same as above, ugly idea
 
@@ -481,7 +481,7 @@ void ShaderProgram::popAttribute() const
     }
 }
 
-bool ShaderProgram::addShader(const Shader& shader)
+bool ShaderProgramPrivate::addShader(const Shader& shader)
 {
     if (!shader.isCompiled())
         return false;
@@ -499,7 +499,7 @@ bool ShaderProgram::addShader(const Shader& shader)
     return true;
 }
 
-void ShaderProgram::link()
+void ShaderProgramPrivate::link()
 {
     GLint linked = 0;
 
@@ -526,24 +526,24 @@ void ShaderProgram::link()
     }
 }
 
-bool ShaderProgram::isLinked() const
+bool ShaderProgramPrivate::isLinked() const
 {
     return m_isLinked;
 }
 
-void ShaderProgram::bind() const
+void ShaderProgramPrivate::bind() const
 {
     glUseProgram(m_programId);
     this->pushAttribute();
 }
 
-void ShaderProgram::unbind() const
+void ShaderProgramPrivate::unbind() const
 {
     this->popAttribute();
     glUseProgram(0);
 }
 
-void ShaderProgram::updateDataIfDirty()
+void ShaderProgramPrivate::updateDataIfDirty()
 {
     for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
         BaseData* baseData = it->second;
@@ -551,7 +551,7 @@ void ShaderProgram::updateDataIfDirty()
     }
 }
 
-bool ShaderProgram::addUniformBlock(const char* name, unsigned int binding_index)
+bool ShaderProgramPrivate::addUniformBlock(const char* name, unsigned int binding_index)
 {
     unsigned int block_index = glGetUniformBlockIndex(this->m_programId, name);
 
@@ -565,7 +565,7 @@ bool ShaderProgram::addUniformBlock(const char* name, unsigned int binding_index
     return true;
 }
 
-int ShaderProgram::attributLocation(const char* name) const
+int ShaderProgramPrivate::attributLocation(const char* name) const
 {
     if (!m_isLinked)
         return -1;
@@ -573,7 +573,7 @@ int ShaderProgram::attributLocation(const char* name) const
     return glGetUniformLocation(this->m_programId, name);
 }
 
-void ShaderProgram::setUniformValue(const char* name, float x)
+void ShaderProgramPrivate::setUniformValue(const char* name, float x)
 {
     int location = attributLocation(name);
 
@@ -585,12 +585,12 @@ void ShaderProgram::setUniformValue(const char* name, float x)
     setUniformValue(location, x);
 }
 
-void ShaderProgram::setUniformValue(int attributLocation, float x)
+void ShaderProgramPrivate::setUniformValue(int attributLocation, float x)
 {
     glUniform1f(attributLocation, x);
 }
 
-void ShaderProgram::setUniformValue(const char* name, const glm::vec2& v)
+void ShaderProgramPrivate::setUniformValue(const char* name, const glm::vec2& v)
 {
     int location = attributLocation(name);
 
@@ -602,12 +602,12 @@ void ShaderProgram::setUniformValue(const char* name, const glm::vec2& v)
     setUniformValue(location, v);
 }
 
-void ShaderProgram::setUniformValue(int attributLocation, const glm::vec2& v)
+void ShaderProgramPrivate::setUniformValue(int attributLocation, const glm::vec2& v)
 {
     glUniform2fv(attributLocation, 1, glm::value_ptr(v));
 }
 
-void ShaderProgram::setUniformValue(const char* name, const glm::vec3& v)
+void ShaderProgramPrivate::setUniformValue(const char* name, const glm::vec3& v)
 {
     int location = attributLocation(name);
 
@@ -619,12 +619,12 @@ void ShaderProgram::setUniformValue(const char* name, const glm::vec3& v)
     setUniformValue(location, v);
 }
 
-void ShaderProgram::setUniformValue(int attributLocation, const glm::vec3& v)
+void ShaderProgramPrivate::setUniformValue(int attributLocation, const glm::vec3& v)
 {
     glUniform3fv(attributLocation, 1, glm::value_ptr(v));
 }
 
-void ShaderProgram::setUniformValue(const char *name, const glm::vec4 &v)
+void ShaderProgramPrivate::setUniformValue(const char *name, const glm::vec4 &v)
 {
     int location = attributLocation(name);
 
@@ -636,12 +636,12 @@ void ShaderProgram::setUniformValue(const char *name, const glm::vec4 &v)
     setUniformValue(location, v);
 }
 
-void ShaderProgram::setUniformValue(int attributLocation, const glm::vec4& v)
+void ShaderProgramPrivate::setUniformValue(int attributLocation, const glm::vec4& v)
 {
     glUniform4fv(attributLocation, 1, glm::value_ptr(v));
 }
 
-void ShaderProgram::setUniformValue(const char* name, const glm::mat2& m)
+void ShaderProgramPrivate::setUniformValue(const char* name, const glm::mat2& m)
 {
     int location = attributLocation(name);
 
@@ -653,12 +653,12 @@ void ShaderProgram::setUniformValue(const char* name, const glm::mat2& m)
     setUniformValue(location, m);
 }
 
-void ShaderProgram::setUniformValue(int attributLocation, const glm::mat2& m)
+void ShaderProgramPrivate::setUniformValue(int attributLocation, const glm::mat2& m)
 {
     glUniformMatrix2fv(attributLocation, 1, GL_FALSE, glm::value_ptr(m));
 }
 
-void ShaderProgram::setUniformValue(const char* name, const glm::mat3& m)
+void ShaderProgramPrivate::setUniformValue(const char* name, const glm::mat3& m)
 {
     int location = attributLocation(name);
 
@@ -670,12 +670,12 @@ void ShaderProgram::setUniformValue(const char* name, const glm::mat3& m)
     setUniformValue(location, m);
 }
 
-void ShaderProgram::setUniformValue(int attributLocation, const glm::mat3& m)
+void ShaderProgramPrivate::setUniformValue(int attributLocation, const glm::mat3& m)
 {
     glUniformMatrix3fv(attributLocation, 1, GL_FALSE, glm::value_ptr(m));
 }
 
-void ShaderProgram::setUniformValue(const char* name, const glm::mat4& m)
+void ShaderProgramPrivate::setUniformValue(const char* name, const glm::mat4& m)
 {
     int location = attributLocation(name);
 
@@ -687,7 +687,7 @@ void ShaderProgram::setUniformValue(const char* name, const glm::mat4& m)
     setUniformValue(location, m);
 }
 
-void ShaderProgram::setUniformValue(int attributLocation, const glm::mat4& m)
+void ShaderProgramPrivate::setUniformValue(int attributLocation, const glm::mat4& m)
 {
     glUniformMatrix4fv(attributLocation, 1, GL_FALSE, glm::value_ptr(m));
 }

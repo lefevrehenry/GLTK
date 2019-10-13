@@ -44,18 +44,18 @@ struct VisualParam {
 };
 
 /**
- * @brief The ShaderProgram class
+ * @brief The ShaderProgramPrivate class
  */
-class ShaderProgram
+class ShaderProgramPrivate
 {
     using ShaderProgramType = GLTK::ShaderProgramType;
 
 public:
-    static ShaderProgram* Create(ShaderProgramType shaderProgramType);
+    static ShaderProgramPrivate* Create(ShaderProgramType shaderProgramType);
 
 public:
-    ShaderProgram();
-    virtual ~ShaderProgram();
+    ShaderProgramPrivate();
+    virtual ~ShaderProgramPrivate();
 
 public:
     GLuint getProgramID() const;

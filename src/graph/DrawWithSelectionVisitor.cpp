@@ -11,7 +11,7 @@ DrawVisitorWithSelection::DrawVisitorWithSelection() : DrawVisitor(),
     m_outlineShader(nullptr),
     m_selected(nullptr)
 {
-    this->m_outlineShader.reset(ShaderProgram::Create(GLTK::ShaderProgramType::OutLine));
+    this->m_outlineShader.reset(ShaderProgramPrivate::Create(GLTK::ShaderProgramType::OutLine));
 }
 
 void DrawVisitorWithSelection::start()

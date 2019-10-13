@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <gltk.h>
+#include <opengl/ShaderProgram.h>
 
 // Standard Library
 #include <memory>
@@ -10,7 +11,7 @@
 
 namespace gl {
 
-class ShaderProgram;
+class ShaderProgramPrivate;
 class Visitor;
 class VisualModel;
 
@@ -53,13 +54,22 @@ public:
     void setShaderProgram(ShaderProgramType shaderProgramType);
     void removeShaderProgram();
 
+    template< typename T >
+    void addData(const char* name, const T& value)
+    {
+        if(this->m_shaderProgram == nullptr)
+            return;
+
+        this->m_shaderProgram->addData<T>(name, value);
+    }
+
 private:
-    ShaderProgram* shaderProgram() const;
+    ShaderProgramPrivate* shaderProgram() const;
 
 private:
     std::vector<Node*>              m_children;
     std::vector<const VisualModel*> m_visuals;
-    std::unique_ptr<ShaderProgram>  m_shaderProgram;
+    std::unique_ptr<ShaderProgramPrivate>  m_shaderProgram;
 
 };
 

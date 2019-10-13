@@ -10,7 +10,7 @@
 namespace gl {
 
 class Node;
-class ShaderProgram;
+class ShaderProgramPrivate;
 class VisualModel;
 
 /**
@@ -28,7 +28,7 @@ public:
     virtual void backwardNode(const Node* node);
 
 private:
-    std::unique_ptr<ShaderProgram>  m_outlineShader;
+    std::unique_ptr<ShaderProgramPrivate>  m_outlineShader;
     const VisualModel*              m_selected;
 
 };

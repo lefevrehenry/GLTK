@@ -15,7 +15,7 @@ namespace gl {
 
 class Framebuffer;
 class Node;
-class ShaderProgram;
+class ShaderProgramPrivate;
 class VisualModel;
 
 /**
@@ -41,7 +41,7 @@ public:
 
 private:
     std::unique_ptr<Framebuffer>    m_pickingFramebuffer;
-    std::unique_ptr<ShaderProgram>  m_shaderProgram;
+    std::unique_ptr<ShaderProgramPrivate>  m_shaderProgram;
 
     std::deque<const VisualModel*>  m_visualModels;
 

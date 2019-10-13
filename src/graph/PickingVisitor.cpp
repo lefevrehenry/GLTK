@@ -50,7 +50,7 @@ PickingVisitor::PickingVisitor() :
     this->m_pickingFramebuffer->attachTexture();
     this->m_pickingFramebuffer->attachDepthTexture();
 
-    this->m_shaderProgram.reset(ShaderProgram::Create(GLTK::ShaderProgramType::Picking));
+    this->m_shaderProgram.reset(ShaderProgramPrivate::Create(GLTK::ShaderProgramType::Picking));
 }
 
 void PickingVisitor::set(int x, int y)

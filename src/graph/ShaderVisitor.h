@@ -11,7 +11,7 @@
 namespace gl {
 
 class Node;
-class ShaderProgram;
+class ShaderProgramPrivate;
 
 /**
  * @brief The ShaderVisitor class
@@ -30,7 +30,7 @@ public:
    void setShaderProgram(GLTK::ShaderProgramType shaderProgramType);
 
 private:
-    std::unique_ptr<ShaderProgram> m_shaderProgram;
+    std::unique_ptr<ShaderProgramPrivate> m_shaderProgram;
 
 };
 
