@@ -2,7 +2,6 @@
 #define SHADERVISITOR_H
 
 #include <graph/DrawVisitor.h>
-#include <gltk.h>
 
 // Standard Library
 #include <memory>
@@ -11,7 +10,7 @@
 namespace gl {
 
 class Node;
-class ShaderProgramPrivate;
+class ShaderProgram;
 
 /**
  * @brief The ShaderVisitor class
@@ -21,16 +20,17 @@ class ShaderVisitor : public DrawVisitor
 
 public:
     ShaderVisitor();
-    ShaderVisitor(GLTK::ShaderProgramType shaderProgramType);
+    ShaderVisitor(ShaderProgram* shaderProgram);
 
 public:
     virtual void processNode(const Node* node);
 
 public:
-   void setShaderProgram(GLTK::ShaderProgramType shaderProgramType);
+    ShaderProgram* shaderProgram() const;
+    void setShaderProgram(ShaderProgram* shaderProgram);
 
 private:
-    std::unique_ptr<ShaderProgramPrivate> m_shaderProgram;
+    std::unique_ptr<ShaderProgram> m_shaderProgram;
 
 };
 

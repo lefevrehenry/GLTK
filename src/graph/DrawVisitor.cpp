@@ -2,6 +2,7 @@
 
 #include <misc/Material.h>
 #include <graph/Node.h>
+#include <graph/ShaderProgram.h>
 #include <opengl/ShaderProgramPrivate.h>
 #include <misc/Transform.h>
 #include <graph/VisualModel.h>
@@ -31,7 +32,7 @@ void DrawVisitor::start()
 
 void DrawVisitor::forwardNode(const Node* node)
 {
-    ShaderProgramPrivate* shaderProgram = node->shaderProgram();
+    ShaderProgram* shaderProgram = node->shaderProgram();
 
     // stack the node's ShaderProgram
     if (shaderProgram != nullptr)
@@ -65,9 +66,9 @@ void DrawVisitor::processNode(const Node* node)
         // fetch the number of instance rendering
         // fetch what kind of primitives has to be drawn by the shader
 
-        VisualParam param;
-        param.nbInstance = m_currentShader->getNbInstance();
-        param.primitiveType = m_currentShader->getPrimitiveType();
+        VisualParam param = VisualParam::DefaultInstance();
+//        param.nbInstance = m_currentShader->getNbInstance();
+//        param.primitiveType = m_currentShader->getPrimitiveType();
 
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
@@ -88,7 +89,7 @@ void DrawVisitor::processNode(const Node* node)
 
 void DrawVisitor::backwardNode(const Node* node)
 {
-    ShaderProgramPrivate* shaderProgram = node->shaderProgram();
+    ShaderProgram* shaderProgram = node->shaderProgram();
 
     // unstack the node's ShaderProgram
     if (shaderProgram != nullptr)

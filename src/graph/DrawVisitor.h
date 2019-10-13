@@ -10,7 +10,7 @@
 namespace gl {
 
 class Node;
-class ShaderProgramPrivate;
+class ShaderProgram;
 class VisualOption;
 
 /**
@@ -30,10 +30,10 @@ public:
     virtual void backwardNode(const Node* node);
 
 protected:
-    std::stack<ShaderProgramPrivate*>  m_shaderStack;
+    std::stack<ShaderProgram*>  m_shaderStack;
     std::stack<VisualOption*>   m_optionStack;
 
-    ShaderProgramPrivate*  m_currentShader;
+    ShaderProgram*  m_currentShader;
     VisualOption*   m_currentOption;
 
 };

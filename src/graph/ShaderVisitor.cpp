@@ -1,6 +1,6 @@
 #include "ShaderVisitor.h"
 
-#include <opengl/ShaderProgramPrivate.h>
+#include <graph/ShaderProgram.h>
 
 using namespace gl;
 
@@ -12,20 +12,25 @@ ShaderVisitor::ShaderVisitor() :
 
 }
 
-ShaderVisitor::ShaderVisitor(ShaderProgramType shaderProgramType) :
+ShaderVisitor::ShaderVisitor(ShaderProgram* shaderProgram) :
     m_shaderProgram(nullptr)
 {
-    this->setShaderProgram(shaderProgramType);
+    this->setShaderProgram(shaderProgram);
 }
 
-void ShaderVisitor::setShaderProgram(ShaderProgramType shaderProgramType)
+ShaderProgram* ShaderVisitor::shaderProgram() const
 {
-    this->m_shaderProgram.reset(ShaderProgramPrivate::Create(shaderProgramType));
+    return this->m_shaderProgram.get();
+}
+
+void ShaderVisitor::setShaderProgram(ShaderProgram* shaderProgram)
+{
+    this->m_shaderProgram.reset(shaderProgram);
 }
 
 void ShaderVisitor::processNode(const Node* node)
 {
-    ShaderProgramPrivate* oldShaderProgram = m_currentShader;
+    ShaderProgram* oldShaderProgram = m_currentShader;
     m_currentShader = this->m_shaderProgram.get();
 
     DrawVisitor::processNode(node);

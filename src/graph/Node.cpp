@@ -1,5 +1,6 @@
 #include "Node.h"
 
+#include <graph/ShaderProgram.h>
 #include <graph/Visitor.h>
 #include <graph/VisualModel.h>
 #include <opengl/VisualOption.h>
@@ -99,17 +100,12 @@ const VisualModel* Node::getVisual(unsigned int i) const
     return this->m_visuals[i];
 }
 
-void Node::setShaderProgram(ShaderProgramType shaderProgramType)
-{
-    this->m_shaderProgram.reset(ShaderProgramPrivate::Create(shaderProgramType));
-}
-
-void Node::removeShaderProgram()
-{
-    this->m_shaderProgram.reset(nullptr);
-}
-
-ShaderProgramPrivate* Node::shaderProgram() const
+ShaderProgram* Node::shaderProgram() const
 {
     return this->m_shaderProgram.get();
+}
+
+void Node::setShaderProgram(ShaderProgram* shaderProgram)
+{
+    this->m_shaderProgram.reset(shaderProgram);
 }
