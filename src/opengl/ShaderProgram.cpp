@@ -432,6 +432,9 @@ void ShaderProgram::pushAttribute() const
         case PolygonMode:
             PushAndApply<PolygonMode>(value);
             break;
+        case SceneLight:
+            PushAndApply<SceneLight>(value);
+            break;
         case Viewport:
             PushAndApply<Viewport>(value);
             break;
@@ -467,6 +470,9 @@ void ShaderProgram::popAttribute() const
             break;
         case PolygonMode:
             OpenGLStateMachine::Pop<PolygonMode>();
+            break;
+        case SceneLight:
+            OpenGLStateMachine::Pop<SceneLight>();
             break;
         case Viewport:
             OpenGLStateMachine::Pop<Viewport>();
