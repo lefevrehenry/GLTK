@@ -20,7 +20,6 @@ class Node
 
 public:
     Node();
-    virtual ~Node();
 
 public:
     void executeVisitor(Visitor* visitor) const;
@@ -35,10 +34,8 @@ public:
     size_t getNbChild() const;
     Node* getChild(unsigned int i) const;
 
-    /* add iterator(s) node/mesh ? */
-
 public:
-    void addVisual(const VisualModel* visual);
+    void addVisual(const VisualModel* visualModel);
     void removeVisual(unsigned int i);
 
     size_t getNbVisual() const;
@@ -49,9 +46,9 @@ public:
     void setShaderProgram(ShaderProgram* shaderProgram);
 
 private:
-    std::vector<Node*>              m_children;
-    std::vector<const VisualModel*> m_visuals;
-    std::unique_ptr<ShaderProgram>  m_shaderProgram;
+    std::vector< std::shared_ptr<Node> >                m_children;
+    std::vector< std::shared_ptr<const VisualModel> >   m_visuals;
+    std::shared_ptr<ShaderProgram>                      m_shaderProgram;
 
 };
 

@@ -15,11 +15,6 @@ Node::Node() :
 
 }
 
-Node::~Node()
-{
-
-}
-
 void Node::executeVisitor(Visitor* visitor) const
 {
     visitor->start();
@@ -42,9 +37,10 @@ void Node::doExecuteVisitor(Visitor* visitor) const
 
 Node* Node::addChild()
 {
-    Node* child = new Node();
+    std::shared_ptr<Node> child(new Node());
     this->m_children.push_back(child);
-    return child;
+
+    return child.get();
 }
 
 Node* Node::removeChild(unsigned int i)
@@ -68,14 +64,15 @@ Node* Node::getChild(unsigned int i) const
     if (i >= getNbChild())
         return nullptr;
 
-    return this->m_children[i];
+    return this->m_children[i].get();
 }
 
-void Node::addVisual(const VisualModel* visual)
+void Node::addVisual(const VisualModel* visualModel)
 {
-    if (visual == nullptr)
+    if (visualModel == nullptr)
         return;
 
+    std::shared_ptr<const VisualModel> visual(visualModel);
     this->m_visuals.push_back(visual);
 }
 
@@ -97,7 +94,7 @@ const VisualModel* Node::getVisual(unsigned int i) const
     if (i >= getNbVisual())
         return nullptr;
 
-    return this->m_visuals[i];
+    return this->m_visuals[i].get();
 }
 
 ShaderProgram* Node::shaderProgram() const
