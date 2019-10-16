@@ -102,7 +102,7 @@ ShaderProgram* Node::shaderProgram() const
     return this->m_shaderProgram.get();
 }
 
-void Node::setShaderProgram(ShaderProgram* shaderProgram)
+void Node::setShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram)
 {
-    this->m_shaderProgram.reset(shaderProgram);
+    this->m_shaderProgram = shaderProgram;
 }

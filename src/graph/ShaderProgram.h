@@ -17,6 +17,7 @@ class ShaderProgramPrivate;
 class ShaderProgram
 {
     using ShaderProgramType = GLTK::ShaderProgramType;
+    using SPtr = std::shared_ptr<ShaderProgram>;
 
 public:
     static ShaderProgram* Create(ShaderProgramType shaderProgramType);

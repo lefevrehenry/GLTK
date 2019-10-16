@@ -2,12 +2,21 @@
 
 #include <helper/FileRepository.h>
 #include <opengl/MeshPrivate.h>
+#include <graph/Mesh.h>
 #include <helper/Message.h>
 #include <opengl/ShaderProgramPrivate.h>
 #include <opengl/Texture.h>
 
 using namespace gl;
 using namespace gl::helper;
+
+VisualModel::VisualModel(std::shared_ptr<const Mesh> mesh, const Material& material) :
+    m_mesh(mesh),
+    m_transform(),
+    m_material(material)
+{
+
+}
 
 VisualModel::VisualModel(const std::string& filename, const Material& material) :
     m_mesh(nullptr),
@@ -19,15 +28,7 @@ VisualModel::VisualModel(const std::string& filename, const Material& material) 
     if (!DataRepository.findFile(path))
         msg_error("Mesh") << "File " << filename << " not found";
     else
-        this->m_mesh.reset(new MeshPrivate(path));
-}
-
-VisualModel::VisualModel(const VisualModel& other) :
-    m_mesh(other.m_mesh),
-    m_transform(other.m_transform),
-    m_material(other.m_material)
-{
-
+        this->m_mesh.reset(new Mesh(path));
 }
 
 Transform& VisualModel::transform()

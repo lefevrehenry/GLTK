@@ -19,6 +19,9 @@ class Node
 {
 
 public:
+    using SPtr = std::shared_ptr<Node>;
+
+public:
     Node();
 
 public:
@@ -43,7 +46,7 @@ public:
 
 public:
     ShaderProgram* shaderProgram() const;
-    void setShaderProgram(ShaderProgram* shaderProgram);
+    void setShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram);
 
 private:
     std::vector< std::shared_ptr<Node> >                m_children;

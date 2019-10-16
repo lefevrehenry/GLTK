@@ -13,6 +13,7 @@ set(HEADER_FILES
     src/graph/DrawVisitor.h
     src/graph/DrawWithSelectionVisitor.h
     src/graph/FetchVisualModelVisitor.h
+    src/graph/Mesh.h
     src/graph/Node.h
     src/graph/PickingVisitor.h
     src/graph/SceneGraph.h
@@ -44,6 +45,7 @@ set(SOURCE_FILES
     src/graph/DrawVisitor.cpp
     src/graph/DrawWithSelectionVisitor.cpp
     src/graph/FetchVisualModelVisitor.cpp
+    src/graph/Mesh.cpp
     src/graph/Node.cpp
     src/graph/PickingVisitor.cpp
     src/graph/SceneGraph.cpp

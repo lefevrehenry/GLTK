@@ -11,7 +11,7 @@
 
 namespace gl {
 
-class MeshPrivate;
+class Mesh;
 class VisualParam;
 
 /**
@@ -21,8 +21,11 @@ class VisualModel
 {
 
 public:
+    using SPtr = std::shared_ptr<VisualModel>;
+
+public:
+    VisualModel(std::shared_ptr<const Mesh> mesh, const Material& material = Material::DefaultMaterial());
     VisualModel(const std::string& filename, const Material& material = Material::DefaultMaterial());
-    VisualModel(const VisualModel& other);
 
 public:
     Transform& transform();
@@ -38,9 +41,9 @@ public:
     void draw(const VisualParam* param) const;
 
 private:
-    std::shared_ptr<MeshPrivate>    m_mesh;
-    Transform                       m_transform;
-    Material                        m_material;
+    std::shared_ptr<const Mesh> m_mesh;
+    Transform                   m_transform;
+    Material                    m_material;
 
 };
 
