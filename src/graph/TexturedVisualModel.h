@@ -10,7 +10,7 @@
 
 namespace gl {
 
-class Texture2D;
+class TexturePrivate2D;
 
 /**
  * @brief The TexturedVisualModel class
@@ -23,7 +23,7 @@ public:
     TexturedVisualModel(const TexturedVisualModel& other);
 
 private:
-    std::shared_ptr<Texture2D> m_texture;
+    std::shared_ptr<TexturePrivate2D> m_texture;
 
 };
 

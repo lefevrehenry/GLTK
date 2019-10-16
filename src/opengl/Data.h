@@ -2,9 +2,9 @@
 #define DATA_H
 
 #include <misc/Camera.h>
-#include <opengl/CubeMapTexture.h>
+#include <opengl/CubeMapTexturePrivate.h>
 #include <helper/Message.h>
-#include <opengl/Texture2D.h>
+#include <opengl/TexturePrivate2D.h>
 
 // Glew
 #include <GL/glew.h>
@@ -146,7 +146,7 @@ template<> inline void Data<glm::mat4>::update()
     glUniformMatrix4fv(this->m_dataLocation, 1, GL_FALSE, glm::value_ptr(this->m_value));
 }
 
-template<> inline void Data<Texture>::update()
+template<> inline void Data<TexturePrivate>::update()
 {
     unsigned short unit = this->m_value.getTextureUnit();
 
@@ -155,7 +155,7 @@ template<> inline void Data<Texture>::update()
     glUniform1i(this->m_dataLocation, unit);
 }
 
-template<> inline void Data<CubeMapTexture>::update()
+template<> inline void Data<CubeMapTexturePrivate>::update()
 {
     unsigned short unit = this->m_value.getTextureUnit();
 

@@ -1,4 +1,4 @@
-#include "Texture2D.h"
+#include "TexturePrivate2D.h"
 
 #include <helper/FileRepository.h>
 #include <helper/Message.h>
@@ -11,7 +11,7 @@
 
 using namespace gl;
 
-void Texture2D::load(const std::string& filename)
+void TexturePrivate2D::load(const std::string& filename)
 {
     std::string path(filename);
 

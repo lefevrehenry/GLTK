@@ -1,7 +1,7 @@
-#ifndef CUBEMAPTEXTURE_H
-#define CUBEMAPTEXTURE_H
+#ifndef CUBEMAPTEXTUREPRIVATE_H
+#define CUBEMAPTEXTUREPRIVATE_H
 
-#include <opengl/Texture.h>
+#include <opengl/TexturePrivate.h>
 
 // Standard Library
 #include <string>
@@ -10,9 +10,9 @@
 namespace gl {
 
 /**
- * @brief The CubeMapTexture class
+ * @brief The CubeMapTexturePrivate class
  */
-class CubeMapTexture : public Texture
+class CubeMapTexturePrivate : public TexturePrivate
 {
 
 public:

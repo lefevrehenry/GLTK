@@ -1,5 +1,5 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#ifndef TEXTUREPRIVATE_H
+#define TEXTUREPRIVATE_H
 
 // Standard Library
 #include <list>
@@ -12,14 +12,14 @@
 namespace gl {
 
 /**
- * @brief The Texture class
+ * @brief The TexturePrivate class
  */
-class Texture
+class TexturePrivate
 {
 
 public:
-    Texture();
-    virtual ~Texture();
+    TexturePrivate();
+    virtual ~TexturePrivate();
 
 public:
     GLuint getTextureID() const;

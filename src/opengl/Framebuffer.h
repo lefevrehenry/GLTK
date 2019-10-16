@@ -1,7 +1,7 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include <opengl/Texture.h>
+#include <opengl/TexturePrivate.h>
 
 // Standard Library
 #include <vector>
@@ -20,8 +20,8 @@ public:
     virtual ~Framebuffer();
 
 public:
-    Texture* renderTexture(unsigned int i);
-    Texture* depthTexture();
+    TexturePrivate* renderTexture(unsigned int i);
+    TexturePrivate* depthTexture();
 
 public:
     unsigned int width() const;
@@ -39,9 +39,9 @@ public:
 private:
     GLuint m_framebufferId;
 
-    std::vector<Texture*> m_textureList;
-    Texture* m_depthTexture;
-    Texture* m_stencilTexture;
+    std::vector<TexturePrivate*> m_textureList;
+    TexturePrivate* m_depthTexture;
+    TexturePrivate* m_stencilTexture;
 
     unsigned int m_width;
     unsigned int m_height;

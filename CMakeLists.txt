@@ -71,14 +71,14 @@ set(SOURCE_FILES
 )
 
 set(PRIVATE_HEADER_FILES
-    src/opengl/CubeMapTexture.h
+    src/opengl/CubeMapTexturePrivate.h
     src/opengl/Data.h
     src/opengl/Framebuffer.h
     src/opengl/MeshPrivate.h
     src/opengl/Shader.h
     src/opengl/ShaderProgramPrivate.h
-    src/opengl/Texture.h
-    src/opengl/Texture2D.h
+    src/opengl/TexturePrivate.h
+    src/opengl/TexturePrivate2D.h
     src/opengl/VisualManager.h
     src/opengl/VisualOption.h
 
@@ -87,14 +87,14 @@ set(PRIVATE_HEADER_FILES
 )
 
 set(PRIVATE_SOURCE_FILES
-    src/opengl/CubeMapTexture.cpp
+    src/opengl/CubeMapTexturePrivate.cpp
     src/opengl/Data.cpp
     src/opengl/Framebuffer.cpp
     src/opengl/MeshPrivate.cpp
     src/opengl/Shader.cpp
     src/opengl/ShaderProgramPrivate.cpp
-    src/opengl/Texture.cpp
-    src/opengl/Texture2D.cpp
+    src/opengl/TexturePrivate.cpp
+    src/opengl/TexturePrivate2D.cpp
     src/opengl/VisualManager.cpp
     src/opengl/VisualOption.cpp
 

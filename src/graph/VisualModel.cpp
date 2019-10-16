@@ -5,7 +5,7 @@
 #include <graph/Mesh.h>
 #include <helper/Message.h>
 #include <opengl/ShaderProgramPrivate.h>
-#include <opengl/Texture.h>
+#include <opengl/TexturePrivate.h>
 
 using namespace gl;
 using namespace gl::helper;

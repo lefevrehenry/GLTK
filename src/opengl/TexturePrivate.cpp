@@ -1,4 +1,4 @@
-#include "Texture.h"
+#include "TexturePrivate.h"
 
 #include <helper/FileRepository.h>
 #include <helper/Message.h>
@@ -12,7 +12,7 @@
 
 using namespace gl;
 
-std::list<unsigned short> Texture::ActiveTexture;
+std::list<unsigned short> TexturePrivate::ActiveTexture;
 
 // find gap in a sequence of number (list must be sorted)
 template< typename T >
@@ -34,7 +34,7 @@ unsigned short find_gap(const std::list<T>& list)
     return next;
 }
 
-Texture::Texture() :
+TexturePrivate::TexturePrivate() :
     m_textureId(0),
     m_textureUnit(0)
 {
@@ -47,39 +47,39 @@ Texture::Texture() :
     this->m_textureUnit = unit;
 }
 
-Texture::~Texture()
+TexturePrivate::~TexturePrivate()
 {
-    auto it = std::find(Texture::ActiveTexture.begin(), Texture::ActiveTexture.end(), this->m_textureUnit);
-    if (it != Texture::ActiveTexture.end())
-        Texture::ActiveTexture.erase(it);
+    auto it = std::find(TexturePrivate::ActiveTexture.begin(), TexturePrivate::ActiveTexture.end(), this->m_textureUnit);
+    if (it != TexturePrivate::ActiveTexture.end())
+        TexturePrivate::ActiveTexture.erase(it);
 
     glDeleteTextures(1, &m_textureId);
     glActiveTexture(GL_TEXTURE0);
 }
 
-GLuint Texture::getTextureID() const
+GLuint TexturePrivate::getTextureID() const
 {
     return this->m_textureId;
 }
 
-unsigned short Texture::getTextureUnit() const
+unsigned short TexturePrivate::getTextureUnit() const
 {
     return this->m_textureUnit;
 }
 
-void Texture::bind() const
+void TexturePrivate::bind() const
 {
     glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
     glBindTexture(GL_TEXTURE_2D, this->m_textureId);
 }
 
-void Texture::unbind() const
+void TexturePrivate::unbind() const
 {
     glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::load(const std::string&)
+void TexturePrivate::load(const std::string&)
 {
     msg_warning("Texture") << "Texture object can't load a file";
 }

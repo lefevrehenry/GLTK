@@ -17,7 +17,7 @@ Framebuffer::Framebuffer(unsigned int width, unsigned int height) :
 
 Framebuffer::~Framebuffer()
 {
-    for (Texture* texture : m_textureList) {
+    for (TexturePrivate* texture : m_textureList) {
         delete texture;
         texture = nullptr;
     }
@@ -33,7 +33,7 @@ Framebuffer::~Framebuffer()
     glDeleteFramebuffers(1, &m_framebufferId);
 }
 
-Texture* Framebuffer::renderTexture(unsigned int i)
+TexturePrivate* Framebuffer::renderTexture(unsigned int i)
 {
     if (i >= m_textureList.size())
         return nullptr;
@@ -41,7 +41,7 @@ Texture* Framebuffer::renderTexture(unsigned int i)
     return this->m_textureList[i];
 }
 
-Texture* Framebuffer::depthTexture()
+TexturePrivate* Framebuffer::depthTexture()
 {
     return this->m_depthTexture;
 }
@@ -75,7 +75,7 @@ void Framebuffer::attachTexture()
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebufferId);
 
-    Texture* texture = new Texture();
+    TexturePrivate* texture = new TexturePrivate();
     texture->bind();
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, int(m_width), int(m_height), 0, GL_RGBA, GL_FLOAT, nullptr);
@@ -109,7 +109,7 @@ void Framebuffer::attachDepthTexture()
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebufferId);
 
-    this->m_depthTexture = new Texture();
+    this->m_depthTexture = new TexturePrivate();
     this->m_depthTexture->bind();
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, int(m_width), int(m_height), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);

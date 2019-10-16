@@ -2,13 +2,13 @@
 
 #include <helper/FileRepository.h>
 #include <helper/Message.h>
-#include <opengl/Texture2D.h>
+#include <opengl/TexturePrivate2D.h>
 
 using namespace gl;
 using namespace gl::helper;
 
 TexturedVisualModel::TexturedVisualModel(const std::string& filename, const std::string& textureFilename) : VisualModel(filename),
-    m_texture(new Texture2D())
+    m_texture(new TexturePrivate2D())
 {
     std::string path = textureFilename;
 

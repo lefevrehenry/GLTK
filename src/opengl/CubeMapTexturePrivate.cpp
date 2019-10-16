@@ -1,4 +1,4 @@
-#include "CubeMapTexture.h"
+#include "CubeMapTexturePrivate.h"
 
 #include <helper/FileRepository.h>
 #include <helper/Message.h>
@@ -11,19 +11,19 @@
 
 using namespace gl;
 
-void CubeMapTexture::bind() const
+void CubeMapTexturePrivate::bind() const
 {
     glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
     glBindTexture(GL_TEXTURE_CUBE_MAP, this->m_textureId);
 }
 
-void CubeMapTexture::unbind() const
+void CubeMapTexturePrivate::unbind() const
 {
     glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
     glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-void CubeMapTexture::load(const std::string& filename)
+void CubeMapTexturePrivate::load(const std::string& filename)
 {
     std::string path(filename);
 
@@ -86,7 +86,7 @@ void CubeMapTexture::load(const std::string& filename)
     stbi_image_free(data);
 }
 
-void CubeMapTexture::load(const std::string& left, const std::string& right, const std::string& bottom, const std::string& top, const std::string& back, const std::string& front)
+void CubeMapTexturePrivate::load(const std::string& left, const std::string& right, const std::string& bottom, const std::string& top, const std::string& back, const std::string& front)
 {
     const std::string list[6] = {left, right, bottom, top, back, front};
 }
