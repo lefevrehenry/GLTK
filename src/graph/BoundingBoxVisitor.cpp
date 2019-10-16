@@ -1,8 +1,8 @@
 #include "BoundingBoxVisitor.h"
 
 #include <graph/Node.h>
-#include <opengl/Mesh.h>
 #include <misc/Transform.h>
+#include <graph/VisualModel.h>
 
 using namespace gl;
 

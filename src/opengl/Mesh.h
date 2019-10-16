@@ -1,8 +1,6 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <graph/VisualModel.h>
-
 // Standard Library
 #include <string>
 #include <vector>
@@ -10,12 +8,16 @@
 // OpenGL
 #include <GL/glew.h>
 
+// Glm
+#include <glm/glm.hpp>
+
 
 class aiMesh;
 class aiScene;
 
 namespace gl {
 
+class VisualModel;
 class VisualParam;
 
 /**
