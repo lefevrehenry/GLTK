@@ -20,8 +20,8 @@ class VisualParam;
 class Mesh
 {
 
-//public:
-//    using SPtr = std::shared_ptr<const Mesh>;
+public:
+    using SPtr = std::shared_ptr<const Mesh>;
 
 public:
     Mesh(const std::string& filename);
@@ -33,7 +33,7 @@ public:
     void draw(const VisualParam* param) const;
 
 private:
-    std::shared_ptr<MeshPrivate>    m_meshPrivate;
+    std::shared_ptr<MeshPrivate> m_meshPrivate;
 
 };
 

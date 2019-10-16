@@ -9,7 +9,9 @@
 
 namespace gl {
 
+class CubeMapTexture;
 class ShaderProgramPrivate;
+class Texture;
 
 /**
  * @brief The ShaderProgram class
@@ -17,6 +19,8 @@ class ShaderProgramPrivate;
 class ShaderProgram
 {
     using ShaderProgramType = GLTK::ShaderProgramType;
+
+public:
     using SPtr = std::shared_ptr<ShaderProgram>;
 
 public:
@@ -34,7 +38,15 @@ public:
     void bind() const;
     void unbind() const;
 
+public:
     void updateDataIfDirty() const;
+
+    bool addDataTexture(const char* name, Texture* value);
+    bool addDataCubeMapTexture(const char* name, CubeMapTexture* value);
+
+private:
+    template< typename T >
+    bool addData(const char* name, T* value);
 
 private:
     std::shared_ptr<ShaderProgramPrivate> m_shaderProgramPrivate;

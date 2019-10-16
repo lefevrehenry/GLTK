@@ -2,6 +2,7 @@
 
 #include <gltk.h>
 #include <opengl/ShaderProgramPrivate.h>
+#include <graph/Texture.h>
 
 using namespace gl;
 
@@ -57,4 +58,26 @@ void ShaderProgram::updateDataIfDirty() const
         return;
 
     this->m_shaderProgramPrivate->updateDataIfDirty();
+}
+
+bool ShaderProgram::addDataTexture(const char* name, Texture* value)
+{
+    return addData<Texture>(name, value);
+}
+
+bool ShaderProgram::addDataCubeMapTexture(const char* name, CubeMapTexture* value)
+{
+    return addData<CubeMapTexture>(name, value);
+}
+
+template< typename T >
+bool ShaderProgram::addData(const char* name, T* value)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return false;
+
+    if(value == nullptr)
+        return false;
+
+    return this->m_shaderProgramPrivate->addData<T>(name, *value);
 }

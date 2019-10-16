@@ -2,8 +2,11 @@
 #define DATA_H
 
 #include <misc/Camera.h>
-#include <opengl/CubeMapTexturePrivate.h>
+#include <graph/CubeMapTexture.h>
 #include <helper/Message.h>
+#include <graph/Texture.h>
+#include <opengl/TexturePrivate.h>
+#include <graph/Texture2D.h>
 #include <opengl/TexturePrivate2D.h>
 
 // Glew
@@ -146,18 +149,32 @@ template<> inline void Data<glm::mat4>::update()
     glUniformMatrix4fv(this->m_dataLocation, 1, GL_FALSE, glm::value_ptr(this->m_value));
 }
 
-template<> inline void Data<TexturePrivate>::update()
+template<> inline void Data<Texture>::update()
 {
-    unsigned short unit = this->m_value.getTextureUnit();
+    TexturePrivate* texturePrivate = this->m_value.texturePrivate();
+
+    if(texturePrivate == nullptr) {
+        msg_warning("Data<Texture2D>") << "texture is empty. Data not updated";
+        return;
+    }
+
+    unsigned short unit = texturePrivate->getTextureUnit();
 
     this->m_value.bind();
 
     glUniform1i(this->m_dataLocation, unit);
 }
 
-template<> inline void Data<CubeMapTexturePrivate>::update()
+template<> inline void Data<CubeMapTexture>::update()
 {
-    unsigned short unit = this->m_value.getTextureUnit();
+    TexturePrivate* texturePrivate = this->m_value.texturePrivate();
+
+    if(texturePrivate == nullptr) {
+        msg_warning("Data<CubeMapTexture>") << "texture is empty. Data not updated";
+        return;
+    }
+
+    unsigned short unit = texturePrivate->getTextureUnit();
 
     this->m_value.bind();
 

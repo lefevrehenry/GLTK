@@ -79,7 +79,6 @@ public:
     void popAttribute() const;
 
 public:
-
     bool addShader(const Shader& shader);
     void link();
     bool isLinked() const;

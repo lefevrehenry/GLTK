@@ -38,7 +38,7 @@ public:
     Node* getChild(unsigned int i) const;
 
 public:
-    void addVisual(const VisualModel* visualModel);
+    void addVisual(const std::shared_ptr<const VisualModel>& visualModel);
     void removeVisual(unsigned int i);
 
     size_t getNbVisual() const;

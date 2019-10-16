@@ -10,6 +10,7 @@ set(HEADER_FILES
     src/controller/Controller.h
 
     src/graph/BoundingBoxVisitor.h
+    src/graph/CubeMapTexture.h
     src/graph/DrawVisitor.h
     src/graph/DrawWithSelectionVisitor.h
     src/graph/FetchVisualModelVisitor.h
@@ -19,6 +20,8 @@ set(HEADER_FILES
     src/graph/SceneGraph.h
     src/graph/ShaderProgram.h
     src/graph/ShaderVisitor.h
+    src/graph/Texture.h
+    src/graph/Texture2D.h
     src/graph/TexturedVisualModel.h
     src/graph/Visitor.h
     src/graph/VisualModel.h
@@ -42,6 +45,7 @@ set(SOURCE_FILES
     src/controller/Controller.cpp
 
     src/graph/BoundingBoxVisitor.cpp
+    src/graph/CubeMapTexture.cpp
     src/graph/DrawVisitor.cpp
     src/graph/DrawWithSelectionVisitor.cpp
     src/graph/FetchVisualModelVisitor.cpp
@@ -51,6 +55,8 @@ set(SOURCE_FILES
     src/graph/SceneGraph.cpp
     src/graph/ShaderProgram.cpp
     src/graph/ShaderVisitor.cpp
+    src/graph/Texture.cpp
+    src/graph/Texture2D.cpp
     src/graph/TexturedVisualModel.cpp
     src/graph/Visitor.cpp
     src/graph/VisualModel.cpp

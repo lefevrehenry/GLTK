@@ -67,13 +67,12 @@ Node* Node::getChild(unsigned int i) const
     return this->m_children[i].get();
 }
 
-void Node::addVisual(const VisualModel* visualModel)
+void Node::addVisual(const std::shared_ptr<const VisualModel>& visualModel)
 {
     if (visualModel == nullptr)
         return;
 
-    std::shared_ptr<const VisualModel> visual(visualModel);
-    this->m_visuals.push_back(visual);
+    this->m_visuals.push_back(visualModel);
 }
 
 void Node::removeVisual(unsigned int i)
