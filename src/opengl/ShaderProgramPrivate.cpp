@@ -39,7 +39,7 @@ ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgr
 {
     typedef Shader::ShaderType ShaderType;
 
-    ShaderProgramPrivate* shaderProgram = new ShaderProgramPrivate();
+    ShaderProgramPrivate* shaderProgramPrivate = new ShaderProgramPrivate();
 
     std::string vertexFilename = "";
     std::string geometryFilename = "";
@@ -187,118 +187,119 @@ ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgr
 
     if (vs != "") {
         vertexShader.compileSourceCode(vs);
-        shaderProgram->addShader(vertexShader);
+        shaderProgramPrivate->addShader(vertexShader);
     }
 
     if (gs != "") {
         geometryShader.compileSourceCode(gs);
-        shaderProgram->addShader(geometryShader);
+        shaderProgramPrivate->addShader(geometryShader);
     }
 
     if (fs != "") {
         fragmentShader.compileSourceCode(fs);
-        shaderProgram->addShader(fragmentShader);
+        shaderProgramPrivate->addShader(fragmentShader);
     }
 
-    shaderProgram->link();
+    shaderProgramPrivate->link();
 
     switch (shaderProgramType)
     {
     case ShaderProgramType::Basic:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::Normal:
 
-        shaderProgram->addData<float>("scale", 0.5f);
-        shaderProgram->addData<glm::vec3>("normalColor", glm::vec3(1,1,1));
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addData<float>("scale", 0.5f);
+        shaderProgramPrivate->addData<glm::vec3>("normalColor", glm::vec3(1,1,1));
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::FlatShading:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::GouraudShading:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::PhongShading:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::Frame:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
-        shaderProgram->setNbInstance(3);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
+        shaderProgramPrivate->setNbInstance(3);
 
         break;
     case ShaderProgramType::HighLight:
 
-        shaderProgram->addData<glm::vec3>("color", glm::vec3(1.0,0.8,0.0));
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->set<DepthFunc>(GL_LEQUAL);
-        shaderProgram->set<LineWidth>(2.0f);
-        shaderProgram->set<PolygonMode>(GL_LINE);
+        shaderProgramPrivate->addData<glm::vec3>("color", glm::vec3(1.0,0.8,0.0));
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->set<DepthFunc>(GL_LEQUAL);
+        shaderProgramPrivate->set<LineWidth>(2.0f);
+        shaderProgramPrivate->set<PolygonMode>(GL_LINE);
 
         break;
     case ShaderProgramType::BasicTexturing:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::Texturing:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::TangentSpace:
 
-        shaderProgram->setPrimitiveType(PrimitiveType::POINTS);
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->setPrimitiveType(PrimitiveType::POINTS);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->setUniformValue("scale", .5);
 
         break;
     case ShaderProgramType::Picking:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::OutLine:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::MatCap:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::VaoQuad:
@@ -306,41 +307,41 @@ ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgr
         break;
     case ShaderProgramType::Deferred:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::ShadowMapping:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     case ShaderProgramType::NormalMapping:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->addUniformBlock("light", VisualManager::LightIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::CubeMap:
 
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgram->set<CullFace>(GL_FALSE);
-        shaderProgram->set<DepthFunc>(GL_LEQUAL);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->set<CullFace>(GL_FALSE);
+        shaderProgramPrivate->set<DepthFunc>(GL_LEQUAL);
 
         break;
     case ShaderProgramType::EnvironmentMapping:
 
-        shaderProgram->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgram->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
 
         break;
     }
 
-    return shaderProgram;
+    return shaderProgramPrivate;
 }
 
 ShaderProgramPrivate::ShaderProgramPrivate() :
