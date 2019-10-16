@@ -72,7 +72,7 @@ set(PRIVATE_HEADER_FILES
     src/opengl/CubeMapTexture.h
     src/opengl/Data.h
     src/opengl/Framebuffer.h
-    src/opengl/Mesh.h
+    src/opengl/MeshPrivate.h
     src/opengl/Shader.h
     src/opengl/ShaderProgramPrivate.h
     src/opengl/Texture.h
@@ -88,7 +88,7 @@ set(PRIVATE_SOURCE_FILES
     src/opengl/CubeMapTexture.cpp
     src/opengl/Data.cpp
     src/opengl/Framebuffer.cpp
-    src/opengl/Mesh.cpp
+    src/opengl/MeshPrivate.cpp
     src/opengl/Shader.cpp
     src/opengl/ShaderProgramPrivate.cpp
     src/opengl/Texture.cpp

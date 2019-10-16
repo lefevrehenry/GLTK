@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "MeshPrivate.h"
 
 #include <helper/FileRepository.h>
 #include <helper/Message.h>
@@ -11,14 +11,14 @@
 
 using namespace gl;
 
-Mesh::Mesh() :
+MeshPrivate::MeshPrivate() :
     m_meshEntries(0),
     m_name("")
 {
 
 }
 
-Mesh::Mesh(const std::string& filename) :
+MeshPrivate::MeshPrivate(const std::string& filename) :
     m_meshEntries(0),
     m_name("")
 {
@@ -40,7 +40,7 @@ Mesh::Mesh(const std::string& filename) :
     }
 }
 
-Mesh::~Mesh()
+MeshPrivate::~MeshPrivate()
 {
     for (const MeshEntry* meshEntry : m_meshEntries) {
         delete meshEntry;
@@ -49,7 +49,7 @@ Mesh::~Mesh()
     m_meshEntries.clear();
 }
 
-Mesh* Mesh::FromFile(const std::string& filename)
+MeshPrivate* MeshPrivate::FromFile(const std::string& filename)
 {
     std::string path(filename);
 
@@ -58,18 +58,18 @@ Mesh* Mesh::FromFile(const std::string& filename)
         return nullptr;
     }
 
-    Mesh* mesh = new Mesh(path);
+    MeshPrivate* mesh = new MeshPrivate(path);
     return mesh;
 }
 
-void Mesh::draw(const VisualParam* param) const
+void MeshPrivate::draw(const VisualParam* param) const
 {
     for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
         m_meshEntries[i]->draw(param);
     }
 }
 
-void Mesh::getBBox(glm::vec3 &min, glm::vec3 &max) const
+void MeshPrivate::getBBox(glm::vec3 &min, glm::vec3 &max) const
 {
     float minf = std::numeric_limits<float>::lowest();
     float maxf = std::numeric_limits<float>::max();
@@ -97,12 +97,12 @@ void Mesh::getBBox(glm::vec3 &min, glm::vec3 &max) const
     }
 }
 
-std::string Mesh::name() const
+std::string MeshPrivate::name() const
 {
     return this->m_name;
 }
 
-Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
+MeshPrivate::MeshEntry::MeshEntry(const aiMesh *mesh)
 {
     if(mesh->HasPositions())
         m_vertices.resize(mesh->mNumVertices * 3);
@@ -205,12 +205,12 @@ Mesh::MeshEntry::MeshEntry(const aiMesh *mesh)
     vao.loadToGPU(m_vertices, m_normals, m_tangents, m_bitangents, m_uvcoord, m_indices, GL_STATIC_DRAW);
 }
 
-Mesh::MeshEntry::~MeshEntry()
+MeshPrivate::MeshEntry::~MeshEntry()
 {
     vao.free();
 }
 
-void Mesh::MeshEntry::draw(const VisualParam* param) const
+void MeshPrivate::MeshEntry::draw(const VisualParam* param) const
 {
     GLenum primitiveType = 0;
     unsigned int count = 0;
@@ -247,7 +247,7 @@ void Mesh::MeshEntry::draw(const VisualParam* param) const
     glBindVertexArray(0);
 }
 
-void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVector& tangents, floatVector& bitangents, floatVector& uvcoords, uintVector& indices, GLenum mode) {
+void MeshPrivate::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVector& tangents, floatVector& bitangents, floatVector& uvcoords, uintVector& indices, GLenum mode) {
     // Create a vertex array object
     glGenVertexArrays(1, &id);
 
@@ -329,7 +329,7 @@ void Mesh::VAO::loadToGPU(floatVector& vertices, floatVector& normals, floatVect
     glBindVertexArray(0);
 }
 
-void Mesh::VAO::free() {
+void MeshPrivate::VAO::free() {
     glDeleteBuffers(1, &vbo_vertices);
 //    glDeleteBuffers(1, &vbo_normals);
 //    glDeleteBuffers(1, &vbo_tangents);

@@ -1,7 +1,7 @@
 #include "VisualModel.h"
 
 #include <helper/FileRepository.h>
-#include <opengl/Mesh.h>
+#include <opengl/MeshPrivate.h>
 #include <helper/Message.h>
 #include <opengl/ShaderProgramPrivate.h>
 #include <opengl/Texture.h>
@@ -19,7 +19,7 @@ VisualModel::VisualModel(const std::string& filename, const Material& material) 
     if (!DataRepository.findFile(path))
         msg_error("Mesh") << "File " << filename << " not found";
     else
-        this->m_mesh.reset(new Mesh(path));
+        this->m_mesh.reset(new MeshPrivate(path));
 }
 
 VisualModel::VisualModel(const VisualModel& other) :

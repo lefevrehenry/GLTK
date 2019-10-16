@@ -1,7 +1,6 @@
 #include "ShaderProgramPrivate.h"
 
 #include <helper/FileRepository.h>
-#include <opengl/Mesh.h>
 #include <helper/Message.h>
 #include <graph/SceneGraph.h>
 #include <opengl/Shader.h>

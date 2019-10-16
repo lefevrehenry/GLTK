@@ -11,7 +11,7 @@
 
 namespace gl {
 
-class Mesh;
+class MeshPrivate;
 class VisualParam;
 
 /**
@@ -38,9 +38,9 @@ public:
     void draw(const VisualParam* param) const;
 
 private:
-    std::shared_ptr<Mesh>   m_mesh;
-    Transform               m_transform;
-    Material                m_material;
+    std::shared_ptr<MeshPrivate>    m_mesh;
+    Transform                       m_transform;
+    Material                        m_material;
 
 };
 

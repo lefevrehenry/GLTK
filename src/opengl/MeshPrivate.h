@@ -1,5 +1,5 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef MESHPRIVATE_H
+#define MESHPRIVATE_H
 
 // Standard Library
 #include <string>
@@ -21,9 +21,9 @@ class VisualModel;
 class VisualParam;
 
 /**
- * @brief The Mesh class
+ * @brief The MeshPrivate class
  */
-class Mesh
+class MeshPrivate
 {
     friend class VisualModel;
 
@@ -32,7 +32,7 @@ class Mesh
 
 public:
 
-    static Mesh* FromFile(const std::string& filename);
+    static MeshPrivate* FromFile(const std::string& filename);
 
     void draw(const VisualParam* param) const;
 
@@ -40,12 +40,12 @@ public:
 
     std::string name() const;
 
-    virtual ~Mesh();
+    virtual ~MeshPrivate();
 
 private:
 
-    Mesh();
-    Mesh(const std::string& filename);
+    MeshPrivate();
+    MeshPrivate(const std::string& filename);
 
 protected:
 
