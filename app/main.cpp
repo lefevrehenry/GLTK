@@ -1,28 +1,27 @@
+#include <gltk.h>
 
+#include <Camera.h>
 #include <FileRepository.h>
 #include <GLFWApplication.h>
-#include <GLFWApplicationEvents.h>
-#include <Helper.h>
+#include <GLFWCameraController.h>
 #include <Light.h>
+#include <Material.h>
 #include <Mesh.h>
 #include <Message.h>
 #include <Node.h>
 #include <SceneGraph.h>
 #include <SceneView.h>
 #include <ShaderProgram.h>
-#include <Texture.h>
+#include <Texture2D.h>
 #include <Visitor.h>
 #include <VisualModel.h>
-#include <VisualManager.h>
+#include <Rect.h>
 
 // Glm
 #include <glm/gtx/transform.hpp>
 
 // Glfw
 #include <GLFW/glfw3.h>
-
-// OpenGL
-#include <GL/gl.h>
 
 // Standard Library
 #include <chrono>
@@ -36,25 +35,30 @@ using namespace gl;
 using namespace gl::helper;
 
 static GLFWApplication* app = nullptr;
-static GLFWApplicationEvents* interface = nullptr;
-static std::shared_ptr<SceneGraph> scene;
-static VisualModel* vm = nullptr;
+static std::shared_ptr<SceneGraph> scene(new SceneGraph());
 
-void addPiece(Node* node, Mesh* mesh, Material material, int i, int j)
+using ShaderProgramType = GLTK::ShaderProgramType;
+
+void addPiece(Node* node, Mesh::SPtr mesh, Material material, int i, int j)
 {
-    VisualModel* visualModel = new VisualModel(mesh, material);
+    VisualModel::SPtr visualModel(new VisualModel(mesh, material));
     visualModel->transform().translate(-12.5f - (3 * 25) + (i * 25), -12.5f - (3 * 25) + (j * 25), 0);
     node->addVisual(visualModel);
 }
 
-void addMatCapShader(Node* node, std::string filename) {
-    Texture* matcapTexture = new Texture2D();
+void addPhongShadingShader(Node* node) {
+    ShaderProgram::SPtr sp( ShaderProgram::Create(ShaderProgramType::PhongShading) );
+    node->setShaderProgram(sp);
+}
+
+void addMatCapShader(Node* node, const std::string& filename) {
+    Texture::SPtr matcapTexture(new Texture2D());
     matcapTexture->load(filename);
 
-    ShaderProgram* shaderProgram = ShaderProgram::Create(ShaderProgram::MatCap);
-    shaderProgram->addData<Texture>("matcap", *matcapTexture);
+    ShaderProgram::SPtr sp( ShaderProgram::Create(ShaderProgramType::MatCap) );
+    sp->addDataTexture("matcap", matcapTexture.get());
 
-    node->setShaderProgram(shaderProgram);
+    node->setShaderProgram(sp);
 }
 
 void createChessboard(Node* node)
@@ -62,33 +66,18 @@ void createChessboard(Node* node)
     std::string folder = "low_res";
     std::string extension = ".obj";
 
-    Mesh* pawn = Mesh::FromFile("mesh/" + folder + "/pion" + extension);
-    Mesh* rook = Mesh::FromFile("mesh/" + folder + "/tour" + extension);
-    Mesh* knight = Mesh::FromFile("mesh/" + folder + "/cavalier" + extension);
-    Mesh* bishop = Mesh::FromFile("mesh/" + folder + "/fou" + extension);
-    Mesh* queen = Mesh::FromFile("mesh/" + folder + "/reine" + extension);
-    Mesh* king = Mesh::FromFile("mesh/" + folder + "/roi" + extension);
-
-    Texture* boardColorTex = new Texture2D();
-    boardColorTex->load("textures/chessboard2.jpg");
-
-    ShaderProgram* shaderProgram = ShaderProgram::Create(ShaderProgram::BasicTexturing);
-    shaderProgram->addData<Texture>("colorMap", *boardColorTex);
-
-    VisualModel* board = new VisualModel("mesh/flatQuad.obj");
-    float s = 118.5;
-    board->transform().scale(s,s,s);
-
-    node->setShaderProgram( shaderProgram );
-    node->addVisual(board);
+    Mesh::SPtr   pawn(new Mesh("mesh/" + folder + "/pion" + extension));
+    Mesh::SPtr   rook(new Mesh("mesh/" + folder + "/tour" + extension));
+    Mesh::SPtr knight(new Mesh("mesh/" + folder + "/cavalier" + extension));
+    Mesh::SPtr bishop(new Mesh("mesh/" + folder + "/fou" + extension));
+    Mesh::SPtr  queen(new Mesh("mesh/" + folder + "/reine" + extension));
+    Mesh::SPtr   king(new Mesh("mesh/" + folder + "/roi" + extension));
 
     // White Set
 
     Node* nodeWhite = node->addChild();
+//    addPhongShadingShader(nodeWhite);
     addMatCapShader(nodeWhite, "textures/m8.jpg");
-
-//    ShaderProgram* sp = ShaderProgram::Create(ShaderProgram::PhongShading);
-//    nodeWhite->setShaderProgram(sp);
 
     Material materialWhite = Material::Brass();
 
@@ -112,9 +101,8 @@ void createChessboard(Node* node)
     // Black Set
 
     Node* nodeBlack = node->addChild();
+//    addPhongShadingShader(nodeBlack);
     addMatCapShader(nodeBlack, "textures/metal.jpg");
-
-//    nodeBlack->setShaderProgram(sp);
 
     Material materialBlack = Material::Silver();
 
@@ -136,42 +124,60 @@ void createChessboard(Node* node)
     addPiece(nodeBlack, pawn,   materialBlack, 7, 6);
 }
 
+void createBoard(Node* node)
+{
+    float s = 118.5;
+
+    Texture::SPtr boardColorTex(new Texture2D());
+    boardColorTex->load("textures/chessboard2.jpg");
+
+    ShaderProgram::SPtr shaderProgram( ShaderProgram::Create(ShaderProgramType::BasicTexturing) );
+    shaderProgram->addDataTexture("colorMap", boardColorTex.get());
+
+    VisualModel::SPtr board(new VisualModel("mesh/flatQuad.obj"));
+    board->transform().scale(s,s,s);
+
+    node->setShaderProgram(shaderProgram);
+    node->addVisual(board);
+}
+
 void createScene(Node* rootNode)
 {
-    vm = new VisualModel("dragon_low.obj", Material::Emerald());
-    rootNode->addVisual(vm);
+    VisualModel::SPtr visualModel;
+    ShaderProgram::SPtr shaderProgram;
 
-    Light light;
-    light.setDirection(glm::vec3(-1,-1,-1));
+    // rootNode
+    visualModel.reset(new VisualModel("mesh/dragon_low.obj", Material::Emerald()));
+    rootNode->addVisual(visualModel);
 
-    VisualManager::UpdateUniformBufferLight(light);
-
-    ShaderProgram* shaderProgram = ShaderProgram::Create(ShaderProgram::PhongShading);
+    shaderProgram.reset( ShaderProgram::Create(GLTK::ShaderProgramType::PhongShading) );
     rootNode->setShaderProgram(shaderProgram);
 
-//    Node* node1 = root->addChild();
-//    node1->setShaderProgram(ShaderProgram::Create(ShaderProgram::PhongShading));
+    // node 1
+    Node* node1 = rootNode->addChild();
+    node1->addVisual(visualModel);
 
-//    VisualModel* frame = new VisualModel("frame.obj", Material::Gold());
-//    node1->addVisual(frame);
+    shaderProgram.reset( ShaderProgram::Create(GLTK::ShaderProgramType::HighLight) );
+    node1->setShaderProgram(shaderProgram);
 
-//    Node* node1 = root->addChild();
-//    node1->addVisual(vm);
-//    ShaderProgram* hightlightShading = ShaderProgram::Create(ShaderProgram::HighLight);
-//    node1->setShaderProgram(hightlightShading);
+    // node 2
+    Node* node2 = rootNode->addChild();
+    node2->addVisual(visualModel);
 
-//    Node* node2 = root->addChild();
-//    node2->addVisual(vm);
-//    ShaderProgram* normalShading = ShaderProgram::Create(ShaderProgram::Normal);
-//    node2->setShaderProgram(normalShading);
+    shaderProgram.reset( ShaderProgram::Create(GLTK::ShaderProgramType::Normal) );
+    node2->setShaderProgram(shaderProgram);
 
-    //createChessboard(root);
+//    createBoard(rootNode);
+//    createChessboard(rootNode);
 }
 
 void fitView(SceneView* sceneView)
 {
-    std::shared_ptr<SceneGraph> scene(sceneView->scene());
-    std::shared_ptr<Camera> camera(sceneView->camera());
+    if(!sceneView)
+        return;
+
+    SceneGraph* scene = sceneView->scene();
+    Camera* camera = sceneView->camera();
 
     if(!scene || !camera)
         return;
@@ -198,75 +204,74 @@ void fitView(SceneView* sceneView)
 }
 
 
-void initGL();
 void initGLTK();
 void errorCallback [[ noreturn ]] (int, const char* description);
 
-static bool stopThread = false;
-static glm::vec3 target_position(0,0,0);
-static unsigned int duration = 0;
+//static bool stopThread = false;
+//static glm::vec3 target_position(0,0,0);
+//static unsigned int duration = 0;
 // number of frame per second
-static unsigned short fps = 20;
+//static unsigned short fps = 20;
 
-void callback()
-{
-    // time waiting between each frame to achieve desired fps
-    double frameRate = 1000.0 / fps;
+//void callback()
+//{
+//    // time waiting between each frame to achieve desired fps
+//    double frameRate = 1000.0 / fps;
 
-    // number of frames counted this second
-    long int frameCount = 0;
+//    // number of frames counted this second
+//    long int frameCount = 0;
 
-    // accumulate elapsed time over multiple frames
-    double totalElapsedTime = 0;
+//    // accumulate elapsed time over multiple frames
+//    double totalElapsedTime = 0;
 
-    // the actual calculated framerate reported
-    long int reportedFramerate = 0;
+//    // the actual calculated framerate reported
+//    long int reportedFramerate = 0;
 
-    while(!stopThread)
-    {
-        // time the frame began
-        double frameStart = glfwGetTime();
+//    while(!stopThread)
+//    {
+//        // time the frame began
+//        double frameStart = glfwGetTime();
 
-        if (vm != nullptr) {
-            Transform& tr = vm->transform();
-//            float angle = ((90.f / 180.f) * glm::pi<float>()) / fps;
-//            glm::vec3 axis(0,1,0);
-//            glm::quat q = glm::angleAxis(angle,axis);
-//            tr.rotate(q);
+//        if (vm != nullptr) {
+////            Transform& tr = vm->transform();
+////            float angle = ((90.f / 180.f) * glm::pi<float>()) / fps;
+////            glm::vec3 axis(0,1,0);
+////            glm::quat q = glm::angleAxis(angle,axis);
+////            tr.rotate(q);
 
-//            if (duration > 0) {
-//                float d = duration;
-//                glm::vec3& position = tr.m_translation;
-//                position = (position * (d-1) + target_position) / d;
-//                duration -= 1;
-//                tr.m_isDirty = true;
-//            }
+////            if (duration > 0) {
+////                float d = duration;
+////                glm::vec3& position = tr.m_translation;
+////                position = (position * (d-1) + target_position) / d;
+////                duration -= 1;
+////                tr.m_isDirty = true;
+////            }
 
-//            tr.translate(0.f,0.01f,0.f);
-        }
+////            tr.translate(0.f,0.01f,0.f);
+//        }
 
-        // time elapsed during one frame
-        double elapsedTime = glfwGetTime() - frameStart;
+//        // time elapsed during one frame
+//        double elapsedTime = glfwGetTime() - frameStart;
 
-        if (elapsedTime < frameRate) {
-            long int t = long(frameRate - elapsedTime);
-            std::chrono::milliseconds dt = std::chrono::milliseconds(t);
-            std::this_thread::sleep_for(dt);
-        }
+//        if (elapsedTime < frameRate) {
+//            long int t = long(frameRate - elapsedTime);
+//            std::chrono::milliseconds dt = std::chrono::milliseconds(t);
+//            std::this_thread::sleep_for(dt);
+//        }
 
-        frameCount += 1;
-        totalElapsedTime += glfwGetTime() - frameStart;
+//        frameCount += 1;
+//        totalElapsedTime += glfwGetTime() - frameStart;
 
-        if (totalElapsedTime > 1) {
-            reportedFramerate = long(frameCount / totalElapsedTime);
-            //msg_info("Thread") << "fps: " << reportedFramerate;
-            frameCount = 0;
-            totalElapsedTime = 0;
-        }
-    }
+//        if (totalElapsedTime > 1) {
+//            reportedFramerate = long(frameCount / totalElapsedTime);
+//            //msg_info("Thread") << "fps: " << reportedFramerate;
+//            frameCount = 0;
+//            totalElapsedTime = 0;
+//        }
+//    }
 
-    msg_info("Thread") << "Terminate";
-}
+//    msg_info("Thread") << "Terminate";
+//}
 
 int main()
 {
@@ -285,9 +290,6 @@ int main()
 
     try
     {
-        // Initialise OpenGL
-        initGL();
-
         // Initialise GLTK
         initGLTK();
 
@@ -311,30 +313,9 @@ int main()
     return return_code;
 }
 
-void initGL()
-{
-    // Specifies background color
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    // Enable depth buffer test
-    glEnable(GL_DEPTH_TEST);
-    // Enable eliminaton of hidden faces
-    glEnable(GL_CULL_FACE);
-    // Specifies whether front or back facing facets are candidates for culling
-    glCullFace(GL_BACK);
-    // Specifies the orientation of front-facing polygons
-    glFrontFace(GL_CCW);
-
-    int glMajor;
-    int glMinor;
-    glGetIntegerv(GL_MAJOR_VERSION, &glMajor);
-    glGetIntegerv(GL_MINOR_VERSION, &glMinor);
-
-    msg_info("OpenGL") << "Congrat's ! You're running OpenGL " << glMajor << "." << glMinor;
-}
-
 void initGLTK()
 {
-    std::map<std::string, std::string> iniFileValues = getMapFromIniFile("../etc/config.ini");
+    std::map<std::string, std::string> iniFileValues = GLTK::getMapFromIniFile("../etc/config.ini");
 
     if (iniFileValues.find("SHARE_DIR") != iniFileValues.end()) {
         std::string ini_directories[4] = {
@@ -350,15 +331,28 @@ void initGLTK()
         msg_warning("FileRepository") << "No share/ directory added";
     }
 
-    SceneView* sceneView = app->createSceneView();
-
-    scene.reset(new SceneGraph());
     createScene(scene->root());
 
-    sceneView->setScene(scene);
-    sceneView->setInterface(CameraController::CameraType::ArcBall);
+    std::shared_ptr<SceneView> sceneView(new SceneView());
 
-    fitView(sceneView);
+    int width = static_cast<int>(Application::ScreenWidth);
+    int height = static_cast<int>(Application::ScreenHeight);
+    Rect rect(0,0,width,height);
+    std::shared_ptr<Controller> controller(new GLFWCameraController(sceneView));
+
+    sceneView->setRect(rect);
+    sceneView->setScene(scene);
+    sceneView->setInterface(controller);
+
+    fitView(sceneView.get());
+
+    app->addSceneView(sceneView);
+
+    Light light;
+    light.setColor(glm::vec3(1,0,0));
+    light.setDirection(glm::vec3(-1,-1,-1));
+
+    sceneView->setLight(light);
 }
 
 void errorCallback(int, const char* description)

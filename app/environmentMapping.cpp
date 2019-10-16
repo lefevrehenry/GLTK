@@ -1,24 +1,21 @@
 
-#include <FileRepository.h>
-#include <GLFWApplication.h>
-#include <GLFWApplicationEvents.h>
-#include <Helper.h>
+#include <helper/FileRepository.h>
+#include <glfw/GLFWApplication.h>
+#include <glfw/GLFWCameraController.h>
+#include <gltk.h>
 #include <Mesh.h>
-#include <Message.h>
-#include <Node.h>
-#include <OpenGLAttribute.h>
-#include <Rendered.h>
-#include <Scene.h>
+#include <helper/Message.h>
+#include <graph/Node.h>
+#include <statemachine/OpenGLAttribute.h>
+#include <graph/SceneGraph.h>
+#include <gui/SceneView.h>
 #include <ShaderProgram.h>
-#include <Texture.h>
-#include <Visitor.h>
+#include <CubeMapTexture.h>
+#include <graph/Visitor.h>
 #include <VisualModel.h>
 
 // Glfw
 #include <GLFW/glfw3.h>
-
-// OpenGL
-#include <GL/gl.h>
 
 // Standard Library
 #include <cstdlib>
@@ -30,45 +27,51 @@
 using namespace gl;
 using namespace gl::helper;
 
-SceneGraph* createScene()
-{
-    SceneGraph* scene = new SceneGraph();
+static GLFWApplication* app = nullptr;
+static std::shared_ptr<SceneGraph> scene(new SceneGraph());
 
-    Node* root = scene->root();
+using ShaderProgramType = GLTK::ShaderProgramType;
+
+void createScene(Node* rootNode)
+{
     Node* childNode;
 
-    CubeMapTexture* cubeMapTexture = new CubeMapTexture();
+    CubeMapTexture::SPtr cubeMapTexture(new CubeMapTexture());
     cubeMapTexture->load("textures/cubemap1.jpg");
 
     ////////////////////////////////////////
 
-    childNode = root->addChild();
+    childNode = rootNode->addChild();
 
-    ShaderProgram* basicTexturingShader = helper::CreateShaderProgram(ShaderProgram::EnvironmentMapping);
+    ShaderProgram::SPtr basicTexturingShader( ShaderProgram::Create(ShaderProgramType::EnvironmentMapping) );
     childNode->setShaderProgram(basicTexturingShader);
 
-    basicTexturingShader->addData<Texture>("cubeMap", *cubeMapTexture);
+    basicTexturingShader->addDataTexture("cubeMap", cubeMapTexture.get());
 
-    VisualModel* board = new VisualModel("mesh/Armadillo_simplified.obj");
+    VisualModel::SPtr board(new VisualModel("mesh/Armadillo_simplified.obj"));
     childNode->addVisual(board);
 
     ////////////////////////////////////////
 
-    childNode = root->addChild();
+    childNode = rootNode->addChild();
 
-    ShaderProgram* cubeMapShader = helper::CreateShaderProgram(ShaderProgram::CubeMap);
+    ShaderProgram::SPtr cubeMapShader( ShaderProgram::Create(ShaderProgramType::CubeMap) );
     childNode->setShaderProgram(cubeMapShader);
 
-    cubeMapShader->addData<CubeMapTexture>("cubeMap", *cubeMapTexture);
+    cubeMapShader->addDataCubeMapTexture("cubeMap", cubeMapTexture.get());
 
-    VisualModel* cube = new VisualModel("mesh/cube.obj");
+    VisualModel::SPtr cube(new VisualModel("mesh/cube.obj"));
     childNode->addVisual(cube);
-
-    return scene;
 }
 
-void fitView(SceneGraph* scene, Camera* camera)
+void fitView(SceneView* sceneView)
 {
+    if(!sceneView)
+        return;
+
+    SceneGraph* scene = sceneView->scene();
+    Camera* camera = sceneView->camera();
+
     glm::vec3 min;
     glm::vec3 max;
     scene->getBB(min, max);
@@ -91,15 +94,10 @@ void fitView(SceneGraph* scene, Camera* camera)
 }
 
 
-static GLFWApplication* app = nullptr;
-static GLFWApplicationEvents* interface = nullptr;
-static Rendered renderer;
-
 void initGL();
 void initGLTK();
 void displayCallback();
-void errorCallback(int error, const char* description);
-
+void errorCallback [[noreturn]] (int error, const char* description);
 
 int main()
 {
@@ -116,9 +114,6 @@ int main()
 
     try
     {
-        // Initialise OpenGL
-        initGL();
-
         // Initialise GLTK
         initGLTK();
 
@@ -139,30 +134,9 @@ int main()
     return return_code;
 }
 
-void initGL()
-{
-    // Specifies background color
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    // Enable depth buffer test
-    glEnable(GL_DEPTH_TEST);
-    // Enable eliminaton of hidden faces
-    glEnable(GL_CULL_FACE);
-    // Specifies whether front or back facing facets are candidates for culling
-    glCullFace(GL_BACK);
-    // Specifies the orientation of front-facing polygons
-    glFrontFace(GL_CCW);
-
-    int glMajor;
-    int glMinor;
-    glGetIntegerv(GL_MAJOR_VERSION, &glMajor);
-    glGetIntegerv(GL_MINOR_VERSION, &glMinor);
-
-    msg_info("OpenGL") << "Congrat's ! You're running OpenGL " << glMajor << "." << glMinor;
-}
-
 void initGLTK()
 {
-    std::map<std::string, std::string> iniFileValues = getMapFromIniFile("../etc/config.ini");
+    std::map<std::string, std::string> iniFileValues = GLTK::getMapFromIniFile("../etc/config.ini");
 
     if (iniFileValues.find("SHARE_DIR") != iniFileValues.end()) {
         std::string ini_directories[4] = {
@@ -178,26 +152,32 @@ void initGLTK()
         msg_warning("FileRepository") << "No share/ directory added";
     }
 
-    renderer.scene = createScene();
-    renderer.camera = new Camera();
+    createScene(scene->root());
 
-    fitView(renderer.scene, renderer.camera);
+    std::shared_ptr<SceneView> sceneView(new SceneView());
 
-    interface = new GLFWApplicationEvents(renderer.camera);
-    app->setInterface(interface);
+    int width = static_cast<int>(GLFWApplication::ScreenWidth);
+    int height = static_cast<int>(GLFWApplication::ScreenHeight);
+    Rect rect(0,0,width,height);
+    std::shared_ptr<Controller> controller(new GLFWCameraController(sceneView));
 
-    app->setDrawCallBack(displayCallback);
-}
+    sceneView->setRect(rect);
+    sceneView->setScene(scene);
+    sceneView->setInterface(controller);
 
-void displayCallback()
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    fitView(sceneView.get());
 
-    renderer.draw();
+    app->addSceneView(sceneView);
+
+    Light light;
+    light.setColor(glm::vec3(1,0,0));
+    light.setDirection(glm::vec3(-1,-1,-1));
+
+    sceneView->setLight(light);
 }
 
 void errorCallback(int, const char* description)
 {
     // Throw an error
-    throw (description);
+    throw std::runtime_error(description);
 }
