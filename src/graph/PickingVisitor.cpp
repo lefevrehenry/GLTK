@@ -59,7 +59,7 @@ void PickingVisitor::set(int x, int y)
     this->m_y = y;
 }
 
-std::shared_ptr<const VisualModel> PickingVisitor::selectedVisualModel() const
+std::weak_ptr<const VisualModel> PickingVisitor::selectedVisualModel() const
 {
     return this->m_selectedVisualModel;
 }
@@ -84,9 +84,9 @@ void PickingVisitor::start()
     this->m_shaderProgram->updateDataIfDirty();
 
     this->m_visualModels.clear();
-    this->m_visualModels.push_back(nullptr);
+    this->m_visualModels.push_back(VisualModel::CWPtr());
 
-    this->m_selectedVisualModel = nullptr;
+    this->m_selectedVisualModel = VisualModel::CWPtr();
     this->m_selectedPosition = glm::vec3(0,0,0);
 
     this->m_id = 1;
@@ -106,7 +106,7 @@ void PickingVisitor::end()
     unsigned int index = unpackIndex(color);
 
     if (index > 0 && index < this->m_visualModels.size()) {
-        VisualModel::CSPtr visualModel = this->m_visualModels[index];
+        VisualModel::CWPtr visualModel = this->m_visualModels[index];
 
         float z = 1.0;
         glReadPixels(this->m_x, this->m_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);

@@ -28,7 +28,7 @@ public:
     GLFWPickingController(std::weak_ptr<SceneView> sceneView);
 
 public:
-    void setCallback(void (*callback)(std::shared_ptr<const VisualModel>, glm::vec4));
+    void setCallback(void (*callback)(std::weak_ptr<const VisualModel>, glm::vec4));
 
 public:
     virtual void mouseButtonCallback(GLFWwindow* handle, int button, int action, int mods);
@@ -38,7 +38,7 @@ private:
     std::shared_ptr<PickingVisitor> m_pickingVisitor;
     bool                            m_cameraActive;
 
-    void (*m_callback)(std::shared_ptr<const VisualModel>, glm::vec4);
+    void (*m_callback)(std::weak_ptr<const VisualModel>, glm::vec4);
 
 };
 
