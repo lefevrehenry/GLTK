@@ -2,8 +2,8 @@
 #define OPENGLATTRIBUT_H
 
 #include <gltk.h>
-#include <misc/Light.h>
-#include <opengl/VisualManager.h>
+#include <Light.h>
+#include <VisualManager.h>
 
 // OpenGL
 #include <GL/gl.h>

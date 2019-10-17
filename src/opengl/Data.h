@@ -1,13 +1,13 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include <misc/Camera.h>
-#include <graph/CubeMapTexture.h>
-#include <helper/Message.h>
-#include <graph/Texture.h>
-#include <opengl/TexturePrivate.h>
-#include <graph/Texture2D.h>
-#include <opengl/TexturePrivate2D.h>
+#include <Camera.h>
+#include <CubeMapTexture.h>
+#include <Message.h>
+#include <Texture.h>
+#include <TexturePrivate.h>
+#include <Texture2D.h>
+#include <TexturePrivate2D.h>
 
 // Glew
 #include <GL/glew.h>

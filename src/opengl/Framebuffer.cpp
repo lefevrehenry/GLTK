@@ -1,6 +1,6 @@
 #include "Framebuffer.h"
 
-#include <helper/Message.h>
+#include <Message.h>
 
 using namespace gl;
 

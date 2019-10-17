@@ -1,8 +1,8 @@
 #ifndef GLFWAPPLICATION_H
 #define GLFWAPPLICATION_H
 
-#include <misc/Application.h>
-#include <misc/Rect.h>
+#include <Application.h>
+#include <Rect.h>
 
 // Standard Library
 #include <memory>

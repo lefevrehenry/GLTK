@@ -1,14 +1,14 @@
 #include "GLFWPickingController.h"
 
-#include <misc/Camera.h>
-#include <opengl/Framebuffer.h>
-#include <glfw/GLFWApplication.h>
-#include <graph/Node.h>
-#include <graph/SceneGraph.h>
-#include <gui/SceneView.h>
-#include <graph/PickingVisitor.h>
-#include <opengl/ShaderProgramPrivate.h>
-#include <graph/VisualModel.h>
+#include <Camera.h>
+#include <Framebuffer.h>
+#include <GLFWApplication.h>
+#include <Node.h>
+#include <SceneGraph.h>
+#include <SceneView.h>
+#include <PickingVisitor.h>
+#include <ShaderProgramPrivate.h>
+#include <VisualModel.h>
 
 // Glfw
 #include <GLFW/glfw3.h>

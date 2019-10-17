@@ -1,6 +1,6 @@
 #include "Texture2D.h"
 
-#include <opengl/TexturePrivate2D.h>
+#include <TexturePrivate2D.h>
 
 using namespace gl;
 

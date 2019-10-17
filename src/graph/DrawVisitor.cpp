@@ -1,12 +1,12 @@
 #include "DrawVisitor.h"
 
-#include <misc/Material.h>
-#include <graph/Node.h>
-#include <graph/ShaderProgram.h>
-#include <opengl/ShaderProgramPrivate.h>
-#include <misc/Transform.h>
-#include <graph/VisualModel.h>
-#include <opengl/VisualManager.h>
+#include <Material.h>
+#include <Node.h>
+#include <ShaderProgram.h>
+#include <ShaderProgramPrivate.h>
+#include <Transform.h>
+#include <VisualModel.h>
+#include <VisualManager.h>
 
 using namespace gl;
 

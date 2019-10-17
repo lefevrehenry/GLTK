@@ -1,8 +1,8 @@
 #include "Controller.h"
 
-#include <misc/Camera.h>
-#include <graph/SceneGraph.h>
-#include <gui/SceneView.h>
+#include <Camera.h>
+#include <SceneGraph.h>
+#include <SceneView.h>
 
 using namespace gl;
 

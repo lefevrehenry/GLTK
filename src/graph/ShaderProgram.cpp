@@ -1,8 +1,8 @@
 #include "ShaderProgram.h"
 
 #include <gltk.h>
-#include <opengl/ShaderProgramPrivate.h>
-#include <graph/Texture.h>
+#include <ShaderProgramPrivate.h>
+#include <Texture.h>
 
 using namespace gl;
 

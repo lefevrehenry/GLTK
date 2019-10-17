@@ -1,7 +1,7 @@
 #ifndef CUBEMAPTEXTUREPRIVATE_H
 #define CUBEMAPTEXTUREPRIVATE_H
 
-#include <opengl/TexturePrivate.h>
+#include <TexturePrivate.h>
 
 // Standard Library
 #include <string>

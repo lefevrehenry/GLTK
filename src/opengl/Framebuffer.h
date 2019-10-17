@@ -1,7 +1,7 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#include <opengl/TexturePrivate.h>
+#include <TexturePrivate.h>
 
 // Standard Library
 #include <vector>

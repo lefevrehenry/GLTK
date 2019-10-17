@@ -1,7 +1,7 @@
 #include "CubeMapTexturePrivate.h"
 
-#include <helper/FileRepository.h>
-#include <helper/Message.h>
+#include <FileRepository.h>
+#include <Message.h>
 
 // OpenGL
 #include <GL/glew.h>

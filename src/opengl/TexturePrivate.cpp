@@ -1,7 +1,7 @@
 #include "TexturePrivate.h"
 
-#include <helper/FileRepository.h>
-#include <helper/Message.h>
+#include <FileRepository.h>
+#include <Message.h>
 
 // Standard Library
 #include <algorithm>

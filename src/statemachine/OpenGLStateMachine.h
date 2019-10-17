@@ -1,8 +1,8 @@
 #ifndef OPENGLSTATEMACHINE_H
 #define OPENGLSTATEMACHINE_H
 
-#include <helper/Message.h>
-#include <statemachine/OpenGLAttribute.h>
+#include <Message.h>
+#include <OpenGLAttribute.h>
 
 // Standard Library
 #include <map>

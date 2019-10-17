@@ -1,7 +1,7 @@
 #include "FetchVisualModelVisitor.h"
 
-#include <graph/Node.h>
-#include <graph/VisualModel.h>
+#include <Node.h>
+#include <VisualModel.h>
 
 using namespace gl;
 

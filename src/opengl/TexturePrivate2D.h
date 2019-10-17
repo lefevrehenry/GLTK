@@ -1,7 +1,7 @@
 #ifndef TEXTUREPRIVATE2D_H
 #define TEXTUREPRIVATE2D_H
 
-#include <opengl/TexturePrivate.h>
+#include <TexturePrivate.h>
 
 // Standard Library
 #include <string>

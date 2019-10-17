@@ -1,6 +1,6 @@
 #include "Visitor.h"
 
-#include <graph/Node.h>
+#include <Node.h>
 
 using namespace gl;
 

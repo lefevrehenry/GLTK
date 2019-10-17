@@ -1,9 +1,9 @@
 #include "DrawWithSelectionVisitor.h"
 
-#include <graph/Node.h>
-#include <opengl/ShaderProgramPrivate.h>
-#include <graph/VisualModel.h>
-#include <opengl/VisualManager.h>
+#include <Node.h>
+#include <ShaderProgramPrivate.h>
+#include <VisualModel.h>
+#include <VisualManager.h>
 
 using namespace gl;
 

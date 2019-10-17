@@ -1,7 +1,7 @@
 #include "Texture.h"
 
-#include <opengl/Data.h>
-#include <opengl/TexturePrivate.h>
+#include <Data.h>
+#include <TexturePrivate.h>
 
 using namespace gl;
 

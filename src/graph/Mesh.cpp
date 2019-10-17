@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-#include <opengl/MeshPrivate.h>
+#include <MeshPrivate.h>
 
 using namespace gl;
 

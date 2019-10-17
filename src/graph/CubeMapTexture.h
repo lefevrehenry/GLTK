@@ -1,7 +1,7 @@
 #ifndef CUBEMAPTEXTURE_H
 #define CUBEMAPTEXTURE_H
 
-#include <graph/Texture.h>
+#include <Texture.h>
 
 // Standard Library
 #include <string>

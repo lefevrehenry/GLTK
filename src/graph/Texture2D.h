@@ -1,7 +1,7 @@
 #ifndef TEXTURE2D_H
 #define TEXTURE2D_H
 
-#include <graph/Texture.h>
+#include <Texture.h>
 
 // Standard Library
 #include <string>

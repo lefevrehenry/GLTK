@@ -1,6 +1,6 @@
 #include "CubeMapTexture.h"
 
-#include <opengl/CubeMapTexturePrivate.h>
+#include <CubeMapTexturePrivate.h>
 
 using namespace gl;
 

@@ -1,7 +1,7 @@
 #ifndef TEXTUREDVISUALMODEL_H
 #define TEXTUREDVISUALMODEL_H
 
-#include <graph/VisualModel.h>
+#include <VisualModel.h>
 
 // Standard Library
 #include <memory>

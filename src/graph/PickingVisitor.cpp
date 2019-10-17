@@ -1,12 +1,12 @@
 #include "PickingVisitor.h"
 
-#include <misc/Application.h>
-#include <opengl/Framebuffer.h>
-#include <graph/Node.h>
-#include <opengl/ShaderProgramPrivate.h>
-#include <misc/Transform.h>
-#include <opengl/VisualManager.h>
-#include <graph/VisualModel.h>
+#include <Application.h>
+#include <Framebuffer.h>
+#include <Node.h>
+#include <ShaderProgramPrivate.h>
+#include <Transform.h>
+#include <VisualManager.h>
+#include <VisualModel.h>
 
 // OpenGL
 #include <GL/glew.h>

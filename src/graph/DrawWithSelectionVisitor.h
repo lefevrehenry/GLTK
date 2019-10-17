@@ -1,7 +1,7 @@
 #ifndef DRAWWITHSELECTIONVISITOR_H
 #define DRAWWITHSELECTIONVISITOR_H
 
-#include <graph/DrawVisitor.h>
+#include <DrawVisitor.h>
 
 // Standard Library
 #include <memory>

@@ -1,10 +1,10 @@
 #include "ShaderProgramPrivate.h"
 
-#include <helper/FileRepository.h>
-#include <helper/Message.h>
-#include <graph/SceneGraph.h>
-#include <opengl/Shader.h>
-#include <opengl/VisualManager.h>
+#include <FileRepository.h>
+#include <Message.h>
+#include <SceneGraph.h>
+#include <Shader.h>
+#include <VisualManager.h>
 
 // Standard Library
 #include <fstream>

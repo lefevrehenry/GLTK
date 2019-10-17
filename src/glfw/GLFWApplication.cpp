@@ -1,9 +1,9 @@
 #include "GLFWApplication.h"
 
-#include <controller/Controller.h>
-#include <helper/Message.h>
-#include <gui/SceneView.h>
-#include <opengl/VisualManager.h>
+#include <Controller.h>
+#include <Message.h>
+#include <SceneView.h>
+#include <VisualManager.h>
 
 // OpenGL
 #include <GL/glew.h>

@@ -1,7 +1,7 @@
 #ifndef PICKINGVISITOR_H
 #define PICKINGVISITOR_H
 
-#include <graph/Visitor.h>
+#include <Visitor.h>
 
 // Glm
 #include <glm/glm.hpp>

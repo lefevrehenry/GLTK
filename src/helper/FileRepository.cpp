@@ -1,6 +1,6 @@
 #include "FileRepository.h"
 
-#include <helper/Message.h>
+#include <Message.h>
 
 // Standard Library
 #include <fstream>

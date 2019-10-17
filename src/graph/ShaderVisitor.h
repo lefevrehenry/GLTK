@@ -1,7 +1,7 @@
 #ifndef SHADERVISITOR_H
 #define SHADERVISITOR_H
 
-#include <graph/DrawVisitor.h>
+#include <DrawVisitor.h>
 
 // Standard Library
 #include <memory>

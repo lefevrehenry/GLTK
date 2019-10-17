@@ -1,9 +1,9 @@
 #include "Node.h"
 
-#include <graph/ShaderProgram.h>
-#include <graph/Visitor.h>
-#include <graph/VisualModel.h>
-#include <opengl/VisualOption.h>
+#include <ShaderProgram.h>
+#include <Visitor.h>
+#include <VisualModel.h>
+#include <VisualOption.h>
 
 using namespace gl;
 

@@ -1,11 +1,11 @@
 #include "VisualModel.h"
 
-#include <helper/FileRepository.h>
-#include <opengl/MeshPrivate.h>
-#include <graph/Mesh.h>
-#include <helper/Message.h>
-#include <opengl/ShaderProgramPrivate.h>
-#include <opengl/TexturePrivate.h>
+#include <FileRepository.h>
+#include <MeshPrivate.h>
+#include <Mesh.h>
+#include <Message.h>
+#include <ShaderProgramPrivate.h>
+#include <TexturePrivate.h>
 
 using namespace gl;
 using namespace gl::helper;

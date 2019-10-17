@@ -1,8 +1,8 @@
 #include "TexturedVisualModel.h"
 
-#include <helper/FileRepository.h>
-#include <helper/Message.h>
-#include <opengl/TexturePrivate2D.h>
+#include <FileRepository.h>
+#include <Message.h>
+#include <TexturePrivate2D.h>
 
 using namespace gl;
 using namespace gl::helper;

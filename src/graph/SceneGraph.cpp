@@ -1,7 +1,7 @@
 #include "SceneGraph.h"
 
-#include <graph/Node.h>
-#include <graph/BoundingBoxVisitor.h>
+#include <Node.h>
+#include <BoundingBoxVisitor.h>
 
 using namespace gl;
 

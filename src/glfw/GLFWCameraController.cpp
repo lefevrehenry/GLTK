@@ -1,7 +1,7 @@
 #include "GLFWCameraController.h"
 
-#include <misc/Camera.h>
-#include <gui/SceneView.h>
+#include <Camera.h>
+#include <SceneView.h>
 
 // GLFW
 #include <GLFW/glfw3.h>

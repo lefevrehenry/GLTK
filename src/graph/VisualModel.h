@@ -1,8 +1,8 @@
 #ifndef VISUALMODEL_H
 #define VISUALMODEL_H
 
-#include <misc/Material.h>
-#include <misc/Transform.h>
+#include <Material.h>
+#include <Transform.h>
 
 // Standard Library
 #include <memory>

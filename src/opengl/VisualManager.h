@@ -1,10 +1,10 @@
 #ifndef VISUALMANAGER_H
 #define VISUALMANAGER_H
 
-#include <misc/Camera.h>
-#include <misc/Light.h>
-#include <misc/Material.h>
-#include <misc/Transform.h>
+#include <Camera.h>
+#include <Light.h>
+#include <Material.h>
+#include <Transform.h>
 
 // Glew
 #include <GL/glew.h>

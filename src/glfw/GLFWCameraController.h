@@ -1,7 +1,7 @@
 #ifndef GLFWCAMERACONTROLLER_H
 #define GLFWCAMERACONTROLLER_H
 
-#include <controller/Controller.h>
+#include <Controller.h>
 
 // Standard Library
 #include <memory>

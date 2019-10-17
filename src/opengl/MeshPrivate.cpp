@@ -1,8 +1,8 @@
 #include "MeshPrivate.h"
 
-#include <helper/FileRepository.h>
-#include <helper/Message.h>
-#include <opengl/ShaderProgramPrivate.h>
+#include <FileRepository.h>
+#include <Message.h>
+#include <ShaderProgramPrivate.h>
 
 // Assimp
 #include <assimp/Importer.hpp>

@@ -1,8 +1,8 @@
 #ifndef SCENEVIEW_H
 #define SCENEVIEW_H
 
-#include <misc/Light.h>
-#include <misc/Rect.h>
+#include <Light.h>
+#include <Rect.h>
 
 // Glm
 #include <glm/glm.hpp>

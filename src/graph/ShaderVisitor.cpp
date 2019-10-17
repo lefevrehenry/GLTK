@@ -1,6 +1,6 @@
 #include "ShaderVisitor.h"
 
-#include <graph/ShaderProgram.h>
+#include <ShaderProgram.h>
 
 using namespace gl;
 

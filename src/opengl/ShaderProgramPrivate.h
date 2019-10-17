@@ -1,10 +1,10 @@
 #ifndef SHADERPROGRAMPRIVATE_H
 #define SHADERPROGRAMPRIVATE_H
 
-#include <opengl/Data.h>
+#include <Data.h>
 #include <gltk.h>
-#include <statemachine/OpenGLAttribute.h>
-#include <statemachine/OpenGLStateMachine.h>
+#include <OpenGLAttribute.h>
+#include <OpenGLStateMachine.h>
 
 // Standard Library
 #include <vector>

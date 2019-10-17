@@ -1,10 +1,10 @@
 #include "SceneView.h"
 
-#include <graph/Node.h>
-#include <graph/SceneGraph.h>
-#include <graph/DrawVisitor.h>
-#include <opengl/VisualManager.h>
-#include <statemachine/OpenGLStateMachine.h>
+#include <Node.h>
+#include <SceneGraph.h>
+#include <DrawVisitor.h>
+#include <VisualManager.h>
+#include <OpenGLStateMachine.h>
 
 using namespace gl;
 

@@ -1,7 +1,7 @@
 #ifndef DRAWVISITOR_H
 #define DRAWVISITOR_H
 
-#include <graph/Visitor.h>
+#include <Visitor.h>
 
 // Standard Library
 #include <stack>
