@@ -1,17 +1,18 @@
 
-#include <FileRepository.h>
-#include <GLFWApplication.h>
-#include <GLFWApplicationEvents.h>
-#include <Helper.h>
+#include <misc/Camera.h>
+#include <helper/FileRepository.h>
+#include <glfw/GLFWApplication.h>
+#include <glfw/GLFWPickingController.h>
+#include <gltk.h>
+#include <misc/Light.h>
 #include <Mesh.h>
-#include <Message.h>
-#include <Node.h>
-#include <Rendered.h>
-#include <Scene.h>
+#include <helper/Message.h>
+#include <graph/Node.h>
+#include <graph/SceneGraph.h>
+#include <gui/SceneView.h>
 #include <ShaderProgram.h>
-#include <Texture.h>
-#include <Visitor.h>
 #include <VisualModel.h>
+#include <graph/VisualModel.h>
 
 // Glfw
 #include <GLFW/glfw3.h>
@@ -29,13 +30,14 @@
 using namespace gl;
 using namespace gl::helper;
 
+static GLFWApplication* app = nullptr;
+static std::shared_ptr<SceneGraph> scene(new SceneGraph());
 static Node* selectedNode = nullptr;
 
-SceneGraph* createScene()
-{
-    SceneGraph* scene = new SceneGraph();
+using ShaderProgramType = GLTK::ShaderProgramType;
 
-    Node* root = scene->root();
+void createScene(Node* rootNode)
+{
     Node* childNode;
 
     std::string folder = "low_res";
@@ -48,42 +50,49 @@ SceneGraph* createScene()
     Material mat5 = Material::Copper();
     Material mat6 = Material::Jade();
 
-    VisualModel* pawn   = new VisualModel("mesh/" + folder + "/pion" + extension, mat1);
-    VisualModel* rook   = new VisualModel("mesh/" + folder + "/tour" + extension, mat2);
-    VisualModel* knight = new VisualModel("mesh/" + folder + "/cavalier" + extension, mat3);
-    VisualModel* bishop = new VisualModel("mesh/" + folder + "/fou" + extension, mat4);
-    VisualModel* queen  = new VisualModel("mesh/" + folder + "/reine" + extension, mat5);
-    VisualModel* king   = new VisualModel("mesh/" + folder + "/roi" + extension, mat6);
+    Mesh::SPtr   pawn(new Mesh("mesh/" + folder + "/pion" + extension));
+    Mesh::SPtr   rook(new Mesh("mesh/" + folder + "/tour" + extension));
+    Mesh::SPtr knight(new Mesh("mesh/" + folder + "/cavalier" + extension));
+    Mesh::SPtr bishop(new Mesh("mesh/" + folder + "/fou" + extension));
+    Mesh::SPtr  queen(new Mesh("mesh/" + folder + "/reine" + extension));
+    Mesh::SPtr   king(new Mesh("mesh/" + folder + "/roi" + extension));
 
-    VisualModel* visualModels[6] = {pawn, rook, knight, bishop, queen, king};
+    Mesh::SPtr meshes[6] = {pawn, rook, knight, bishop, queen, king};
+    Material materials[6] = {mat1, mat2, mat3, mat4, mat5, mat6};
 
     ////////////////////////////////////////
 
-    childNode = root->addChild();
+    childNode = rootNode->addChild();
 
-    ShaderProgram* phongShadingShader = helper::CreateShaderProgram(ShaderProgram::PhongShading);
+    ShaderProgram::SPtr phongShadingShader( ShaderProgram::Create(ShaderProgramType::PhongShading) );
     childNode->setShaderProgram(phongShadingShader);
 
     for (unsigned int i = 0; i < 6; ++i) {
-        VisualModel* vm = visualModels[i];
+        Mesh::SPtr mesh = meshes[i];
+        const Material& material = materials[i];
+        VisualModel::SPtr vm(new VisualModel(mesh, material));
         vm->transform().translate(25*i, 0, 0);
         childNode->addVisual(vm);
     }
 
     ////////////////////////////////////////
 
-    childNode = root->addChild();
+    childNode = rootNode->addChild();
 
-    ShaderProgram* highlightShader = helper::CreateShaderProgram(ShaderProgram::Normal);
+    ShaderProgram::SPtr highlightShader( ShaderProgram::Create(ShaderProgramType::Normal) );
     childNode->setShaderProgram(highlightShader);
 
     selectedNode = childNode;
-
-    return scene;
 }
 
-void fitView(SceneGraph* scene, Camera* camera)
+void fitView(SceneView* sceneView)
 {
+    if(!sceneView)
+        return;
+
+    SceneGraph* scene = sceneView->scene();
+    Camera* camera = sceneView->camera();
+
     glm::vec3 min;
     glm::vec3 max;
     scene->getBB(min, max);
@@ -105,23 +114,20 @@ void fitView(SceneGraph* scene, Camera* camera)
     camera->perspective(fovy, aspect, zNear, zFar);
 }
 
-void visualModelChanged(const VisualModel* visualModel, glm::vec4)
+void visualModelChanged(std::weak_ptr<const VisualModel> visualModel, glm::vec4)
 {
     selectedNode->removeVisual(0);
 
-    if (visualModel != nullptr)
-        selectedNode->addVisual(visualModel);
+    VisualModel::CSPtr vm = visualModel.lock();
+    if (vm != nullptr)
+        selectedNode->addVisual(vm);
 }
 
-
-static GLFWApplication* app = nullptr;
-static GLFWApplicationEvents* interface = nullptr;
-static Rendered renderer;
 
 void initGL();
 void initGLTK();
 void displayCallback();
-void errorCallback(int error, const char* description);
+void errorCallback [[noreturn]] (int error, const char* description);
 
 
 int main()
@@ -139,9 +145,6 @@ int main()
 
     try
     {
-        // Initialise OpenGL
-        initGL();
-
         // Initialise GLTK
         initGLTK();
 
@@ -162,30 +165,9 @@ int main()
     return return_code;
 }
 
-void initGL()
-{
-    // Specifies background color
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    // Enable depth buffer test
-    glEnable(GL_DEPTH_TEST);
-    // Enable eliminaton of hidden faces
-    glEnable(GL_CULL_FACE);
-    // Specifies whether front or back facing facets are candidates for culling
-    glCullFace(GL_BACK);
-    // Specifies the orientation of front-facing polygons
-    glFrontFace(GL_CCW);
-
-    int glMajor;
-    int glMinor;
-    glGetIntegerv(GL_MAJOR_VERSION, &glMajor);
-    glGetIntegerv(GL_MINOR_VERSION, &glMinor);
-
-    msg_info("OpenGL") << "Congrat's ! You're running OpenGL " << glMajor << "." << glMinor;
-}
-
 void initGLTK()
 {
-    std::map<std::string, std::string> iniFileValues = getMapFromIniFile("../etc/config.ini");
+    std::map<std::string, std::string> iniFileValues = GLTK::getMapFromIniFile("../etc/config.ini");
 
     if (iniFileValues.find("SHARE_DIR") != iniFileValues.end()) {
         std::string ini_directories[4] = {
@@ -201,33 +183,29 @@ void initGLTK()
         msg_warning("FileRepository") << "No share/ directory added";
     }
 
-    renderer.scene = createScene();
-    renderer.camera = new Camera();
+    createScene(scene->root());
 
-    fitView(renderer.scene, renderer.camera);
+    std::shared_ptr<SceneView> sceneView(new SceneView());
+
+    int width = static_cast<int>(Application::ScreenWidth);
+    int height = static_cast<int>(Application::ScreenHeight);
+    Rect rect(0,0,width,height);
+    std::shared_ptr<GLFWPickingController> controller(new GLFWPickingController(sceneView));
+    controller->setCallback(visualModelChanged);
+
+    sceneView->setRect(rect);
+    sceneView->setScene(scene);
+    sceneView->setInterface(controller);
+
+    fitView(sceneView.get());
+
+    app->addSceneView(sceneView);
 
     Light light;
-    light.setPosition(glm::vec3(0,0,0));
-    light.setDirection(glm::vec3(0,0,-1));
-    light.setColor(glm::vec3(1,1,1));
+    light.setColor(glm::vec3(1,0,0));
+    light.setDirection(glm::vec3(-1,-1,-1));
 
-    VisualManager::UpdateUniformBufferLight(light);
-
-    interface = new GLFWApplicationEvents(renderer.camera);
-    app->setInterface(interface);
-
-    InterfacePicking* interface = new InterfacePicking(renderer.scene, renderer.camera);
-    interface->setCallback(visualModelChanged);
-    app->setInterface(interface);
-
-    app->setDrawCallBack(displayCallback);
-}
-
-void displayCallback()
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    renderer.draw();
+    sceneView->setLight(light);
 }
 
 void errorCallback(int, const char* description)

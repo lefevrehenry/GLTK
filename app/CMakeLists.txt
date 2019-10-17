@@ -5,7 +5,7 @@ set(EXECUTABLE_FILES
 #    deferredShading
     environmentMapping
 #    normalMapping
-#    picking
+    picking
 #    shadertoy
 #    prog
 )
