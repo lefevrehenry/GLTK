@@ -5,6 +5,7 @@
 
 // Standard Library
 #include <list>
+#include <memory>
 
 
 namespace gl {
@@ -27,10 +28,10 @@ public:
     virtual void processNode(const Node* node);
 
 public:
-    std::list<const VisualModel*> getVisualModels() const;
+    std::list<std::weak_ptr<const VisualModel>> getVisualModels() const;
 
 private:
-    std::list<const VisualModel*> m_visualModels;
+    std::list<std::weak_ptr<const VisualModel>> m_visualModels;
 
 };
 

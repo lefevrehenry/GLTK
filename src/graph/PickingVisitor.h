@@ -1,7 +1,7 @@
 #ifndef PICKINGVISITOR_H
 #define PICKINGVISITOR_H
 
-#include "Visitor.h"
+#include <graph/Visitor.h>
 
 // Glm
 #include <glm/glm.hpp>
@@ -31,7 +31,7 @@ public:
     void set(int x, int y);
 
 public:
-    const VisualModel* selectedVisualModel() const;
+    std::shared_ptr<const VisualModel> selectedVisualModel() const;
     glm::vec3 selectedPosition() const;
 
 public:
@@ -40,13 +40,13 @@ public:
     virtual void processNode(const Node* node);
 
 private:
-    std::unique_ptr<Framebuffer>    m_pickingFramebuffer;
-    std::unique_ptr<ShaderProgramPrivate>  m_shaderProgram;
+    std::unique_ptr<Framebuffer>            m_pickingFramebuffer;
+    std::unique_ptr<ShaderProgramPrivate>   m_shaderProgram;
 
-    std::deque<const VisualModel*>  m_visualModels;
+    std::deque< std::shared_ptr<const VisualModel> >  m_visualModels;
 
-    const VisualModel*  m_selectedVisualModel;
-    glm::vec3           m_selectedPosition;
+    std::shared_ptr<const VisualModel>  m_selectedVisualModel;
+    glm::vec3                           m_selectedPosition;
 
     int m_x;
     int m_y;

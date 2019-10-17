@@ -22,6 +22,10 @@ class VisualModel
 
 public:
     using SPtr = std::shared_ptr<VisualModel>;
+    using CSPtr = std::shared_ptr<const VisualModel>;
+
+    using WPtr = std::weak_ptr<VisualModel>;
+    using CWPtr = std::weak_ptr<const VisualModel>;
 
 public:
     VisualModel(std::shared_ptr<const Mesh> mesh, const Material& material = Material::DefaultMaterial());

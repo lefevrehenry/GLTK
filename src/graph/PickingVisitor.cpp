@@ -37,7 +37,7 @@ PickingVisitor::PickingVisitor() :
     m_pickingFramebuffer(nullptr),
     m_shaderProgram(nullptr),
     m_visualModels(0),
-    m_selectedVisualModel(nullptr),
+    m_selectedVisualModel(),
     m_selectedPosition(),
     m_x(0),
     m_y(0),
@@ -59,7 +59,7 @@ void PickingVisitor::set(int x, int y)
     this->m_y = y;
 }
 
-const VisualModel* PickingVisitor::selectedVisualModel() const
+std::shared_ptr<const VisualModel> PickingVisitor::selectedVisualModel() const
 {
     return this->m_selectedVisualModel;
 }
@@ -106,7 +106,7 @@ void PickingVisitor::end()
     unsigned int index = unpackIndex(color);
 
     if (index > 0 && index < this->m_visualModels.size()) {
-        const VisualModel* visual = this->m_visualModels[index];
+        VisualModel::CSPtr visualModel = this->m_visualModels[index];
 
         float z = 1.0;
         glReadPixels(this->m_x, this->m_y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z);
@@ -118,7 +118,7 @@ void PickingVisitor::end()
         float ndc_y = (this->m_y / h) * 2.f - 1;
         float ndc_z = (z * 2.f) - 1;
 
-        this->m_selectedVisualModel = visual;
+        this->m_selectedVisualModel = visualModel;
         this->m_selectedPosition = glm::vec3(ndc_x,ndc_y,ndc_z);
     }
 
@@ -132,15 +132,15 @@ void PickingVisitor::processNode(const Node* node)
 
     // draw each mesh
     for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
-        const VisualModel* visual = node->getVisual(i);
-        const Transform& transform = visual->transform();
+        VisualModel::CSPtr visualModel = node->getVisual(i);
+        const Transform& transform = visualModel->transform();
 
         VisualManager::UpdateUniformBufferTransform(transform);
 
         this->m_shaderProgram->setUniformValue("index", packIndex(this->m_id));
-        this->m_visualModels.push_back(visual);
+        this->m_visualModels.push_back(visualModel);
 
-        visual->draw(&param);
+        visualModel->draw(&param);
 
         this->m_id += 1;
     }

@@ -67,7 +67,7 @@ Node* Node::getChild(unsigned int i) const
     return this->m_children[i].get();
 }
 
-void Node::addVisual(const std::shared_ptr<const VisualModel>& visualModel)
+void Node::addVisual(std::shared_ptr<const VisualModel> visualModel)
 {
     if (visualModel == nullptr)
         return;
@@ -88,12 +88,12 @@ size_t Node::getNbVisual() const
     return this->m_visuals.size();
 }
 
-const VisualModel* Node::getVisual(unsigned int i) const
+std::shared_ptr<const VisualModel> Node::getVisual(unsigned int i) const
 {
     if (i >= getNbVisual())
-        return nullptr;
+        return std::shared_ptr<const VisualModel>();
 
-    return this->m_visuals[i].get();
+    return this->m_visuals[i];
 }
 
 ShaderProgram* Node::shaderProgram() const

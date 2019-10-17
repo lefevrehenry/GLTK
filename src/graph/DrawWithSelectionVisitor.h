@@ -29,7 +29,7 @@ public:
 
 private:
     std::unique_ptr<ShaderProgramPrivate>  m_outlineShader;
-    const VisualModel*              m_selected;
+    std::shared_ptr<const VisualModel>     m_selected;
 
 };
 

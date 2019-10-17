@@ -22,7 +22,7 @@ GLFWPickingController::GLFWPickingController(std::weak_ptr<SceneView> sceneView)
 {
 }
 
-void GLFWPickingController::setCallback(void (*callback)(const VisualModel*, glm::vec4))
+void GLFWPickingController::setCallback(void (*callback)(std::shared_ptr<const VisualModel>, glm::vec4))
 {
     this->m_callback = callback;
 }
@@ -57,7 +57,7 @@ void GLFWPickingController::mouseButtonCallback(GLFWwindow* handle, int button, 
         const Node* root = sceneGraph->root();
         root->executeVisitor(m_pickingVisitor.get());
 
-        const VisualModel* visualModel = m_pickingVisitor->selectedVisualModel();
+        VisualModel::CSPtr visualModel = m_pickingVisitor->selectedVisualModel();
 
         const glm::vec3& ndc = m_pickingVisitor->selectedPosition();
         const glm::mat4& projection = camera->projection();

@@ -72,14 +72,14 @@ void DrawVisitor::processNode(const Node* node)
 
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
-            const VisualModel* visual = node->getVisual(i);
-            const Transform& transform = visual->transform();
-            const Material& material = visual->material();
+            VisualModel::CSPtr visualModel(node->getVisual(i));
+            const Transform& transform = visualModel->transform();
+            const Material& material = visualModel->material();
 
             VisualManager::UpdateUniformBufferTransform(transform);
             VisualManager::UpdateUniformBufferMaterial(material);
 
-            visual->draw(&param);
+            visualModel->draw(&param);
         }
 
         // unbind the current ShaderProgram

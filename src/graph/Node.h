@@ -38,11 +38,11 @@ public:
     Node* getChild(unsigned int i) const;
 
 public:
-    void addVisual(const std::shared_ptr<const VisualModel>& visualModel);
+    void addVisual(std::shared_ptr<const VisualModel> visualModel);
     void removeVisual(unsigned int i);
 
     size_t getNbVisual() const;
-    const VisualModel* getVisual(unsigned int i) const;
+    std::shared_ptr<const VisualModel> getVisual(unsigned int i) const;
 
 public:
     ShaderProgram* shaderProgram() const;

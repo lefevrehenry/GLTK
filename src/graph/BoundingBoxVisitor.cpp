@@ -30,10 +30,13 @@ void BoundingBoxVisitor::processNode(const Node* node)
         glm::vec3 min;
         glm::vec3 max;
 
-        const VisualModel* visual = node->getVisual(i);
-        visual->getBBox(min, max);
+        std::shared_ptr<const VisualModel> visualModel(node->getVisual(i));
+        if(visualModel == nullptr)
+            continue;
 
-        const Transform& transform = visual->transform();
+        visualModel->getBBox(min, max);
+
+        const Transform& transform = visualModel->transform();
         min = glm::vec3(transform.matrix() * glm::vec4(min, 1.0));
         max = glm::vec3(transform.matrix() * glm::vec4(max, 1.0));
 

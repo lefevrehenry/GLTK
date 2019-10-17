@@ -29,9 +29,9 @@ void DrawVisitorWithSelection::forwardNode(const Node* node)
         VisualParam param = VisualParam::DefaultInstance();
 
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
-            const VisualModel* visual = node->getVisual(i);
+            VisualModel::CSPtr visualModel(node->getVisual(i));
 
-            if (visual == this->m_selected) {
+            if (visualModel == this->m_selected) {
                 m_outlineShader->bind();
                 m_outlineShader->updateDataIfDirty();
 
@@ -48,10 +48,10 @@ void DrawVisitorWithSelection::forwardNode(const Node* node)
                 // disable color buffer
                 glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 
-                const Transform& transform = visual->transform();
+                const Transform& transform = visualModel->transform();
                 VisualManager::UpdateUniformBufferTransform(transform);
 
-                visual->draw(&param);
+                visualModel->draw(&param);
 
                 // enable color buffer
                 glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
@@ -75,9 +75,9 @@ void DrawVisitorWithSelection::backwardNode(const Node* node)
         VisualParam param = VisualParam::DefaultInstance();
 
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
-            const VisualModel* visual = node->getVisual(i);
+            VisualModel::CSPtr visualModel(node->getVisual(i));
 
-            if (visual == this->m_selected) {
+            if (visualModel == this->m_selected) {
                 m_outlineShader->bind();
                 m_outlineShader->updateDataIfDirty();
 
@@ -93,10 +93,10 @@ void DrawVisitorWithSelection::backwardNode(const Node* node)
                 glStencilFunc(GL_NOTEQUAL, 1, 0xFFFFFFFF);
                 glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-                const Transform& transform = visual->transform();
+                const Transform& transform = visualModel->transform();
                 VisualManager::UpdateUniformBufferTransform(transform);
 
-                visual->draw(&param);
+                visualModel->draw(&param);
 
                 // deactivate stencil buffer test
                 glDisable(GL_STENCIL_TEST);

@@ -24,12 +24,12 @@ void FetchVisualModelVisitor::start()
 void FetchVisualModelVisitor::processNode(const Node* node)
 {
     for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
-        const VisualModel* visual = node->getVisual(i);
-        this->m_visualModels.push_front(visual);
+        std::shared_ptr<const VisualModel> visualModel(node->getVisual(i));
+        this->m_visualModels.push_front(visualModel);
     }
 }
 
-std::list<const VisualModel*> FetchVisualModelVisitor::getVisualModels() const
+std::list<std::weak_ptr<const VisualModel>> FetchVisualModelVisitor::getVisualModels() const
 {
     return this->m_visualModels;
 }
