@@ -7,7 +7,7 @@
 #include <Transform.h>
 
 // Glew
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 
 namespace gl {

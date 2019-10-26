@@ -3,8 +3,8 @@
 #include <FileRepository.h>
 #include <Message.h>
 
-// OpenGL
-#include <GL/glew.h>
+// Glad
+#include <glad/glad.h>
 
 // Stb Image
 #include <stb_image/stb_image.h>

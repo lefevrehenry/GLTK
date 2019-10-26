@@ -13,6 +13,7 @@ FileRepository gl::helper::DataRepository;
 FileRepository::FileRepository() :
     m_paths(0)
 {
+    addFirstPath("../share/");
 }
 
 FileRepository::~FileRepository()

@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-// OpenGL
-#include <GL/glew.h>
+// Glad
+#include <glad/glad.h>
 
 // Glm
 #include <glm/glm.hpp>

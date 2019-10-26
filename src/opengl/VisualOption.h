@@ -1,8 +1,8 @@
 #ifndef VISUALOPTION_H
 #define VISUALOPTION_H
 
-// OpenGL
-#include <GL/glew.h>
+// Glad
+#include <glad/glad.h>
 
 
 namespace gl {

@@ -1,10 +1,10 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 project(GLTK)
 
-#set(CMAKE_BUILD_TYPE Debug)
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer -g")
+
+set(CMAKE_INSTALL_RPATH "../lib")
 
 set(HEADER_FILES
     src/controller/Controller.h
@@ -110,6 +110,10 @@ set(PRIVATE_SOURCE_FILES
     src/statemachine/OpenGLStateMachine.inl
 )
 
+set(EXTLIBS_SOURCE_FILES
+    extlibs/glad/src/glad.c
+)
+
 set(SHADER_FILES
     share/shaders/basic.vs
     share/shaders/basic.fs
@@ -190,26 +194,20 @@ endif()
 if(${BUILD_WITH_GLFW})
     find_package(glfw3 REQUIRED)
 
-    set(HEADER_FILES
-        ${HEADER_FILES}
+    list(APPEND HEADER_FILES
         src/glfw/GLFWApplication.h
         src/glfw/GLFWCameraController.h
         src/glfw/GLFWPickingController.h
     )
-    set(SOURCE_FILES
-        ${SOURCE_FILES}
+    list(APPEND SOURCE_FILES
         src/glfw/GLFWApplication.cpp
         src/glfw/GLFWCameraController.cpp
         src/glfw/GLFWPickingController.cpp
     )
 endif()
 
-set(STB_IMAGE_INCLUDE_DIR
-    extlibs/stb_image/include
-)
-
 #========== Creation of the library ==========#
-add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${PRIVATE_HEADER_FILES} ${PRIVATE_SOURCE_FILES} ${SHADER_FILES})
+add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${PRIVATE_HEADER_FILES} ${PRIVATE_SOURCE_FILES} ${EXTLIBS_SOURCE_FILES} ${SHADER_FILES})
 
 target_include_directories(${PROJECT_NAME}  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
 target_include_directories(${PROJECT_NAME}  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/controller>)
@@ -219,11 +217,12 @@ target_include_directories(${PROJECT_NAME}  PUBLIC $<BUILD_INTERFACE:${CMAKE_CUR
 target_include_directories(${PROJECT_NAME}  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/misc>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/opengl>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/statemachine>)
+target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs/stb_image/include>)
+target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs/glad/include>)
 
 target_include_directories(${PROJECT_NAME}  PUBLIC $<INSTALL_INTERFACE:include/GLTK>)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE_DIR})
-target_include_directories(${PROJECT_NAME} PRIVATE ${STB_IMAGE_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
 
@@ -277,3 +276,9 @@ install(EXPORT ${PROJECT_NAME}Config DESTINATION lib/cmake)
 
 ## install header files
 install(FILES ${HEADER_FILES} DESTINATION include/GLTK)
+
+## install examples
+install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/ DESTINATION bin)
+
+## install share/ directory
+install(DIRECTORY share/ DESTINATION share)

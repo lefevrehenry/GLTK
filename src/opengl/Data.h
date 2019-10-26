@@ -10,7 +10,7 @@
 #include <TexturePrivate2D.h>
 
 // Glew
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 // Glm
 #include <glm/glm.hpp>

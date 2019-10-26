@@ -5,8 +5,8 @@
 #include <SceneView.h>
 #include <VisualManager.h>
 
-// OpenGL
-#include <GL/glew.h>
+// Glad
+#include <glad/glad.h>
 
 // GLFW
 #include <GLFW/glfw3.h>
@@ -60,14 +60,23 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
     /* Make the window's context current */
     glfwMakeContextCurrent(windowHandle);
 
-    // Glew initialization
-    if (glewInit() != GLEW_OK)
+    // Glad initialization
+    if (!gladLoadGLLoader(GLADloadproc(glfwGetProcAddress)))
     {
-        // Problem: glewInit failed, something is seriously wrong.
+        // Problem: glad initialization failed, something is seriously wrong.
         glfwTerminate();
-        msg_error("OpenGL") << "oh no ! glewInit() has failed";
+        msg_error("OpenGL") << "oh no ! glad initialization has failed";
         return nullptr;
     }
+
+//    // Glew initialization
+//    if (glewInit() != GLEW_OK)
+//    {
+//        // Problem: glewInit failed, something is seriously wrong.
+//        glfwTerminate();
+//        msg_error("OpenGL") << "oh no ! glewInit() has failed";
+//        return nullptr;
+//    }
 
     GLFWApplication* app = new GLFWApplication(windowHandle);
 

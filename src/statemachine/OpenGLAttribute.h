@@ -5,7 +5,7 @@
 #include <Light.h>
 #include <VisualManager.h>
 
-// OpenGL
+// Glad
 #include <GL/gl.h>
 
 // Standard Library

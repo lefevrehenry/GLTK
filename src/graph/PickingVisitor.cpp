@@ -8,8 +8,8 @@
 #include <VisualManager.h>
 #include <VisualModel.h>
 
-// OpenGL
-#include <GL/glew.h>
+// Glad
+#include <glad/glad.h>
 
 using namespace gl;
 

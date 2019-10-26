@@ -5,8 +5,8 @@
 #include <list>
 #include <string>
 
-// OpenGL
-#include <GL/glew.h>
+// Glad
+#include <glad/glad.h>
 
 
 namespace gl {
