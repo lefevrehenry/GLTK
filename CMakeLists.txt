@@ -186,6 +186,7 @@ configure_file(${CMAKE_SOURCE_DIR}/etc/config.ini.in "${CMAKE_BINARY_DIR}/etc/co
 
 # Required packages
 find_package(OpenGL REQUIRED)
+find_package(assimp 4.0.0 EXACT REQUIRED)
 
 if(${BUILD_EXAMPLES})
     add_subdirectory(app)
@@ -217,42 +218,20 @@ target_include_directories(${PROJECT_NAME}  PUBLIC $<BUILD_INTERFACE:${CMAKE_CUR
 target_include_directories(${PROJECT_NAME}  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/misc>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/opengl>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/statemachine>)
+target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs/stb_image/include>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs/glad/include>)
+target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${ASSIMP_INCLUDE_DIRS}>)
 
 target_include_directories(${PROJECT_NAME}  PUBLIC $<INSTALL_INTERFACE:include/GLTK>)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE_DIR})
-
-target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES} ${ASSIMP_LIBRARY_DIRS}/lib${ASSIMP_LIBRARIES}.a)
 
 if(${BUILD_WITH_GLFW})
     target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/glfw>)
     target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${GLFW3_INCLUDE_DIR}>)
     target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW3_LIBRARY})
 endif()
-
-#========= Linking with local library =========#
-macro(link_with_local_lib LOCAL_PATH NAME)
-    set(${NAME}_PATH ${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_PATH})
-
-    find_library(${NAME}_LIBRARY
-        NAME ${NAME}
-        NO_DEFAULT_PATH
-        PATHS ${${NAME}_PATH}/lib
-    )
-
-    if(${NAME})
-        message(FATAL_ERROR "${NAME}_LIBRARY library not found !")
-    else()
-        target_include_directories(${PROJECT_NAME} PRIVATE ${${NAME}_PATH}/include)
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${${NAME}_LIBRARY})
-    endif()
-endmacro()
-
-link_with_local_lib(extlibs/glew GLEW)
-link_with_local_lib(extlibs/assimp assimp)
-
 
 #========= Install rules =========#
 
