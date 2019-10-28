@@ -513,22 +513,28 @@ void ShaderProgramPrivate::popAttribute() const
     }
 }
 
-bool ShaderProgramPrivate::addShader(const Shader& shader)
+void ShaderProgramPrivate::addShader(const Shader& shader)
 {
     if (!shader.isCompiled())
-        return false;
+        return;
 
     typedef Shader::ShaderType ShaderType;
     ShaderType type = shader.getShaderType();
 
     if (m_shaderList[type] != nullptr) {
         msg_warning("ShaderProgram") << "Shader " << type << " already set in ShaderProgram " << m_programId;
-        return false;
+        return;
     }
 
     m_shaderList[type] = &shader;
+}
 
-    return true;
+void ShaderProgramPrivate::removeShader(const Shader &shader)
+{
+    typedef Shader::ShaderType ShaderType;
+    ShaderType type = shader.getShaderType();
+
+    m_shaderList[type] = nullptr;
 }
 
 void ShaderProgramPrivate::bind() const

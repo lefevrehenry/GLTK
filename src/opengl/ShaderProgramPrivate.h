@@ -84,7 +84,8 @@ private:
     void popAttribute() const;
 
 public:
-    bool addShader(const Shader& shader);
+    void addShader(const Shader& shader);
+    void removeShader(const Shader& shader);
 
 public:
     void bind() const;
