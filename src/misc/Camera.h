@@ -1,5 +1,5 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef GLTK_CAMERA_H
+#define GLTK_CAMERA_H
 
 // Glm
 #include <glm/glm.hpp>

@@ -1,5 +1,5 @@
-#ifndef SCENEGRAPH_H
-#define SCENEGRAPH_H
+#ifndef GLTK_SCENEGRAPH_H
+#define GLTK_SCENEGRAPH_H
 
 // Glm
 #include <glm/glm.hpp>

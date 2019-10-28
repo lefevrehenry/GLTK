@@ -1,8 +1,9 @@
-﻿#ifndef SHADERPROGRAMPRIVATE_H
-#define SHADERPROGRAMPRIVATE_H
+﻿#ifndef GLTK_SHADERPROGRAMPRIVATE_H
+#define GLTK_SHADERPROGRAMPRIVATE_H
 
 #include <Data.h>
 #include <gltk.h>
+#include <Message.h>
 #include <OpenGLAttribute.h>
 #include <VisualOption.h>
 
@@ -21,13 +22,6 @@ namespace gl {
 
 class BaseData;
 class Shader;
-
-//// Specifies what kind of primives has to be rendered
-//enum PrimitiveType {
-//    POINTS = GL_POINTS,
-//    LINES = GL_LINES,
-//    TRIANGLES = GL_TRIANGLES
-//};
 
 /**
  * @brief The ShaderProgramPrivate class

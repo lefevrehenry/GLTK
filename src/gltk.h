@@ -1,5 +1,5 @@
-#ifndef GLTK_H
-#define GLTK_H
+#ifndef GLTK_GLTK_H
+#define GLTK_GLTK_H
 
 // Standard Library
 #include <map>

@@ -1,5 +1,5 @@
-#ifndef NODE_H
-#define NODE_H
+#ifndef GLTK_NODE_H
+#define GLTK_NODE_H
 
 // Standard Library
 #include <memory>

@@ -1,5 +1,5 @@
-#ifndef PICKINGVISITOR_H
-#define PICKINGVISITOR_H
+#ifndef GLTK_PICKINGVISITOR_H
+#define GLTK_PICKINGVISITOR_H
 
 #include <Visitor.h>
 

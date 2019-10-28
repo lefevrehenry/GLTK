@@ -1,5 +1,5 @@
-#ifndef MESHPRIVATE_H
-#define MESHPRIVATE_H
+#ifndef GLTK_MESHPRIVATE_H
+#define GLTK_MESHPRIVATE_H
 
 // Standard Library
 #include <string>

@@ -1,5 +1,5 @@
-#ifndef SHADERVISITOR_H
-#define SHADERVISITOR_H
+#ifndef GLTK_SHADERVISITOR_H
+#define GLTK_SHADERVISITOR_H
 
 #include <DrawVisitor.h>
 

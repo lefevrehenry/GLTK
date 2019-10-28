@@ -1,5 +1,5 @@
-#ifndef OPENGLSTATEMACHINE_H
-#define OPENGLSTATEMACHINE_H
+#ifndef GLTK_OPENGLSTATEMACHINE_H
+#define GLTK_OPENGLSTATEMACHINE_H
 
 #include <Message.h>
 #include <OpenGLAttribute.h>

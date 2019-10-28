@@ -1,5 +1,5 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef GLTK_MESH_H
+#define GLTK_MESH_H
 
 // Standard Library
 #include <memory>

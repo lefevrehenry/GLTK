@@ -1,5 +1,5 @@
-#ifndef VISUALOPTION_H
-#define VISUALOPTION_H
+#ifndef GLTK_VISUALOPTION_H
+#define GLTK_VISUALOPTION_H
 
 #include <OpenGLAttribute.h>
 

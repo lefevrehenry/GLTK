@@ -1,5 +1,5 @@
-#ifndef INTERFACE_H
-#define INTERFACE_H
+#ifndef GLTK_INTERFACE_H
+#define GLTK_INTERFACE_H
 
 // Standard Library
 #include <memory>

@@ -1,5 +1,5 @@
-#ifndef DATA_H
-#define DATA_H
+#ifndef GLTK_DATA_H
+#define GLTK_DATA_H
 
 #include <Camera.h>
 #include <CubeMapTexture.h>

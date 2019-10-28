@@ -1,5 +1,5 @@
-#ifndef SCENEVIEW_H
-#define SCENEVIEW_H
+#ifndef GLTK_SCENEVIEW_H
+#define GLTK_SCENEVIEW_H
 
 #include <Light.h>
 #include <Rect.h>

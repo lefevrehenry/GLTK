@@ -1,5 +1,5 @@
-#ifndef FILEREPOSITORY_H
-#define FILEREPOSITORY_H
+#ifndef GLTK_FILEREPOSITORY_H
+#define GLTK_FILEREPOSITORY_H
 
 // Standard Library
 #include <string>

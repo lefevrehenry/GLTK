@@ -1,5 +1,5 @@
-#ifndef VISUALMODEL_H
-#define VISUALMODEL_H
+#ifndef GLTK_VISUALMODEL_H
+#define GLTK_VISUALMODEL_H
 
 #include <Material.h>
 #include <Transform.h>

@@ -1,5 +1,5 @@
-#ifndef VISUALMANAGER_H
-#define VISUALMANAGER_H
+#ifndef GLTK_VISUALMANAGER_H
+#define GLTK_VISUALMANAGER_H
 
 #include <Camera.h>
 #include <Light.h>

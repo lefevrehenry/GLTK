@@ -1,5 +1,5 @@
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef GLTK_SHADER_H
+#define GLTK_SHADER_H
 
 // Standard Library
 #include <string>

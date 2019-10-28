@@ -1,5 +1,5 @@
-#ifndef MATERIAL_H
-#define MATERIAL_H
+#ifndef GLTK_MATERIAL_H
+#define GLTK_MATERIAL_H
 
 // Glm
 #include <glm/glm.hpp>

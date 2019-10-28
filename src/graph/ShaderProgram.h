@@ -1,5 +1,5 @@
-#ifndef SHADERPROGRAM_H
-#define SHADERPROGRAM_H
+#ifndef GLTK_SHADERPROGRAM_H
+#define GLTK_SHADERPROGRAM_H
 
 #include <gltk.h>
 

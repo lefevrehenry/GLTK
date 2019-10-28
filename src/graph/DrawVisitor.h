@@ -1,5 +1,5 @@
-#ifndef DRAWVISITOR_H
-#define DRAWVISITOR_H
+#ifndef GLTK_DRAWVISITOR_H
+#define GLTK_DRAWVISITOR_H
 
 #include <Visitor.h>
 

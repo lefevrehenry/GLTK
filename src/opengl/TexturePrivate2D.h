@@ -1,5 +1,5 @@
-#ifndef TEXTUREPRIVATE2D_H
-#define TEXTUREPRIVATE2D_H
+#ifndef GLTK_TEXTUREPRIVATE2D_H
+#define GLTK_TEXTUREPRIVATE2D_H
 
 #include <TexturePrivate.h>
 

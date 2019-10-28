@@ -1,5 +1,5 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#ifndef GLTK_TEXTURE_H
+#define GLTK_TEXTURE_H
 
 // Standard Library
 #include <memory>

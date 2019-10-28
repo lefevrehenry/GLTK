@@ -1,5 +1,5 @@
-#ifndef VISITOR_H
-#define VISITOR_H
+#ifndef GLTK_VISITOR_H
+#define GLTK_VISITOR_H
 
 
 namespace gl {

@@ -1,5 +1,5 @@
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
+#ifndef GLTK_TRANSFORM_H
+#define GLTK_TRANSFORM_H
 
 // Glm
 #include <glm/glm.hpp>

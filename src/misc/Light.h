@@ -1,5 +1,5 @@
-#ifndef LIGHT_H
-#define LIGHT_H
+#ifndef GLTK_LIGHT_H
+#define GLTK_LIGHT_H
 
 // Glm
 #include <glm/glm.hpp>

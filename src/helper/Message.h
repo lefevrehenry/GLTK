@@ -1,5 +1,5 @@
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef GLTK_MESSAGE_H
+#define GLTK_MESSAGE_H
 
 // Standard Library
 #include <iomanip>

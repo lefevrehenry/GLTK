@@ -1,5 +1,5 @@
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#ifndef GLTK_APPLICATION_H
+#define GLTK_APPLICATION_H
 
 
 namespace gl {

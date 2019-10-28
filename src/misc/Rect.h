@@ -1,5 +1,5 @@
-#ifndef RECT_H
-#define RECT_H
+#ifndef GLTK_RECT_H
+#define GLTK_RECT_H
 
 
 namespace gl {

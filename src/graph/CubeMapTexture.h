@@ -1,5 +1,5 @@
-#ifndef CUBEMAPTEXTURE_H
-#define CUBEMAPTEXTURE_H
+#ifndef GLTK_CUBEMAPTEXTURE_H
+#define GLTK_CUBEMAPTEXTURE_H
 
 #include <Texture.h>
 

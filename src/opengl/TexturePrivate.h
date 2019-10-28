@@ -1,5 +1,5 @@
-#ifndef TEXTUREPRIVATE_H
-#define TEXTUREPRIVATE_H
+#ifndef GLTK_TEXTUREPRIVATE_H
+#define GLTK_TEXTUREPRIVATE_H
 
 // Standard Library
 #include <list>

@@ -1,5 +1,5 @@
-#ifndef GLFWAPPLICATION_H
-#define GLFWAPPLICATION_H
+#ifndef GLTK_GLFWAPPLICATION_H
+#define GLTK_GLFWAPPLICATION_H
 
 #include <Application.h>
 #include <Rect.h>

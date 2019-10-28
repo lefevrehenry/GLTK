@@ -1,5 +1,5 @@
-#ifndef OPENGLATTRIBUT_H
-#define OPENGLATTRIBUT_H
+#ifndef GLTK_OPENGLATTRIBUT_H
+#define GLTK_OPENGLATTRIBUT_H
 
 #include <gltk.h>
 #include <Light.h>

@@ -1,5 +1,5 @@
-#ifndef FRAMEBUFFER_H
-#define FRAMEBUFFER_H
+#ifndef GLTK_FRAMEBUFFER_H
+#define GLTK_FRAMEBUFFER_H
 
 #include <TexturePrivate.h>
 
