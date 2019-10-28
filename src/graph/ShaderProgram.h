@@ -30,7 +30,7 @@ private:
     ShaderProgram();
     ShaderProgram(ShaderProgramPrivate* shaderProgramPrivate);
 
-private:
+public:
     ShaderProgramPrivate* shaderProgramPrivate() const;
     void setShaderProgramPrivate(ShaderProgramPrivate* shaderProgramPrivate);
 

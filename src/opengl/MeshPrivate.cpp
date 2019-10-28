@@ -212,6 +212,8 @@ MeshPrivate::MeshEntry::~MeshEntry()
 
 void MeshPrivate::MeshEntry::draw(const VisualParam* param) const
 {
+    using PrimitiveType = VisualParam::PrimitiveType;
+
     GLenum primitiveType = 0;
     unsigned int count = 0;
     unsigned int offset = 0;
@@ -239,8 +241,8 @@ void MeshPrivate::MeshEntry::draw(const VisualParam* param) const
         break;
     }
 
-    if (param->nbInstance > 1)
-        glDrawElementsInstanced(primitiveType, int(count), GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), int(param->nbInstance));
+    if (param->instancing > 1)
+        glDrawElementsInstanced(primitiveType, int(count), GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), int(param->instancing));
     else
         glDrawElements(primitiveType, int(count), GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 

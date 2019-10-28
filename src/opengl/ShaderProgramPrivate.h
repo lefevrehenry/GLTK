@@ -1,10 +1,10 @@
-#ifndef SHADERPROGRAMPRIVATE_H
+﻿#ifndef SHADERPROGRAMPRIVATE_H
 #define SHADERPROGRAMPRIVATE_H
 
 #include <Data.h>
 #include <gltk.h>
 #include <OpenGLAttribute.h>
-#include <OpenGLStateMachine.h>
+#include <VisualOption.h>
 
 // Standard Library
 #include <vector>
@@ -22,26 +22,12 @@ namespace gl {
 class BaseData;
 class Shader;
 
-// Specifies what kind of primives has to be rendered
-enum PrimitiveType {
-    POINTS = GL_POINTS,
-    LINES = GL_LINES,
-    TRIANGLES = GL_TRIANGLES
-};
-
-struct VisualParam {
-
-    static VisualParam DefaultInstance() {
-        VisualParam param;
-        param.nbInstance = 1;
-        param.primitiveType = TRIANGLES;
-        return param;
-    }
-
-    unsigned int nbInstance;
-    PrimitiveType primitiveType;
-
-};
+//// Specifies what kind of primives has to be rendered
+//enum PrimitiveType {
+//    POINTS = GL_POINTS,
+//    LINES = GL_LINES,
+//    TRIANGLES = GL_TRIANGLES
+//};
 
 /**
  * @brief The ShaderProgramPrivate class
@@ -63,25 +49,6 @@ public:
 public:
     void link();
     bool isLinked() const;
-
-public:
-    unsigned int getNbInstance() const;
-    void setNbInstance(unsigned int n);
-
-public:
-    PrimitiveType getPrimitiveType() const;
-    void setPrimitiveType(PrimitiveType primitiveType);
-
-public:
-    template< AttributeName N >
-    void set(typename OpenGL<N>::Type value)
-    {
-        this->m_attributeStack[N] = OpenGLAttribut<N>::Create(value);
-    }
-
-private:
-    void pushAttribute() const;
-    void popAttribute() const;
 
 public:
     void addShader(const Shader& shader);
@@ -172,6 +139,26 @@ public:
     void setUniformValue(const char* name, const glm::mat4& m);
     void setUniformValue(int attributLocation, const glm::mat4& m);
 
+public:
+    VisualParam visualParam() const;
+
+    unsigned int instancing() const;
+    void setInstancing(unsigned int instancing);
+
+    VisualParam::PrimitiveType primitiveType() const;
+    void setPrimitiveType(VisualParam::PrimitiveType primitiveType);
+
+public:
+    template< AttributeName N >
+    void set(typename OpenGL<N>::Type value)
+    {
+        this->m_visualOption.set<N>(value);
+    }
+
+private:
+    void pushAttribute() const;
+    void popAttribute() const;
+
 private:
     GLuint m_programId;
     bool m_isLinked;
@@ -179,10 +166,8 @@ private:
     std::vector< const Shader* > m_shaderList;
     std::map< const char*, BaseData* > m_dataList;
 
-    unsigned int m_nbInstance;
-    PrimitiveType m_primitiveType;
-
-    std::map< AttributeName, BaseOpenGLAttribut::SPtr > m_attributeStack;
+    VisualParam m_visualParam;      // specify Mesh::draw behavior
+    VisualOption m_visualOption;    // change OpenGLStateMachine
 
 };
 

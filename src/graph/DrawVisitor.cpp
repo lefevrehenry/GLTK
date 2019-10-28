@@ -47,12 +47,9 @@ void DrawVisitor::processNode(const Node* node)
         m_currentShader->bind();
         m_currentShader->updateDataIfDirty();
 
-        // fetch the number of instance rendering
-        // fetch what kind of primitives has to be drawn by the shader
-
-        VisualParam param = VisualParam::DefaultInstance();
-//        param.nbInstance = m_currentShader->getNbInstance();
-//        param.primitiveType = m_currentShader->getPrimitiveType();
+        // get VisualParam for
+        ShaderProgramPrivate* shaderProgramPrivate = m_currentShader->shaderProgramPrivate();
+        VisualParam param = shaderProgramPrivate->visualParam();
 
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {

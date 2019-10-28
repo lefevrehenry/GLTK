@@ -2,7 +2,6 @@
 
 #include <FileRepository.h>
 #include <Message.h>
-#include <SceneGraph.h>
 #include <Shader.h>
 #include <VisualManager.h>
 
@@ -248,7 +247,7 @@ ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgr
         shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
         shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
-        shaderProgramPrivate->setNbInstance(3);
+        shaderProgramPrivate->setInstancing(3);
 
         break;
     case ShaderProgramType::HighLight:
@@ -277,7 +276,7 @@ ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgr
         break;
     case ShaderProgramType::TangentSpace:
 
-//        shaderProgramPrivate->setPrimitiveType(PrimitiveType::POINTS);
+        shaderProgramPrivate->setPrimitiveType(VisualParam::PrimitiveType::POINTS);
         shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
         shaderProgramPrivate->setUniformValue("scale", .5);
@@ -345,12 +344,11 @@ ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgr
 
 ShaderProgramPrivate::ShaderProgramPrivate() :
     m_programId(0),
+    m_isLinked(false),
     m_shaderList(3),
     m_dataList(),
-    m_isLinked(false),
-    m_nbInstance(1),
-    m_primitiveType(TRIANGLES),
-    m_attributeStack()
+    m_visualParam(VisualParam::DefaultInstance()),
+    m_visualOption()
 {
     m_programId = glCreateProgram();
 }
@@ -400,117 +398,6 @@ void ShaderProgramPrivate::link()
 bool ShaderProgramPrivate::isLinked() const
 {
     return m_isLinked;
-}
-
-unsigned int ShaderProgramPrivate::getNbInstance() const
-{
-    return this->m_nbInstance;
-}
-
-void ShaderProgramPrivate::setNbInstance(unsigned int n)
-{
-    this->m_nbInstance = n;
-}
-
-PrimitiveType ShaderProgramPrivate::getPrimitiveType() const
-{
-    return this->m_primitiveType;
-}
-
-void ShaderProgramPrivate::setPrimitiveType(PrimitiveType primitiveType)
-{
-    this->m_primitiveType = primitiveType;
-}
-
-template< AttributeName N >
-void PushAndApply(BaseOpenGLAttribut::SPtr baseAttribut)
-{
-    typename OpenGLAttribut<N>::SPtr attribut = std::static_pointer_cast< OpenGLAttribut<N> >(baseAttribut);
-
-    OpenGLStateMachine::Push<N>();
-    OpenGLStateMachine::Set<N>(*attribut);
-}
-
-void ShaderProgramPrivate::pushAttribute() const
-{
-    // ugly as fuck !
-    // mixing compile-time template compilation with runtime check :/
-    // implement a static_for loop ?
-    // but probably a bad idea to use template in this case
-
-    for (auto it : this->m_attributeStack) {
-        AttributeName attribute = it.first;
-        BaseOpenGLAttribut::SPtr value = it.second;
-
-        switch (attribute) {
-        case ClearColor:
-            PushAndApply<ClearColor>(value);
-            break;
-        case CullFace:
-            PushAndApply<CullFace>(value);
-            break;
-        case DepthFunc:
-            PushAndApply<DepthFunc>(value);
-            break;
-        case DepthMask:
-            PushAndApply<DepthMask>(value);
-            break;
-        case DepthTest:
-            PushAndApply<DepthTest>(value);
-            break;
-        case LineWidth:
-            PushAndApply<LineWidth>(value);
-            break;
-        case PolygonMode:
-            PushAndApply<PolygonMode>(value);
-            break;
-        case SceneLight:
-            PushAndApply<SceneLight>(value);
-            break;
-        case Viewport:
-            PushAndApply<Viewport>(value);
-            break;
-        }
-    }
-}
-
-void ShaderProgramPrivate::popAttribute() const
-{
-    // same as above, ugly idea
-
-    for (auto it : this->m_attributeStack) {
-        AttributeName attribute = it.first;
-
-        switch (attribute) {
-        case ClearColor:
-            OpenGLStateMachine::Pop<ClearColor>();
-            break;
-        case CullFace:
-            OpenGLStateMachine::Pop<CullFace>();
-            break;
-        case DepthFunc:
-            OpenGLStateMachine::Pop<DepthFunc>();
-            break;
-        case DepthMask:
-            OpenGLStateMachine::Pop<DepthMask>();
-            break;
-        case DepthTest:
-            OpenGLStateMachine::Pop<DepthTest>();
-            break;
-        case LineWidth:
-            OpenGLStateMachine::Pop<LineWidth>();
-            break;
-        case PolygonMode:
-            OpenGLStateMachine::Pop<PolygonMode>();
-            break;
-        case SceneLight:
-            OpenGLStateMachine::Pop<SceneLight>();
-            break;
-        case Viewport:
-            OpenGLStateMachine::Pop<Viewport>();
-            break;
-        }
-    }
 }
 
 void ShaderProgramPrivate::addShader(const Shader& shader)
@@ -696,4 +583,39 @@ void ShaderProgramPrivate::setUniformValue(const char* name, const glm::mat4& m)
 void ShaderProgramPrivate::setUniformValue(int attributLocation, const glm::mat4& m)
 {
     glUniformMatrix4fv(attributLocation, 1, GL_FALSE, glm::value_ptr(m));
+}
+
+VisualParam ShaderProgramPrivate::visualParam() const
+{
+    return this->m_visualParam;
+}
+
+unsigned int ShaderProgramPrivate::instancing() const
+{
+    return this->m_visualParam.instancing;
+}
+
+void ShaderProgramPrivate::setInstancing(unsigned int instancing)
+{
+    this->m_visualParam.instancing = instancing;
+}
+
+VisualParam::PrimitiveType ShaderProgramPrivate::primitiveType() const
+{
+    return this->m_visualParam.primitiveType;
+}
+
+void ShaderProgramPrivate::setPrimitiveType(VisualParam::PrimitiveType primitiveType)
+{
+    this->m_visualParam.primitiveType = primitiveType;
+}
+
+void ShaderProgramPrivate::pushAttribute() const
+{
+    this->m_visualOption.pushAttribute();
+}
+
+void ShaderProgramPrivate::popAttribute() const
+{
+    this->m_visualOption.popAttribute();
 }

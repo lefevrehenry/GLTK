@@ -1,11 +1,46 @@
 #ifndef VISUALOPTION_H
 #define VISUALOPTION_H
 
+#include <OpenGLAttribute.h>
+
 // Glad
 #include <glad/glad.h>
 
+// Standard Library
+#include <map>
+
 
 namespace gl {
+
+/**
+ * @brief The VisualParam struct
+ */
+struct VisualParam {
+//    // Specifies how primives are rendered
+//    enum class PolygonMode {
+//        POINT = GL_POINT,
+//        LINE = GL_LINES,
+//        FILL = GL_FILL
+//    };
+
+    // Specifies what type of primives are rendered
+    enum class PrimitiveType {
+        POINTS = GL_POINTS,
+        LINES = GL_LINES,
+        TRIANGLES = GL_TRIANGLES
+    };
+
+    static VisualParam DefaultInstance() {
+        VisualParam param;
+        param.instancing = 1;
+        param.primitiveType = PrimitiveType::TRIANGLES;
+        return param;
+    }
+
+    unsigned int instancing;
+    PrimitiveType primitiveType;
+
+};
 
 /**
  * @brief The VisualOption class
@@ -14,27 +49,22 @@ class VisualOption
 {
 
 public:
-    // Specifies how polygons are rendered
-    enum FillMode {
-        POINT,
-        LINE,
-        FILL
-    };
-
-public:
     VisualOption();
     virtual ~VisualOption();
 
 public:
-    void push() const;
-    void pop() const;
+    template< AttributeName N >
+    void set(typename OpenGL<N>::Type value)
+    {
+        this->m_attributeStack[N] = OpenGLAttribut<N>::Create(value);
+    }
 
 public:
-    FillMode fillMode() const;
-    void setFillMode(FillMode polygonMode);
+    void pushAttribute() const;
+    void popAttribute() const;
 
 private:
-    FillMode m_polygonMode;
+    std::map< AttributeName, BaseOpenGLAttribut::SPtr > m_attributeStack;
 
 };
 
