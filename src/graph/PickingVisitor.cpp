@@ -3,6 +3,7 @@
 #include <Application.h>
 #include <Framebuffer.h>
 #include <Node.h>
+#include <OpenGLStateMachine.h>
 #include <ShaderProgramPrivate.h>
 #include <Transform.h>
 #include <VisualManager.h>

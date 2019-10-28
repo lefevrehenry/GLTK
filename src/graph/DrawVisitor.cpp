@@ -12,9 +12,7 @@ using namespace gl;
 
 DrawVisitor::DrawVisitor() :
     m_shaderStack(),
-    m_optionStack(),
-    m_currentShader(nullptr),
-    m_currentOption(nullptr)
+    m_currentShader(nullptr)
 {
 
 }
@@ -27,7 +25,6 @@ DrawVisitor::~DrawVisitor()
 void DrawVisitor::start()
 {
     this->m_currentShader = nullptr;
-    this->m_currentOption = nullptr;
 }
 
 void DrawVisitor::forwardNode(const Node* node)
@@ -41,19 +38,6 @@ void DrawVisitor::forwardNode(const Node* node)
     // get the current shader program
     if (!m_shaderStack.empty())
         m_currentShader = m_shaderStack.top();
-
-//    // stack the node's VisualOption
-//    VisualOption* visualOption = node->visualOption();
-//    if (visualOption != nullptr)
-//        m_optionStack.push(visualOption);
-
-//    VisualOption* m_currentOption = nullptr;
-
-//    // get the current visual option
-//    if (!m_optionStack.empty()) {
-//        m_currentOption = m_optionStack.top();
-//        m_currentOption->push();
-//    }
 }
 
 void DrawVisitor::processNode(const Node* node)
@@ -94,12 +78,4 @@ void DrawVisitor::backwardNode(const Node* node)
     // unstack the node's ShaderProgram
     if (shaderProgram != nullptr)
         m_shaderStack.pop();
-
-//    // pop the current visual option
-//    if (m_currentOption != nullptr)
-//        m_currentOption->pop();
-
-//    // unstack the node's visualOption
-//    if (visualOption != nullptr)
-//        m_optionStack.pop();
 }

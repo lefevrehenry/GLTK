@@ -11,7 +11,6 @@ namespace gl {
 
 class Node;
 class ShaderProgram;
-class VisualOption;
 
 /**
  * @brief The DrawVisitor class
@@ -31,10 +30,7 @@ public:
 
 protected:
     std::stack<ShaderProgram*>  m_shaderStack;
-    std::stack<VisualOption*>   m_optionStack;
-
     ShaderProgram*  m_currentShader;
-    VisualOption*   m_currentOption;
 
 };
 

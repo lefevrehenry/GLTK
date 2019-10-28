@@ -6,7 +6,7 @@
 #include <Material.h>
 #include <Transform.h>
 
-// Glew
+// Glad
 #include <glad/glad.h>
 
 

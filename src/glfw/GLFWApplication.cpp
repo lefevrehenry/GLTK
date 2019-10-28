@@ -69,15 +69,6 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
         return nullptr;
     }
 
-//    // Glew initialization
-//    if (glewInit() != GLEW_OK)
-//    {
-//        // Problem: glewInit failed, something is seriously wrong.
-//        glfwTerminate();
-//        msg_error("OpenGL") << "oh no ! glewInit() has failed";
-//        return nullptr;
-//    }
-
     GLFWApplication* app = new GLFWApplication(windowHandle);
 
     VisualManager::Init();

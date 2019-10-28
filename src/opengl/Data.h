@@ -9,7 +9,7 @@
 #include <Texture2D.h>
 #include <TexturePrivate2D.h>
 
-// Glew
+// Glad
 #include <glad/glad.h>
 
 // Glm
