@@ -24,12 +24,12 @@ void VisualOption::pop() const
 //    glPopAttrib();
 }
 
-VisualOption::PolygonMode VisualOption::getPolygonMode() const
+VisualOption::FillMode VisualOption::fillMode() const
 {
     return this->m_polygonMode;
 }
 
-void VisualOption::setPolygonMode(PolygonMode polygonMode)
+void VisualOption::setFillMode(FillMode polygonMode)
 {
     this->m_polygonMode = polygonMode;
 }

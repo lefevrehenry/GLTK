@@ -15,7 +15,7 @@ class VisualOption
 
 public:
     // Specifies how polygons are rendered
-    enum PolygonMode {
+    enum FillMode {
         POINT,
         LINE,
         FILL
@@ -30,11 +30,11 @@ public:
     void pop() const;
 
 public:
-    PolygonMode getPolygonMode() const;
-    void setPolygonMode(PolygonMode polygonMode);
+    FillMode fillMode() const;
+    void setFillMode(FillMode polygonMode);
 
 private:
-    PolygonMode m_polygonMode;
+    FillMode m_polygonMode;
 
 };
 
