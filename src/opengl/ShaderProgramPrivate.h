@@ -101,7 +101,7 @@ public:
 
 public:
     template< typename T >
-    Data<T>* getDataByName(const char* name)
+    Data<T>* dataByName(const char* name)
     {
         for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
             if (it->first == name) {

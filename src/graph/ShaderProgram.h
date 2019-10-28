@@ -41,12 +41,13 @@ public:
 public:
     void updateDataIfDirty() const;
 
-    bool addDataTexture(const char* name, Texture* value);
-    bool addDataCubeMapTexture(const char* name, CubeMapTexture* value);
+    bool addData(const char* name, float value);
+    bool addData(const char* name, Texture* value);
+    bool addData(const char* name, CubeMapTexture* value);
 
 private:
     template< typename T >
-    bool addData(const char* name, T* value);
+    bool doAddData(const char* name, const T& value);
 
 private:
     std::shared_ptr<ShaderProgramPrivate> m_shaderProgramPrivate;

@@ -60,24 +60,32 @@ void ShaderProgram::updateDataIfDirty() const
     this->m_shaderProgramPrivate->updateDataIfDirty();
 }
 
-bool ShaderProgram::addDataTexture(const char* name, Texture* value)
+bool ShaderProgram::addData(const char* name, float value)
 {
-    return addData<Texture>(name, value);
+    return doAddData<float>(name, value);
 }
 
-bool ShaderProgram::addDataCubeMapTexture(const char* name, CubeMapTexture* value)
+bool ShaderProgram::addData(const char* name, Texture* value)
 {
-    return addData<CubeMapTexture>(name, value);
+    if(value == nullptr)
+        return false;
+
+    return doAddData<Texture>(name, *value);
+}
+
+bool ShaderProgram::addData(const char* name, CubeMapTexture* value)
+{
+    if(value == nullptr)
+        return false;
+
+    return doAddData<CubeMapTexture>(name, *value);
 }
 
 template< typename T >
-bool ShaderProgram::addData(const char* name, T* value)
+bool ShaderProgram::doAddData(const char* name, const T& value)
 {
     if(this->m_shaderProgramPrivate == nullptr)
         return false;
 
-    if(value == nullptr)
-        return false;
-
-    return this->m_shaderProgramPrivate->addData<T>(name, *value);
+    return this->m_shaderProgramPrivate->addData<T>(name, value);
 }
