@@ -5,7 +5,7 @@
 #include <Light.h>
 #include <VisualManager.h>
 
-// Glad
+// OpenGL
 #include <GL/gl.h>
 
 // Standard Library
@@ -27,9 +27,6 @@ enum AttributeName
     Viewport,
     SceneLight
 };
-
-GLTK::OpenGLDepthFunc OpenGLToGLTKDepthFunc(GLenum);
-GLenum GLTKToOpenglDepthFunc(GLTK::OpenGLDepthFunc);
 
 /**
  * @brief The OpenGL class
@@ -214,8 +211,6 @@ struct OpenGL<SceneLight>
         VisualManager::UpdateUniformBufferLight(value);
     }
 };
-
-class OpenGLStateMachine;
 
 /**
  * @brief The BaseOpenGLAttribut class

@@ -61,6 +61,10 @@ public:
     GLuint getProgramID() const;
 
 public:
+    void link();
+    bool isLinked() const;
+
+public:
     unsigned int getNbInstance() const;
     void setNbInstance(unsigned int n);
 
@@ -75,13 +79,12 @@ public:
         this->m_attributeStack[N] = OpenGLAttribut<N>::Create(value);
     }
 
+private:
     void pushAttribute() const;
     void popAttribute() const;
 
 public:
     bool addShader(const Shader& shader);
-    void link();
-    bool isLinked() const;
 
 public:
     void bind() const;
@@ -170,10 +173,10 @@ public:
 
 private:
     GLuint m_programId;
+    bool m_isLinked;
+
     std::vector< const Shader* > m_shaderList;
     std::map< const char*, BaseData* > m_dataList;
-
-    bool m_isLinked;
 
     unsigned int m_nbInstance;
     PrimitiveType m_primitiveType;

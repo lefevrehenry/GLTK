@@ -370,6 +370,38 @@ GLuint ShaderProgramPrivate::getProgramID() const
     return this->m_programId;
 }
 
+void ShaderProgramPrivate::link()
+{
+    GLint linked = 0;
+
+    for (const Shader* shader : m_shaderList) {
+        if (shader != nullptr)
+            glAttachShader(m_programId, shader->getShaderID());
+    }
+
+    glLinkProgram(m_programId);
+
+    glGetProgramiv(m_programId, GL_LINK_STATUS, &linked);
+    if (!linked)
+    {
+        GLchar infoLog[512];
+        glGetProgramInfoLog(m_programId, 512, nullptr, infoLog);
+        msg_error("ShaderProgram") << "Linkage failed: " << infoLog;
+    }
+
+    m_isLinked = linked;
+
+    for (const Shader* shader : m_shaderList) {
+        if (shader != nullptr)
+            glDetachShader(m_programId, shader->getShaderID());
+    }
+}
+
+bool ShaderProgramPrivate::isLinked() const
+{
+    return m_isLinked;
+}
+
 unsigned int ShaderProgramPrivate::getNbInstance() const
 {
     return this->m_nbInstance;
@@ -497,38 +529,6 @@ bool ShaderProgramPrivate::addShader(const Shader& shader)
     m_shaderList[type] = &shader;
 
     return true;
-}
-
-void ShaderProgramPrivate::link()
-{
-    GLint linked = 0;
-
-    for (const Shader* shader : m_shaderList) {
-        if (shader != nullptr)
-            glAttachShader(m_programId, shader->getShaderID());
-    }
-
-    glLinkProgram(m_programId);
-
-    glGetProgramiv(m_programId, GL_LINK_STATUS, &linked);
-    if (!linked)
-    {
-        GLchar infoLog[512];
-        glGetProgramInfoLog(m_programId, 512, nullptr, infoLog);
-        msg_error("ShaderProgram") << "Linkage failed: " << infoLog;
-    }
-
-    m_isLinked = linked;
-
-    for (const Shader* shader : m_shaderList) {
-        if (shader != nullptr)
-            glDetachShader(m_programId, shader->getShaderID());
-    }
-}
-
-bool ShaderProgramPrivate::isLinked() const
-{
-    return m_isLinked;
 }
 
 void ShaderProgramPrivate::bind() const
