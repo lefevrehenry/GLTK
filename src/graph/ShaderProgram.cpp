@@ -8,7 +8,7 @@ using namespace gl;
 
 ShaderProgram* ShaderProgram::Create(GLTK::ShaderProgramType shaderProgramType)
 {
-    ShaderProgramPrivate* shaderProgramPrivate = ShaderProgramPrivate::Create(shaderProgramType);
+    std::shared_ptr<ShaderProgramPrivate> shaderProgramPrivate( ShaderProgramPrivate::Create(shaderProgramType) );
     ShaderProgram* shaderProgram = new ShaderProgram(shaderProgramPrivate);
 
     return shaderProgram;
@@ -20,7 +20,7 @@ ShaderProgram::ShaderProgram() :
 
 }
 
-ShaderProgram::ShaderProgram(ShaderProgramPrivate* shaderProgramPrivate) :
+ShaderProgram::ShaderProgram(const std::shared_ptr<ShaderProgramPrivate>& shaderProgramPrivate) :
     m_shaderProgramPrivate(shaderProgramPrivate)
 {
 

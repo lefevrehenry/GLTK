@@ -28,7 +28,7 @@ public:
 
 private:
     ShaderProgram();
-    ShaderProgram(ShaderProgramPrivate* shaderProgramPrivate);
+    ShaderProgram(const std::shared_ptr<ShaderProgramPrivate>& shaderProgramPrivate);
 
 public:
     ShaderProgramPrivate* shaderProgramPrivate() const;
