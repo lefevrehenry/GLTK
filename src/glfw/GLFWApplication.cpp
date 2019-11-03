@@ -236,8 +236,16 @@ void GLFWApplication::loop()
 
         VisualManager::UpdateUniformBufferTime(t);
 
+        /* Call beforeDrawing callback */
+        if(m_beforeDrawing)
+            this->m_beforeDrawing(t);
+
         /* Call the drawing function */
         this->draw();
+
+        /* Call afterDrawing callback */
+        if(m_afterDrawing)
+            this->m_afterDrawing(t);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(this->m_windowHandle);
@@ -245,6 +253,16 @@ void GLFWApplication::loop()
         /* Poll for and process events */
         glfwPollEvents();
     }
+}
+
+void GLFWApplication::setBeforeDrawingCallback(std::function<void (float)> callback)
+{
+    this->m_beforeDrawing = callback;
+}
+
+void GLFWApplication::setAfterDrawingCallback(std::function<void (float)> callback)
+{
+    this->m_afterDrawing = callback;
 }
 
 GLFWwindow* GLFWApplication::getWindow() const

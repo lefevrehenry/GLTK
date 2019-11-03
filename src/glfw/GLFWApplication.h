@@ -5,6 +5,7 @@
 #include <Rect.h>
 
 // Standard Library
+#include <functional>
 #include <memory>
 #include <vector>
 
@@ -42,6 +43,10 @@ public:
     virtual void loop();
 
 public:
+    void setBeforeDrawingCallback(std::function<void(float)> callback);
+    void setAfterDrawingCallback(std::function<void(float)> callback);
+
+public:
     GLFWwindow* getWindow() const;
     void setWindow(GLFWwindow* newHandle);
 
@@ -64,6 +69,9 @@ private:
     GLFWwindow* m_windowHandle;
 
     std::vector< std::shared_ptr<SceneView> > m_sceneViews;
+
+    std::function<void(float)> m_beforeDrawing;
+    std::function<void(float)> m_afterDrawing;
 
 };
 
