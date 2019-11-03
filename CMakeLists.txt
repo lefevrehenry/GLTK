@@ -4,8 +4,6 @@ project(GLTK)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer -g")
 
-set(CMAKE_INSTALL_RPATH "../lib")
-
 set(HEADER_FILES
     src/controller/Controller.h
 
@@ -255,9 +253,6 @@ install(EXPORT ${PROJECT_NAME}Config DESTINATION lib/cmake)
 
 ## install header files
 install(FILES ${HEADER_FILES} DESTINATION include/GLTK)
-
-## install examples
-install(DIRECTORY ${CMAKE_BINARY_DIR}/bin/ DESTINATION bin)
 
 ## install share/ directory
 install(DIRECTORY share/ DESTINATION share)

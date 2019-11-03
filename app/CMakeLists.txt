@@ -10,16 +10,25 @@ set(EXECUTABLE_FILES
 #    prog
 )
 
-find_package(Threads)
-find_package(glfw3 CONFIG REQUIRED)
+#find_package(Threads)
+#find_package(glfw3 CONFIG REQUIRED)
+
+macro(create_executable target_name)
+    message(STATUS "${target_name}")
+
+    add_executable(${target_name} ${target_name}.cpp)
+    target_link_libraries(${target_name} PRIVATE GLTK)# Threads::Threads)
+
+    set_target_properties(${target_name} PROPERTIES INSTALL_RPATH "$ORIGIN/../lib")
+
+    ## install binary
+    install(TARGETS ${target_name}
+            RUNTIME DESTINATION bin COMPONENT Runtime
+            LIBRARY DESTINATION lib COMPONENT Runtime
+            ARCHIVE DESTINATION lib COMPONENT Runtime
+    )
+endmacro()
 
 foreach(exec ${EXECUTABLE_FILES})
-    add_executable(${exec} ${exec}.cpp)
-    message(STATUS "${exec}")
-    target_include_directories(${exec} PRIVATE ${GLFW3_INCLUDE_DIR})
-    target_link_libraries(${exec} PRIVATE GLTK ${GLFW3_LIBRARY})
+    create_executable(${exec})
 endforeach()
-
-add_executable(${PROJECT_NAME} main.cpp)
-target_include_directories(${PROJECT_NAME} PRIVATE ${GLFW3_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE GLTK ${GLFW3_LIBRARY} Threads::Threads)
