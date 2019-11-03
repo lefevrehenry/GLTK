@@ -2,6 +2,7 @@
 
 // vertex attribut
 layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 normal;
 layout(location = 4) in vec2 uvcoord;
 
 layout(std140) uniform transform
@@ -19,10 +20,12 @@ layout(std140) uniform camera
 };
 
 // data to fragment shader
+out vec3 o_normal;
 out vec2 o_uvcoord;
 
 void main()
 {
+    o_normal = ModelNormalMatrix * normal;
     o_uvcoord = uvcoord;
 
     gl_Position = ProjViewMatrix * ModelMatrix * vec4(position, 1.0);

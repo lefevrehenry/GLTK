@@ -264,6 +264,7 @@ ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgr
 
         shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     case ShaderProgramType::Texturing:
