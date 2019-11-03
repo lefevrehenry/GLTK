@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 project(GLTK)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -166,14 +166,10 @@ set(CONFIG_FILES
 set(BUILD_EXAMPLES ON CACHE BOOL "")
 set(BUILD_WITH_GLFW ON CACHE BOOL "")
 
-set(ARCHIVE_OUTPUT_DIRECTORY lib)
-set(LIBRARY_OUTPUT_DIRECTORY lib)
-set(RUNTIME_OUTPUT_DIRECTORY bin)
-
 ## Set the output directories globally
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${ARCHIVE_OUTPUT_DIRECTORY})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${LIBRARY_OUTPUT_DIRECTORY})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${RUNTIME_OUTPUT_DIRECTORY})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Create etc/config.ini in the build direcotry: it contains the paths to severals share/ directories
 set(SHARE_DIR "${CMAKE_SOURCE_DIR}/share")
@@ -191,7 +187,7 @@ if(${BUILD_EXAMPLES})
 endif()
 
 if(${BUILD_WITH_GLFW})
-    find_package(glfw3 REQUIRED)
+    find_package(glfw3 3.2.1 EXACT REQUIRED)
 
     list(APPEND HEADER_FILES
         src/glfw/GLFWApplication.h
@@ -208,6 +204,9 @@ endif()
 #========== Creation of the library ==========#
 add_library(${PROJECT_NAME} SHARED ${HEADER_FILES} ${SOURCE_FILES} ${PRIVATE_HEADER_FILES} ${PRIVATE_SOURCE_FILES} ${EXTLIBS_SOURCE_FILES} ${SHADER_FILES})
 
+# To be able to find libraries that are not located in the system after install stage
+set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH_USE_LINK_PATH True)
+
 target_include_directories(${PROJECT_NAME}  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
 target_include_directories(${PROJECT_NAME}  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/controller>)
 target_include_directories(${PROJECT_NAME}  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/graph>)
@@ -217,26 +216,27 @@ target_include_directories(${PROJECT_NAME}  PUBLIC $<BUILD_INTERFACE:${CMAKE_CUR
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/opengl>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/statemachine>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${OPENGL_INCLUDE_DIR}>)
+target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${ASSIMP_INCLUDE_DIRS}>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs/stb_image/include>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs/glad/include>)
-target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${ASSIMP_INCLUDE_DIRS}>)
-
 target_include_directories(${PROJECT_NAME}  PUBLIC $<INSTALL_INTERFACE:include/GLTK>)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES} ${ASSIMP_LIBRARY_DIRS}/lib${ASSIMP_LIBRARIES}.a)
+find_library(ASSIMP_LIBRARY
+    NAME ${ASSIMP_LIBRARIES}
+    PATHS ${ASSIMP_LIBRARY_DIRS}
+    NO_DEFAULT_PATH
+)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_LIBRARIES} ${ASSIMP_LIBRARY})
 
 if(${BUILD_WITH_GLFW})
     target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/glfw>)
-    target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${GLFW3_INCLUDE_DIR}>)
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW3_LIBRARY})
+    target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
 endif()
 
 #========= Install rules =========#
 
 ## Change default install prefix
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
-endif()
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Install path prefix, prepended onto install directories." FORCE)
 
 ## install target binary
 install(TARGETS ${PROJECT_NAME}
