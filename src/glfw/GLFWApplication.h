@@ -34,7 +34,6 @@ public:
     static void KeyCallback(GLFWwindow* handle, int key, int scancode, int action, int mods);
 
 protected:
-
     GLFWApplication(GLFWwindow* handle);
     virtual ~GLFWApplication();
 
@@ -46,7 +45,8 @@ public:
     GLFWwindow* getWindow() const;
     void setWindow(GLFWwindow* newHandle);
 
-    Rect windowSize() const;
+    Rect windowRect() const;
+    void setWindowRect(const Rect& rect);
 
     void addSceneView(std::shared_ptr<SceneView> sceneView);
 

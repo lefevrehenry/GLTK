@@ -277,12 +277,32 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
     }
 }
 
-Rect GLFWApplication::windowSize() const
+Rect GLFWApplication::windowRect() const
 {
+    GLFWwindow* window = getWindow();
+
+    if (window == nullptr)
+        return Rect();
+
+    int x = 0;
+    int y = 0;
+    glfwGetWindowPos(window, &x, &y);
+
     int width = static_cast<int>(Application::ScreenWidth);
     int height = static_cast<int>(Application::ScreenHeight);
 
-    return Rect(0,0,width,height);
+    return Rect(x,y,width,height);
+}
+
+void GLFWApplication::setWindowRect(const Rect& rect)
+{
+    GLFWwindow* window = getWindow();
+
+    if (window == nullptr)
+        return;
+
+    glfwSetWindowPos(window, rect.x(), rect.y());
+    glfwSetWindowSize(window, rect.width(), rect.height());
 }
 
 void GLFWApplication::addSceneView(std::shared_ptr<SceneView> sceneView)
