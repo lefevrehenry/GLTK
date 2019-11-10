@@ -4,17 +4,10 @@
 #include <Application.h>
 #include <Rect.h>
 
-// Standard Library
-#include <functional>
-#include <memory>
-#include <vector>
-
 
 class GLFWwindow;
 
 namespace gl {
-
-class SceneView;
 
 /**
  * @brief The GLFWApplication class
@@ -43,17 +36,11 @@ public:
     virtual void loop();
 
 public:
-    void setBeforeDrawingCallback(std::function<void(float)> callback);
-    void setAfterDrawingCallback(std::function<void(float)> callback);
-
-public:
     GLFWwindow* getWindow() const;
     void setWindow(GLFWwindow* newHandle);
 
     Rect windowRect() const;
     void setWindowRect(const Rect& rect);
-
-    void addSceneView(std::shared_ptr<SceneView> sceneView);
 
 private:
     void draw();
@@ -67,11 +54,7 @@ private:
 
 private:
     GLFWwindow* m_windowHandle;
-
-    std::vector< std::shared_ptr<SceneView> > m_sceneViews;
-
-    std::function<void(float)> m_beforeDrawing;
-    std::function<void(float)> m_afterDrawing;
+    double      m_previousTime;
 
 };
 

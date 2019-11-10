@@ -119,7 +119,7 @@ void GLFWApplication::FramebufferSizeCallback(GLFWwindow* handle, int width, int
 {
     static GLFWApplication* app = GLFWApplication::Instance();
 
-    for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
+    for (const std::shared_ptr<SceneView>& sceneView : app->sceneViews()) {
         if(sceneView && sceneView->interface())
             sceneView->interface()->framebufferSizeCallback(handle, width, height);
     }
@@ -132,7 +132,7 @@ void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int ac
 {
     static GLFWApplication* app = GLFWApplication::Instance();
 
-    for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
+    for (const std::shared_ptr<SceneView>& sceneView : app->sceneViews()) {
         if(sceneView && sceneView->interface()) {
             const Rect& rect = sceneView->rect();
             double xpos = -1;
@@ -148,7 +148,7 @@ void GLFWApplication::CursorPosCallback(GLFWwindow* handle, double xpos, double 
 {
     static GLFWApplication* app = GLFWApplication::Instance();
 
-    for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
+    for (const std::shared_ptr<SceneView>& sceneView : app->sceneViews()) {
         if(sceneView && sceneView->interface()) {
             const Rect& rect = sceneView->rect();
             if (rect.contains(int(xpos), int(ypos))) {
@@ -167,7 +167,7 @@ void GLFWApplication::ScrollCallback(GLFWwindow* handle, double xoffset, double 
 {
     static GLFWApplication* app = GLFWApplication::Instance();
 
-    for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
+    for (const std::shared_ptr<SceneView>& sceneView : app->sceneViews()) {
         if(sceneView && sceneView->interface()) {
             const Rect& rect = sceneView->rect();
             double xpos = -1;
@@ -183,7 +183,7 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 {
     static GLFWApplication* app = GLFWApplication::Instance();
 
-    for (const std::shared_ptr<SceneView>& sceneView : app->m_sceneViews) {
+    for (const std::shared_ptr<SceneView>& sceneView : app->sceneViews()) {
         if(sceneView && sceneView->interface())
             sceneView->interface()->keyCallback(handle, key, scancode, action, mods);
     }
@@ -191,7 +191,7 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
 
 GLFWApplication::GLFWApplication(GLFWwindow* handle) : Application(),
     m_windowHandle(nullptr),
-    m_sceneViews()
+    m_previousTime(0)
 {
     setWindow(handle);
 
@@ -231,38 +231,33 @@ void GLFWApplication::loop()
 //            lastTime += 1.0;
 //        }
 
-        double time = glfwGetTime();
-        float t = std::round(float(time) * 100) / 100;
+        double currentTime = glfwGetTime();
+        double dt = currentTime - m_previousTime;
 
+        float t = std::round(float(currentTime) * 100) / 100;
         VisualManager::UpdateUniformBufferTime(t);
 
+        /* Call prepareFrame to update animations */
+        this->prepareFrame(dt);
+
         /* Call beforeDrawing callback */
-        if(m_beforeDrawing)
-            this->m_beforeDrawing(t);
+        this->callBeforeDrawingCallback(t);
 
         /* Call the drawing function */
         this->draw();
 
         /* Call afterDrawing callback */
-        if(m_afterDrawing)
-            this->m_afterDrawing(t);
+        this->callAfterDrawingCallback(t);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(this->m_windowHandle);
 
         /* Poll for and process events */
         glfwPollEvents();
+
+        /* Record the current time for the next frame */
+        this->m_previousTime = currentTime;
     }
-}
-
-void GLFWApplication::setBeforeDrawingCallback(std::function<void (float)> callback)
-{
-    this->m_beforeDrawing = callback;
-}
-
-void GLFWApplication::setAfterDrawingCallback(std::function<void (float)> callback)
-{
-    this->m_afterDrawing = callback;
 }
 
 GLFWwindow* GLFWApplication::getWindow() const
@@ -323,14 +318,9 @@ void GLFWApplication::setWindowRect(const Rect& rect)
     glfwSetWindowSize(window, rect.width(), rect.height());
 }
 
-void GLFWApplication::addSceneView(std::shared_ptr<SceneView> sceneView)
-{
-    this->m_sceneViews.push_back(sceneView);
-}
-
 void GLFWApplication::draw()
 {
-    for (const std::shared_ptr<SceneView>& sceneView : m_sceneViews) {
+    for (const std::shared_ptr<SceneView>& sceneView : sceneViews()) {
         if(sceneView)
             sceneView->draw();
     }
