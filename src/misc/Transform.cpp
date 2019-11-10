@@ -31,6 +31,17 @@ const glm::mat4& Transform::matrix() const
     return this->m_transform;
 }
 
+Transform Transform::inverse(const Transform& transform)
+{
+    Transform result;
+
+    result.m_translation = -transform.m_translation;
+    result.m_orientation = glm::inverse(transform.m_orientation);
+    result.m_scale /= transform.m_scale;
+
+    return result;
+}
+
 void Transform::translate(float x, float y, float z)
 {
     this->m_translation.x += x;

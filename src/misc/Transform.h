@@ -21,6 +21,9 @@ public:
     const glm::mat4& matrix() const;
 
 public:
+    static Transform inverse(const Transform& transform);
+
+public:
     void translate(float x, float y, float z);
     void translate(const glm::vec3& translate);
 
