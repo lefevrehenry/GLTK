@@ -21,33 +21,21 @@ public:
     };
 
 public:
-    AnimationGroup() :
-        m_animations(),
-        m_indexAnimation(0),
-        m_running(true),
-        m_type(Loop)
-    {
-    }
+    AnimationGroup();
     virtual ~AnimationGroup() = default;
 
 public:
-    void addAnimation(BaseAnimation baseAnimation) {
-        m_animations.push_back(baseAnimation);
-    }
+    void addAnimation(BaseAnimation baseAnimation);
 
 public:
-    bool running() {
-        return m_running;
-    }
-    virtual void start() {
-        this->m_running = true;
-    }
-    virtual void stop() {
-        this->m_running = false;
-    }
+    bool running();
 
 public:
-    virtual void update(float dt) = 0;
+    virtual void start();
+    virtual void stop();
+
+public:
+    virtual void update(double dt);
 
 protected:
     std::vector<BaseAnimation> m_animations;

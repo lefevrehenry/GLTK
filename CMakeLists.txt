@@ -31,15 +31,19 @@ set(HEADER_FILES
 
     src/misc/Application.h
     src/misc/Animation.h
+    src/misc/Animation.inl
     src/misc/AnimationGroup.h
+    src/misc/BaseAnimation.h
     src/misc/Camera.h
     src/misc/Light.h
     src/misc/Material.h
     src/misc/ParallelAnimation.h
+    src/misc/QuaternionAnimation.h
     src/misc/Rect.h
-    src/misc/Transform.h
     src/misc/SequentialAnimation.h
-
+    src/misc/Transform.h
+    src/misc/TransformAnimation.h
+    src/misc/Vector3DAnimation.h
 
     src/gltk.h
 )
@@ -72,13 +76,17 @@ set(SOURCE_FILES
     src/misc/Application.cpp
     src/misc/Animation.cpp
     src/misc/AnimationGroup.cpp
+    src/misc/BaseAnimation.cpp
     src/misc/Camera.cpp
     src/misc/Light.cpp
     src/misc/Material.cpp
     src/misc/ParallelAnimation.cpp
+    src/misc/QuaternionAnimation.cpp
     src/misc/Rect.cpp
-    src/misc/Transform.cpp
     src/misc/SequentialAnimation.cpp
+    src/misc/Transform.cpp
+    src/misc/TransformAnimation.h
+    src/misc/Vector3DAnimation.h
 
     src/gltk.cpp
 )

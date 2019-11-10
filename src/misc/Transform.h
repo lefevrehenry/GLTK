@@ -23,6 +23,10 @@ public:
 public:
     static Transform inverse(const Transform& transform);
 
+//public:
+//    void setTranslation(float x, float y, float z);
+//    void setTranslation(const glm::vec3& translate);
+
 public:
     void translate(float x, float y, float z);
     void translate(const glm::vec3& translate);

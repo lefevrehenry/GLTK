@@ -9,7 +9,7 @@ void SequentialAnimation::start() {
     AnimationGroup::start();
 }
 
-void SequentialAnimation::update(float dt)
+void SequentialAnimation::update(double dt)
 {
     if(!running() || m_animations.size() == 0 || m_indexAnimation >= m_animations.size())
         return;

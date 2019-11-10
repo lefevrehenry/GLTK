@@ -42,6 +42,14 @@ Transform Transform::inverse(const Transform& transform)
     return result;
 }
 
+//void Transform::setTranslation(float x, float y, float z)
+//{
+//    this->m_translation.x = x;
+//    this->m_translation.y = y;
+//    this->m_translation.z = z;
+//    this->m_isDirty = true;
+//}
+
 void Transform::translate(float x, float y, float z)
 {
     this->m_translation.x += x;

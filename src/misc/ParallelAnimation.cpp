@@ -11,7 +11,7 @@ void ParallelAnimation::start() {
     AnimationGroup::start();
 }
 
-void ParallelAnimation::update(float dt)
+void ParallelAnimation::update(double dt)
 {
     for (BaseAnimation& animation : m_animations) {
         animation.update(dt);
