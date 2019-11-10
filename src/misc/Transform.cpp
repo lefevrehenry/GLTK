@@ -79,3 +79,59 @@ void Transform::scale(const glm::vec3& scale)
 {
     this->scale(scale.x, scale.y, scale.z);
 }
+
+Transform Transform::operator*(const Transform& other) const
+{
+    Transform result(*this);
+    result *= other;
+
+    return result;
+}
+
+Transform& Transform::operator*=(const Transform& other)
+{
+    this->m_translation += other.m_translation;
+    this->m_orientation *= other.m_orientation;
+    this->m_scale *= other.m_scale;
+
+    return *this;
+}
+
+Transform Transform::operator-(const Transform& other) const
+{
+    Transform result(*this);
+    result -= other;
+
+    return result;
+}
+
+Transform& Transform::operator-=(const Transform& other)
+{
+    this->m_translation -= other.m_translation;
+    this->m_orientation *= glm::inverse(other.m_orientation);
+    this->m_scale /= other.m_scale;
+
+    return *this;
+}
+
+Transform& Transform::operator*=(float t)
+{
+    this->m_translation *= t;
+
+    glm::quat q = m_orientation;
+    glm::vec3 axis = glm::axis(q);
+    glm::quat unit = glm::angleAxis(0.f, axis);
+    this->m_orientation = glm::mix(unit, q, t);
+
+    this->m_scale *= t;
+
+    return *this;
+}
+
+Transform Transform::operator*(float t) const
+{
+    Transform result(*this);
+    result *= t;
+
+    return result;
+}

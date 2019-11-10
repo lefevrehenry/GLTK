@@ -33,7 +33,17 @@ public:
     void scale(float sx, float sy, float sz);
     void scale(const glm::vec3& scale);
 
-private:
+public:
+    Transform operator*(float t) const;
+    Transform& operator*=(float t);
+
+    Transform operator*(const Transform& other) const;
+    Transform& operator*=(const Transform& other);
+
+    Transform operator-(const Transform& other) const;
+    Transform& operator-=(const Transform& other);
+
+public:
     glm::vec3 m_translation;
     glm::quat m_orientation;
     glm::vec3 m_scale;
