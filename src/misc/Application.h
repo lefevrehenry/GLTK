@@ -1,8 +1,6 @@
 #ifndef GLTK_APPLICATION_H
 #define GLTK_APPLICATION_H
 
-#include <AnimationGroup.h>
-
 // Standard Library
 #include <functional>
 #include <memory>
@@ -11,6 +9,7 @@
 
 namespace gl {
 
+class AnimationGroup;
 class SceneView;
 
 /**
@@ -43,8 +42,8 @@ public:
     const std::vector< std::shared_ptr<SceneView> >& sceneViews() const;
     void addSceneView(std::shared_ptr<SceneView> sceneView);
 
-    const std::vector< AnimationGroup >& animationsGroup() const;
-    void addAnimationGroup(AnimationGroup animationGroup);
+    const std::vector< std::shared_ptr<AnimationGroup> >& animationsGroup() const;
+    void addAnimationGroup(std::shared_ptr<AnimationGroup> animationGroup);
 public:
     static unsigned int ScreenWidth;
     static unsigned int ScreenHeight;
@@ -55,7 +54,7 @@ private:
 
 private:
     std::vector< std::shared_ptr<SceneView> > m_sceneViews;
-    std::vector< AnimationGroup > m_animationsGroup;
+    std::vector< std::shared_ptr<AnimationGroup> > m_animationsGroup;
 
     std::function<void(float)> m_beforeDrawing;
     std::function<void(float)> m_afterDrawing;

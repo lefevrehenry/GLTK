@@ -4,10 +4,13 @@
 #include <Animation.h>
 
 // Standard Library
+#include <memory>
 #include <vector>
 
 
 namespace gl {
+
+class BaseAnimation;
 
 /**
  * @brief The AnimationGroup class
@@ -21,11 +24,11 @@ public:
     };
 
 public:
-    AnimationGroup();
+    AnimationGroup(AnimationType animationType);
     virtual ~AnimationGroup() = default;
 
 public:
-    void addAnimation(BaseAnimation baseAnimation);
+    void addAnimation(std::shared_ptr<BaseAnimation> baseAnimation);
 
 public:
     bool running();
@@ -38,7 +41,7 @@ public:
     virtual void update(double dt);
 
 protected:
-    std::vector<BaseAnimation> m_animations;
+    std::vector< std::shared_ptr<BaseAnimation> > m_animations;
     size_t m_indexAnimation;
     bool m_running;
     AnimationType m_type;

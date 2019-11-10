@@ -8,6 +8,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+// Standard Library
+#include <functional>
+
 
 namespace gl {
 
@@ -19,7 +22,10 @@ class Animation : public BaseAnimation
 {
 
 public:
-    Animation(const T& from, const T& to, T* target);
+    Animation(const T& from, const T& to);
+
+public:
+    void setCallback(std::function<void(const T&)> callback);
 
 public:
     virtual void start();
@@ -28,7 +34,8 @@ public:
 private:
     T m_from;
     T m_to;
-    T* m_target;
+
+    std::function<void(const T&)> m_callback;
 
 };
 

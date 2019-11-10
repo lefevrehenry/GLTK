@@ -11,6 +11,10 @@ namespace gl {
 
 class Vector3DAnimation : public Animation<glm::vec3>
 {
+
+public:
+    Vector3DAnimation(const glm::vec3& from, const glm::vec3& to);
+
 };
 
 }   // namespace gl

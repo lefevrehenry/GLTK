@@ -3,34 +3,12 @@
 
 #include <Transform.h>
 
-// Glm
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-
 
 namespace gl {
 
-template< typename T >
-class Animator
-{
-public:
-    static T mix(const T& from, const T& to, float t)
-    {
-        return glm::mix(from, to, t);
-    }
-};
-
-template<>
-class Animator<Transform>
-{
-public:
-    static Transform mix(const Transform& from, const Transform& to, float t)
-    {
-        return (from * (1.f - t)) * (to * t);
-    }
-};
-
-
+/**
+ * @brief The BaseAnimation class
+ */
 class BaseAnimation
 {
 

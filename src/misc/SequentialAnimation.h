@@ -15,6 +15,9 @@ class SequentialAnimation : public AnimationGroup
 {
 
 public:
+    SequentialAnimation(AnimationType animationType);
+
+public:
     virtual void start();
     virtual void update(double dt);
 

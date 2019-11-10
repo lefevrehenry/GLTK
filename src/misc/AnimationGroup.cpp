@@ -2,15 +2,15 @@
 
 using namespace gl;
 
-AnimationGroup::AnimationGroup() :
+AnimationGroup::AnimationGroup(AnimationType animationType) :
     m_animations(),
     m_indexAnimation(0),
-    m_running(true),
-    m_type(Loop)
+    m_running(false),
+    m_type(animationType)
 {
 }
 
-void AnimationGroup::addAnimation(BaseAnimation baseAnimation)
+void AnimationGroup::addAnimation(std::shared_ptr<BaseAnimation> baseAnimation)
 {
     m_animations.push_back(baseAnimation);
 }

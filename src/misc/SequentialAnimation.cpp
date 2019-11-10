@@ -4,17 +4,28 @@
 
 using namespace gl;
 
+SequentialAnimation::SequentialAnimation(AnimationType animationType) : AnimationGroup(animationType)
+{
+
+}
+
 void SequentialAnimation::start() {
-    this->m_indexAnimation = m_animations.size() - 1;
+    this->m_indexAnimation = 0;
+
+    if(m_indexAnimation < m_animations.size()) {
+        BaseAnimation* animation = m_animations.at(m_indexAnimation).get();
+        animation->start();
+    }
+
     AnimationGroup::start();
 }
 
 void SequentialAnimation::update(double dt)
 {
-    if(!running() || m_animations.size() == 0 || m_indexAnimation >= m_animations.size())
+    if(m_animations.size() == 0 || m_indexAnimation >= m_animations.size())
         return;
 
-    BaseAnimation* animation = &m_animations.at(m_indexAnimation);
+    BaseAnimation* animation = m_animations.at(m_indexAnimation).get();
 
     if(animation->finished())
     {
@@ -39,7 +50,7 @@ BaseAnimation* SequentialAnimation::nextAnimation()
     if(m_indexAnimation >= m_animations.size())
         return nullptr;
 
-    BaseAnimation* animation = &m_animations.at(m_indexAnimation);
+    BaseAnimation* animation = m_animations.at(m_indexAnimation).get();
 
     return animation;
 }

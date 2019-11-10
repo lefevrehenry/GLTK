@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include <AnimationGroup.h>
+
 using namespace gl;
 
 unsigned int Application::ScreenWidth = 0;
@@ -21,8 +23,10 @@ Application::~Application()
 
 void Application::prepareFrame(double dt)
 {
-    for (AnimationGroup& animationGroup : m_animationsGroup)
-        animationGroup.update(dt);
+    for (std::shared_ptr<AnimationGroup>& animationGroup : m_animationsGroup) {
+        if (animationGroup->running())
+            animationGroup->update(dt);
+    }
 }
 
 std::function<void (float)> Application::beforeDrawingCallback() const
@@ -67,12 +71,12 @@ void Application::addSceneView(std::shared_ptr<SceneView> sceneView)
     this->m_sceneViews.push_back(sceneView);
 }
 
-const std::vector<AnimationGroup>& Application::animationsGroup() const
+const std::vector< std::shared_ptr<AnimationGroup> >& Application::animationsGroup() const
 {
     return this->m_animationsGroup;
 }
 
-void Application::addAnimationGroup(AnimationGroup animationGroup)
+void Application::addAnimationGroup(std::shared_ptr<AnimationGroup> animationGroup)
 {
     this->m_animationsGroup.push_back(animationGroup);
 }

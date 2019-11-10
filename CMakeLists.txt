@@ -85,8 +85,8 @@ set(SOURCE_FILES
     src/misc/Rect.cpp
     src/misc/SequentialAnimation.cpp
     src/misc/Transform.cpp
-    src/misc/TransformAnimation.h
-    src/misc/Vector3DAnimation.h
+    src/misc/TransformAnimation.cpp
+    src/misc/Vector3DAnimation.cpp
 
     src/gltk.cpp
 )

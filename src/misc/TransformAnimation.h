@@ -9,6 +9,10 @@ namespace gl {
 
 class TransformAnimation : public Animation<Transform>
 {
+
+public:
+    TransformAnimation(const Transform& from, const Transform& to);
+
 };
 
 }   // namespace gl

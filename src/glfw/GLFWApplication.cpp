@@ -214,6 +214,8 @@ void GLFWApplication::loop()
         return;
     }
 
+    this->m_previousTime = glfwGetTime();
+
 //    double lastTime = glfwGetTime();
 //    unsigned int nbFrames = 0;
 
@@ -231,8 +233,8 @@ void GLFWApplication::loop()
 //            lastTime += 1.0;
 //        }
 
-        double currentTime = glfwGetTime();
-        double dt = currentTime - m_previousTime;
+        double currentTime = glfwGetTime();                     // second
+        double dt = 1000.0 * (currentTime - m_previousTime);    // millisecond
 
         float t = std::round(float(currentTime) * 100) / 100;
         VisualManager::UpdateUniformBufferTime(t);
