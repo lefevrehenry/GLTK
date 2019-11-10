@@ -30,11 +30,16 @@ set(HEADER_FILES
     src/helper/FileRepository.h
 
     src/misc/Application.h
+    src/misc/Animation.h
+    src/misc/AnimationGroup.h
     src/misc/Camera.h
     src/misc/Light.h
     src/misc/Material.h
+    src/misc/ParallelAnimation.h
     src/misc/Rect.h
     src/misc/Transform.h
+    src/misc/SequentialAnimation.h
+
 
     src/gltk.h
 )
@@ -65,11 +70,15 @@ set(SOURCE_FILES
     src/helper/Message.cpp
 
     src/misc/Application.cpp
+    src/misc/Animation.cpp
+    src/misc/AnimationGroup.cpp
     src/misc/Camera.cpp
     src/misc/Light.cpp
     src/misc/Material.cpp
+    src/misc/ParallelAnimation.cpp
     src/misc/Rect.cpp
     src/misc/Transform.cpp
+    src/misc/SequentialAnimation.cpp
 
     src/gltk.cpp
 )
