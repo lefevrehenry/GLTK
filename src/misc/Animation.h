@@ -39,6 +39,7 @@ private:
 
 };
 
+extern template class Animation<float>;
 extern template class Animation<glm::vec3>;
 extern template class Animation<glm::quat>;
 extern template class Animation<Transform>;

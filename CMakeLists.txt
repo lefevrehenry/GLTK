@@ -40,6 +40,7 @@ set(HEADER_FILES
     src/misc/ParallelAnimation.h
     src/misc/QuaternionAnimation.h
     src/misc/Rect.h
+    src/misc/ScalarAnimation.h
     src/misc/SequentialAnimation.h
     src/misc/Transform.h
     src/misc/TransformAnimation.h
@@ -83,6 +84,7 @@ set(SOURCE_FILES
     src/misc/ParallelAnimation.cpp
     src/misc/QuaternionAnimation.cpp
     src/misc/Rect.cpp
+    src/misc/ScalarAnimation.cpp
     src/misc/SequentialAnimation.cpp
     src/misc/Transform.cpp
     src/misc/TransformAnimation.cpp
