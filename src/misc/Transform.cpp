@@ -17,11 +17,6 @@ Transform::Transform() :
 
 }
 
-Transform::~Transform()
-{
-
-}
-
 const glm::mat4& Transform::matrix() const
 {
     if (this->m_isDirty) {

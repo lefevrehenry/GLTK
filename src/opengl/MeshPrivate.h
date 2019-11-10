@@ -17,7 +17,6 @@ class aiScene;
 
 namespace gl {
 
-class VisualModel;
 class VisualParam;
 
 /**
@@ -25,8 +24,6 @@ class VisualParam;
  */
 class MeshPrivate
 {
-    friend class VisualModel;
-
     typedef std::vector<float> floatVector;
     typedef std::vector<unsigned int> uintVector;
 

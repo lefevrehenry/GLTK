@@ -16,7 +16,6 @@ class Transform
 
 public:
     Transform();
-    virtual ~Transform();
 
 public:
     const glm::mat4& matrix() const;

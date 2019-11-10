@@ -8,6 +8,7 @@
 
 // Glm
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 
 namespace gl {
@@ -31,6 +32,12 @@ public:
         return *this;
     }
 
+    Message& operator<<(const glm::vec2& x)
+    {
+        m_message << "(" << x[0] << "," << x[1] << ")";
+        return *this;
+    }
+
     Message& operator<<(const glm::vec3& x)
     {
         m_message << "(" << x[0] << "," << x[1] << "," << x[2] << ")";
@@ -40,6 +47,12 @@ public:
     Message& operator<<(const glm::vec4& x)
     {
         m_message << "(" << x[0] << "," << x[1] << "," << x[2] << "," << x[3] << ")";
+        return *this;
+    }
+
+    Message& operator<<(const glm::quat& q)
+    {
+        m_message << "(" << q[0] << "," << q[1] << "," << q[2] << "," << q[3] << ")";
         return *this;
     }
 
