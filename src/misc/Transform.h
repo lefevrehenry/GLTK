@@ -53,13 +53,16 @@ public:
     Transform operator-(const Transform& other) const;
     Transform& operator-=(const Transform& other);
 
+private:
+    void markDirty() const;
+    void unmarkDirty() const;
+
 public:
     glm::vec3 m_translation;
     glm::quat m_orientation;
     glm::vec3 m_scale;
 
     mutable glm::mat4 m_transform;
-
     mutable bool m_isDirty;
 
 };

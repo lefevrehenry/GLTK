@@ -25,7 +25,7 @@ const glm::mat4& Transform::matrix() const
         glm::mat4 sc = glm::scale(this->m_scale);
 
         this->m_transform = tr * rt * sc;
-        this->m_isDirty = false;
+        this->unmarkDirty();
     }
 
     return this->m_transform;
@@ -47,7 +47,7 @@ void Transform::setTranslation(float x, float y, float z)
     this->m_translation.x = x;
     this->m_translation.y = y;
     this->m_translation.z = z;
-    this->m_isDirty = true;
+    this->markDirty();
 }
 
 void Transform::setTranslation(const glm::vec3& translation)
@@ -58,7 +58,7 @@ void Transform::setTranslation(const glm::vec3& translation)
 void Transform::setQuaternion(const glm::quat& quaternion)
 {
     this->m_orientation = glm::normalize(quaternion);
-    this->m_isDirty = true;
+    this->markDirty();
 }
 
 void Transform::setQuaternion(float radian, const glm::vec3& axis)
@@ -72,7 +72,7 @@ void Transform::setScale(float sx, float sy, float sz)
     this->m_scale.x = sx;
     this->m_scale.y = sy;
     this->m_scale.z = sz;
-    this->m_isDirty = true;
+    this->markDirty();
 }
 
 void Transform::setScale(const glm::vec3& scale)
@@ -85,7 +85,7 @@ void Transform::translate(float x, float y, float z)
     this->m_translation.x += x;
     this->m_translation.y += y;
     this->m_translation.z += z;
-    this->m_isDirty = true;
+    this->markDirty();
 }
 
 void Transform::translate(const glm::vec3& translation)
@@ -96,7 +96,7 @@ void Transform::translate(const glm::vec3& translation)
 void Transform::rotate(const glm::quat& quaternion)
 {
     this->m_orientation = glm::normalize(quaternion * this->m_orientation);
-    this->m_isDirty = true;
+    this->markDirty();
 }
 
 void Transform::rotate(float radian, const glm::vec3& axis)
@@ -110,7 +110,7 @@ void Transform::scale(float sx, float sy, float sz)
     this->m_scale.x *= sx;
     this->m_scale.y *= sy;
     this->m_scale.z *= sz;
-    this->m_isDirty = true;
+    this->markDirty();
 }
 
 void Transform::scale(const glm::vec3& scale)
@@ -150,6 +150,16 @@ Transform& Transform::operator-=(const Transform& other)
     this->m_scale /= other.m_scale;
 
     return *this;
+}
+
+void Transform::markDirty() const
+{
+    this->m_isDirty = true;
+}
+
+void Transform::unmarkDirty() const
+{
+    this->m_isDirty = false;
 }
 
 Transform& Transform::operator*=(float t)
