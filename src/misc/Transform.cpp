@@ -42,13 +42,43 @@ Transform Transform::inverse(const Transform& transform)
     return result;
 }
 
-//void Transform::setTranslation(float x, float y, float z)
-//{
-//    this->m_translation.x = x;
-//    this->m_translation.y = y;
-//    this->m_translation.z = z;
-//    this->m_isDirty = true;
-//}
+void Transform::setTranslation(float x, float y, float z)
+{
+    this->m_translation.x = x;
+    this->m_translation.y = y;
+    this->m_translation.z = z;
+    this->m_isDirty = true;
+}
+
+void Transform::setTranslation(const glm::vec3& translation)
+{
+    this->setTranslation(translation.x, translation.y, translation.z);
+}
+
+void Transform::setQuaternion(const glm::quat& quaternion)
+{
+    this->m_orientation = glm::normalize(quaternion);
+    this->m_isDirty = true;
+}
+
+void Transform::setQuaternion(float radian, const glm::vec3& axis)
+{
+    glm::quat quat = glm::angleAxis(radian, glm::normalize(axis));
+    setQuaternion(quat);
+}
+
+void Transform::setScale(float sx, float sy, float sz)
+{
+    this->m_scale.x = sx;
+    this->m_scale.y = sy;
+    this->m_scale.z = sz;
+    this->m_isDirty = true;
+}
+
+void Transform::setScale(const glm::vec3& scale)
+{
+    this->setScale(scale.x, scale.y, scale.z);
+}
 
 void Transform::translate(float x, float y, float z)
 {
@@ -58,21 +88,21 @@ void Transform::translate(float x, float y, float z)
     this->m_isDirty = true;
 }
 
-void Transform::translate(const glm::vec3& translate)
+void Transform::translate(const glm::vec3& translation)
 {
-    this->translate(translate.x, translate.y, translate.z);
+    this->translate(translation.x, translation.y, translation.z);
 }
 
-void Transform::rotate(const glm::quat& quat)
+void Transform::rotate(const glm::quat& quaternion)
 {
-    this->m_orientation = glm::normalize(quat * this->m_orientation);
+    this->m_orientation = glm::normalize(quaternion * this->m_orientation);
     this->m_isDirty = true;
 }
 
 void Transform::rotate(float radian, const glm::vec3& axis)
 {
-    glm::quat q = glm::angleAxis(radian, axis);
-    this->rotate(q);
+    glm::quat quat = glm::angleAxis(radian, axis);
+    this->rotate(quat);
 }
 
 void Transform::scale(float sx, float sy, float sz)
