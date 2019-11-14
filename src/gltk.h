@@ -34,7 +34,8 @@ public:
         ShadowMapping,
         NormalMapping,
         CubeMap,
-        EnvironmentMapping
+        EnvironmentMapping,
+        DisplacementMapping
     };
 
     enum class OpenGLDepthFunc {

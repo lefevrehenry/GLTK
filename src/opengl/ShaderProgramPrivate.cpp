@@ -172,6 +172,12 @@ ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgr
         fragmentFilename = "shaders/environmentMapping.fs";
 
         break;
+    case ShaderProgramType::DisplacementMapping:
+
+        vertexFilename = "shaders/displacementMapping.vs";
+        fragmentFilename = "shaders/displacementMapping.fs";
+
+        break;
     }
 
     if (DataRepository.findFile(vertexFilename))
@@ -336,6 +342,13 @@ ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgr
 
         shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
         shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+
+        break;
+    case ShaderProgramType::DisplacementMapping:
+
+        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
+        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
 
         break;
     }

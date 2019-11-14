@@ -69,7 +69,7 @@ void MeshPrivate::draw(const VisualParam* param) const
     }
 }
 
-void MeshPrivate::getBBox(glm::vec3 &min, glm::vec3 &max) const
+void MeshPrivate::getBBox(glm::vec3& min, glm::vec3& max) const
 {
     float minf = std::numeric_limits<float>::lowest();
     float maxf = std::numeric_limits<float>::max();
