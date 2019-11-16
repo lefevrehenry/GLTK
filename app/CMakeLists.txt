@@ -2,10 +2,11 @@ cmake_minimum_required(VERSION 3.2)
 project(app)
 
 set(EXECUTABLE_FILES
+    main
 #    deferredShading
-    environmentMapping
+#    environmentMapping
 #    normalMapping
-    picking
+#    picking
 #    shadertoy
 #    prog
 )

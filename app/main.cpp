@@ -56,7 +56,7 @@ void addMatCapShader(Node* node, const std::string& filename) {
     matcapTexture->load(filename);
 
     ShaderProgram::SPtr sp( ShaderProgram::Create(ShaderProgramType::MatCap) );
-    sp->addDataTexture("matcap", matcapTexture.get());
+    sp->addData("matcap", matcapTexture.get());
 
     node->setShaderProgram(sp);
 }
@@ -132,7 +132,7 @@ void createBoard(Node* node)
     boardColorTex->load("textures/chessboard2.jpg");
 
     ShaderProgram::SPtr shaderProgram( ShaderProgram::Create(ShaderProgramType::BasicTexturing) );
-    shaderProgram->addDataTexture("colorMap", boardColorTex.get());
+    shaderProgram->addData("colorMap", boardColorTex.get());
 
     VisualModel::SPtr board(new VisualModel("mesh/flatQuad.obj"));
     board->transform().scale(s,s,s);
