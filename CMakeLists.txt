@@ -31,7 +31,6 @@ set(HEADER_FILES
 
     src/misc/Application.h
     src/misc/Animation.h
-    src/misc/Animation.inl
     src/misc/AnimationGroup.h
     src/misc/BaseAnimation.h
     src/misc/Camera.h
@@ -76,6 +75,7 @@ set(SOURCE_FILES
 
     src/misc/Application.cpp
     src/misc/Animation.cpp
+    src/misc/Animation.inl
     src/misc/AnimationGroup.cpp
     src/misc/BaseAnimation.cpp
     src/misc/Camera.cpp
