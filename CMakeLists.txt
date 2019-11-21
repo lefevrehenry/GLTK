@@ -238,7 +238,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${OPENGL_IN
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${ASSIMP_INCLUDE_DIRS}>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs/stb_image/include>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs/glad/include>)
-target_include_directories(${PROJECT_NAME}  PUBLIC $<INSTALL_INTERFACE:include/GLTK>)
+target_include_directories(${PROJECT_NAME}  PUBLIC $<INSTALL_INTERFACE:include>)
 
 find_library(ASSIMP_LIBRARY
     NAME ${ASSIMP_LIBRARIES}
@@ -263,7 +263,6 @@ endif()
 install(TARGETS ${PROJECT_NAME}
         EXPORT ${PROJECT_NAME}Config
         LIBRARY
-        INCLUDES DESTINATION "include"
         RUNTIME DESTINATION bin COMPONENT Runtime
         LIBRARY DESTINATION lib COMPONENT Runtime
         ARCHIVE DESTINATION lib COMPONENT Runtime
