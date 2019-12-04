@@ -102,12 +102,12 @@ set(PRIVATE_HEADER_FILES
     src/opengl/Data.h
     src/opengl/Framebuffer.h
     src/opengl/MeshPrivate.h
+    src/opengl/RenderState.h
     src/opengl/Shader.h
     src/opengl/ShaderProgramPrivate.h
     src/opengl/TexturePrivate.h
     src/opengl/TexturePrivate2D.h
     src/opengl/VisualManager.h
-    src/opengl/VisualOption.h
 
     src/statemachine/OpenGLAttribute.h
     src/statemachine/OpenGLStateMachine.h
@@ -118,12 +118,12 @@ set(PRIVATE_SOURCE_FILES
     src/opengl/Data.cpp
     src/opengl/Framebuffer.cpp
     src/opengl/MeshPrivate.cpp
+    src/opengl/RenderState.cpp
     src/opengl/Shader.cpp
     src/opengl/ShaderProgramPrivate.cpp
     src/opengl/TexturePrivate.cpp
     src/opengl/TexturePrivate2D.cpp
     src/opengl/VisualManager.cpp
-    src/opengl/VisualOption.cpp
 
     src/statemachine/OpenGLAttribute.cpp
     src/statemachine/OpenGLAttribute.inl
