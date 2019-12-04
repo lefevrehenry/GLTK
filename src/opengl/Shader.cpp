@@ -5,26 +5,26 @@
 
 using namespace gl;
 
+GLenum ConvertShaderType(Shader::ShaderType shaderType)
+{
+    switch (shaderType)
+    {
+    case Shader::Vertex:
+        return GL_VERTEX_SHADER;
+    case Shader::Geometry:
+        return GL_GEOMETRY_SHADER;
+    case Shader::Fragment:
+        return GL_FRAGMENT_SHADER;
+    }
+}
+
 Shader::Shader(ShaderType shaderType) :
     m_shaderId(0),
     m_shaderType(shaderType),
     m_isCompiled(false),
     m_sourceCode("")
 {
-    GLenum type = 0;
-
-    switch (m_shaderType)
-    {
-    case Vertex:
-        type = GL_VERTEX_SHADER;
-        break;
-    case Geometry:
-        type = GL_GEOMETRY_SHADER;
-        break;
-    case Fragment:
-        type = GL_FRAGMENT_SHADER;
-        break;
-    }
+    GLenum type = ConvertShaderType(shaderType);
 
     m_shaderId = glCreateShader(type);
 }

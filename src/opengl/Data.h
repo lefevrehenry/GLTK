@@ -151,7 +151,7 @@ template<> inline void Data<glm::mat4>::update()
 
 template<> inline void Data<Texture>::update()
 {
-    TexturePrivate* texturePrivate = this->m_value.texturePrivate();
+    TexturePrivate::SPtr texturePrivate = this->m_value.texturePrivate();
 
     if(texturePrivate == nullptr) {
         msg_warning("Data<Texture2D>") << "texture is empty. Data not updated";
@@ -167,7 +167,7 @@ template<> inline void Data<Texture>::update()
 
 template<> inline void Data<CubeMapTexture>::update()
 {
-    TexturePrivate* texturePrivate = this->m_value.texturePrivate();
+    TexturePrivate::SPtr texturePrivate = this->m_value.texturePrivate();
 
     if(texturePrivate == nullptr) {
         msg_warning("Data<CubeMapTexture>") << "texture is empty. Data not updated";

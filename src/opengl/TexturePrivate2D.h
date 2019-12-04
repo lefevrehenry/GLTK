@@ -16,6 +16,9 @@ class TexturePrivate2D : public TexturePrivate
 {
 
 public:
+    using SPtr = std::shared_ptr<TexturePrivate2D>;
+
+public:
     virtual void load(const std::string& filename);
 
 };

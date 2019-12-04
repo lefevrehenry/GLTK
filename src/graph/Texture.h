@@ -30,7 +30,7 @@ public:
     void unbind() const;
 
 public:
-    TexturePrivate* texturePrivate() const;
+    std::shared_ptr<TexturePrivate> texturePrivate() const;
 
 protected:
     std::shared_ptr<TexturePrivate> m_texturePrivate;
