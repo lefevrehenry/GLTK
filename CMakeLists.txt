@@ -12,8 +12,10 @@ set(HEADER_FILES
     src/graph/DrawVisitor.h
     src/graph/DrawWithSelectionVisitor.h
     src/graph/FetchVisualModelVisitor.h
+    src/graph/MatCapShaderProgram.cpp
     src/graph/Mesh.h
     src/graph/Node.h
+    src/graph/PhongShaderProgram.h
     src/graph/PickingVisitor.h
     src/graph/SceneGraph.h
     src/graph/ShaderProgram.h
@@ -56,8 +58,10 @@ set(SOURCE_FILES
     src/graph/DrawVisitor.cpp
     src/graph/DrawWithSelectionVisitor.cpp
     src/graph/FetchVisualModelVisitor.cpp
+    src/graph/MatCapShaderProgram.cpp
     src/graph/Mesh.cpp
     src/graph/Node.cpp
+    src/graph/PhongShaderProgram.cpp
     src/graph/PickingVisitor.cpp
     src/graph/SceneGraph.cpp
     src/graph/ShaderProgram.cpp

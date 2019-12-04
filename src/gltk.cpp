@@ -1,12 +1,14 @@
 #include "gltk.h"
 
+#include <FileRepository.h>
+
 // Standard Library
 #include <exception>
 #include <fstream>
 
 using namespace gl;
 
-std::map<std::string, std::string> GLTK::getMapFromIniFile(const std::string& filename)
+std::map<std::string, std::string> GLTK::GetMapFromIniFile(const std::string& filename)
 {
     std::map<std::string, std::string> map;
 
@@ -25,4 +27,26 @@ std::map<std::string, std::string> GLTK::getMapFromIniFile(const std::string& fi
     }
 
     return map;
+}
+
+std::string GLTK::GetStringFromFile(const std::string& filename)
+{
+    std::string file = filename;
+    helper::DataRepository.findFile(file);
+
+    std::ifstream filestream(file, std::ios::in);
+
+    if(!filestream.is_open())
+        throw std::runtime_error("Cannot read file " + filename);
+
+    std::string dest = "";
+    std::string line;
+
+    while(getline(filestream, line)) {
+        dest += line + "\n";
+    }
+
+    filestream.close();
+
+    return dest;
 }

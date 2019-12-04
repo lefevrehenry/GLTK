@@ -1,39 +1,176 @@
 #include "ShaderProgram.h"
 
-#include <gltk.h>
+#include <CubeMapTexturePrivate.h>
 #include <ShaderProgramPrivate.h>
-#include <Texture.h>
+#include <TexturePrivate2D.h>
+#include <VisualManager.h>
 
 using namespace gl;
 
-ShaderProgram* ShaderProgram::Create(GLTK::ShaderProgramType shaderProgramType)
-{
-    std::shared_ptr<ShaderProgramPrivate> shaderProgramPrivate( ShaderProgramPrivate::Create(shaderProgramType) );
-    ShaderProgram* shaderProgram = new ShaderProgram(shaderProgramPrivate);
-
-    return shaderProgram;
-}
-
 ShaderProgram::ShaderProgram() :
-    m_shaderProgramPrivate()
+    m_shaderProgramPrivate(new ShaderProgramPrivate())
 {
 
 }
 
-ShaderProgram::ShaderProgram(const std::shared_ptr<ShaderProgramPrivate>& shaderProgramPrivate) :
-    m_shaderProgramPrivate(shaderProgramPrivate)
+std::string ShaderProgram::vertexShaderCode() const
 {
-
+    return this->m_vertexShaderCode;
 }
 
-ShaderProgramPrivate* ShaderProgram::shaderProgramPrivate() const
+void ShaderProgram::setVertexShaderCode(const std::string& vertexShaderCode)
 {
-    return this->m_shaderProgramPrivate.get();
+    this->m_vertexShaderCode = vertexShaderCode;
 }
 
-void ShaderProgram::setShaderProgramPrivate(ShaderProgramPrivate* shaderProgramPrivate)
+std::string ShaderProgram::geometryShaderCode() const
 {
-    this->m_shaderProgramPrivate.reset(shaderProgramPrivate);
+    return this->m_geometryShaderCode;
+}
+
+void ShaderProgram::setGeometryShaderCode(const std::string& geometryShaderCode)
+{
+    this->m_geometryShaderCode = geometryShaderCode;
+}
+
+std::string ShaderProgram::fragmentShaderCode() const
+{
+    return this->m_fragmentShaderCode;
+}
+
+void ShaderProgram::setFragmentShaderCode(const std::string& fragmentShaderCode)
+{
+    this->m_fragmentShaderCode = fragmentShaderCode;
+}
+
+void ShaderProgram::link()
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->link(m_vertexShaderCode, m_geometryShaderCode, m_fragmentShaderCode);
+}
+
+bool ShaderProgram::isLinked() const
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return false;
+
+    return this->m_shaderProgramPrivate->isLinked();
+}
+
+void ShaderProgram::attachUniformBufferTransform(const char* name)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->attachUniformBlock(name, VisualManager::TransformIndex);
+}
+
+void ShaderProgram::attachUniformBufferMaterial(const char* name)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->attachUniformBlock(name, VisualManager::MaterialIndex);
+}
+
+void ShaderProgram::attachUniformBufferCamera(const char* name)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->attachUniformBlock(name, VisualManager::CameraIndex);
+}
+
+void ShaderProgram::attachUniformBufferLight(const char* name)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->attachUniformBlock(name, VisualManager::LightIndex);
+}
+
+void ShaderProgram::attachUniformBufferTime(const char* name)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->attachUniformBlock(name, VisualManager::TimeIndex);
+}
+
+void ShaderProgram::setUniformValue(const char* name, float x)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->setUniformValue(name, x);
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::vec2& v)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->setUniformValue(name, v);
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::vec3& v)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->setUniformValue(name, v);
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::vec4& v)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->setUniformValue(name, v);
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::mat2& m)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->setUniformValue(name, m);
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::mat3& m)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->setUniformValue(name, m);
+}
+
+void ShaderProgram::setUniformValue(const char* name, const glm::mat4& m)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    this->m_shaderProgramPrivate->setUniformValue(name, m);
+}
+
+void ShaderProgram::setUniformValue(const char* name, Texture2D::SPtr t)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    TexturePrivate2D::SPtr texturePrivate = std::static_pointer_cast<TexturePrivate2D>(t->texturePrivate());
+    this->m_shaderProgramPrivate->setUniformValue(name, texturePrivate);
+}
+
+void ShaderProgram::setUniformValue(const char* name, CubeMapTexture::SPtr t)
+{
+    if(this->m_shaderProgramPrivate == nullptr)
+        return;
+
+    CubeMapTexturePrivate::SPtr texturePrivate = std::static_pointer_cast<CubeMapTexturePrivate>(t->texturePrivate());
+    this->m_shaderProgramPrivate->setUniformValue(name, texturePrivate);
 }
 
 void ShaderProgram::bind() const
@@ -50,42 +187,4 @@ void ShaderProgram::unbind() const
         return;
 
     this->m_shaderProgramPrivate->unbind();
-}
-
-void ShaderProgram::updateDataIfDirty() const
-{
-    if(this->m_shaderProgramPrivate == nullptr)
-        return;
-
-    this->m_shaderProgramPrivate->updateDataIfDirty();
-}
-
-bool ShaderProgram::addData(const char* name, float value)
-{
-    return doAddData<float>(name, value);
-}
-
-bool ShaderProgram::addData(const char* name, Texture* value)
-{
-    if(value == nullptr)
-        return false;
-
-    return doAddData<Texture>(name, *value);
-}
-
-bool ShaderProgram::addData(const char* name, CubeMapTexture* value)
-{
-    if(value == nullptr)
-        return false;
-
-    return doAddData<CubeMapTexture>(name, *value);
-}
-
-template< typename T >
-bool ShaderProgram::doAddData(const char* name, const T& value)
-{
-    if(this->m_shaderProgramPrivate == nullptr)
-        return false;
-
-    return this->m_shaderProgramPrivate->addData<T>(name, value);
 }
