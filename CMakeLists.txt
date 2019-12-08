@@ -15,6 +15,7 @@ set(HEADER_FILES
     src/graph/MatCapShaderProgram.cpp
     src/graph/Mesh.h
     src/graph/Node.h
+    src/graph/NormalShaderProgram.h
     src/graph/PhongShaderProgram.h
     src/graph/PickingVisitor.h
     src/graph/SceneGraph.h
@@ -61,6 +62,7 @@ set(SOURCE_FILES
     src/graph/MatCapShaderProgram.cpp
     src/graph/Mesh.cpp
     src/graph/Node.cpp
+    src/graph/NormalShaderProgram.cpp
     src/graph/PhongShaderProgram.cpp
     src/graph/PickingVisitor.cpp
     src/graph/SceneGraph.cpp
