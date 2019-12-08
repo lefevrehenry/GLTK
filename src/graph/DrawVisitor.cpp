@@ -45,11 +45,11 @@ void DrawVisitor::processNode(const Node* node)
     if (m_currentShader != nullptr) {
         // bind the current ShaderProgram
         m_currentShader->bind();
-        m_currentShader->updateDataIfDirty();
+//        m_currentShader->updateDataIfDirty();
 
         // get VisualParam for
-        ShaderProgramPrivate* shaderProgramPrivate = m_currentShader->shaderProgramPrivate();
-        VisualParam param = shaderProgramPrivate->visualParam();
+//        ShaderProgramPrivate* shaderProgramPrivate = m_currentShader->shaderProgramPrivate();
+//        VisualParam param = shaderProgramPrivate->visualParam();
 
         // draw each mesh
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
@@ -60,7 +60,7 @@ void DrawVisitor::processNode(const Node* node)
             VisualManager::UpdateUniformBufferTransform(transform);
             VisualManager::UpdateUniformBufferMaterial(material);
 
-            visualModel->draw(&param);
+            visualModel->draw(/*&param*/);
         }
 
         // unbind the current ShaderProgram

@@ -30,7 +30,7 @@ public:
     void getBBox(glm::vec3& min, glm::vec3& max) const;
 
 public:
-    void draw(const VisualParam* param) const;
+    void draw() const;
 
 private:
     std::shared_ptr<MeshPrivate> m_meshPrivate;

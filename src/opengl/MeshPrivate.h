@@ -31,7 +31,7 @@ public:
 
     static MeshPrivate* FromFile(const std::string& filename);
 
-    void draw(const VisualParam* param) const;
+    void draw() const;
 
     void getBBox(glm::vec3& min, glm::vec3& max) const;
 
@@ -74,7 +74,7 @@ protected:
         floatVector m_uvcoord;
         uintVector m_indices;
 
-        void draw(const VisualParam* param) const;
+        void draw() const;
 
         MeshEntry(const aiMesh *mesh);
         virtual ~MeshEntry();

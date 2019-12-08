@@ -62,10 +62,10 @@ MeshPrivate* MeshPrivate::FromFile(const std::string& filename)
     return mesh;
 }
 
-void MeshPrivate::draw(const VisualParam* param) const
+void MeshPrivate::draw() const
 {
     for (unsigned int i = 0; i < m_meshEntries.size(); ++i) {
-        m_meshEntries[i]->draw(param);
+        m_meshEntries[i]->draw();
     }
 }
 
@@ -208,9 +208,9 @@ MeshPrivate::MeshEntry::~MeshEntry()
     vao.free();
 }
 
-void MeshPrivate::MeshEntry::draw(const VisualParam* param) const
+void MeshPrivate::MeshEntry::draw() const
 {
-    using PrimitiveType = VisualParam::PrimitiveType;
+//    using PrimitiveType = VisualParam::PrimitiveType;
 
     GLenum primitiveType = 0;
     unsigned int count = 0;
@@ -218,30 +218,30 @@ void MeshPrivate::MeshEntry::draw(const VisualParam* param) const
 
     glBindVertexArray(vao.id);
 
-    switch (param->primitiveType) {
-    case PrimitiveType::POINTS:
-        primitiveType = GL_POINTS;
-        count = m_numVertices;
-        offset = 0;
+//    switch (param->primitiveType) {
+//    case PrimitiveType::POINTS:
+//        primitiveType = GL_POINTS;
+//        count = m_numVertices;
+//        offset = 0;
 
-        break;
-    case PrimitiveType::LINES:
-        primitiveType = GL_LINES;
-        count = 2 * m_numEdges;
-        offset = m_numVertices;
+//        break;
+//    case PrimitiveType::LINES:
+//        primitiveType = GL_LINES;
+//        count = 2 * m_numEdges;
+//        offset = m_numVertices;
 
-        break;
-    case PrimitiveType::TRIANGLES:
+//        break;
+//    case PrimitiveType::TRIANGLES:
         primitiveType = GL_TRIANGLES;
         count = 3 * m_numTriangles;
         offset = m_numVertices + (2 * m_numEdges);
 
-        break;
-    }
+//        break;
+//    }
 
-    if (param->instancing > 1)
-        glDrawElementsInstanced(primitiveType, int(count), GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), int(param->instancing));
-    else
+//    if (param->instancing > 1)
+//        glDrawElementsInstanced(primitiveType, int(count), GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)), int(param->instancing));
+//    else
         glDrawElements(primitiveType, int(count), GL_UNSIGNED_INT, (void*) (offset * sizeof(unsigned int)));
 
     glBindVertexArray(0);

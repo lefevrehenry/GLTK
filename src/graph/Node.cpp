@@ -3,7 +3,6 @@
 #include <ShaderProgram.h>
 #include <Visitor.h>
 #include <VisualModel.h>
-#include <VisualOption.h>
 
 using namespace gl;
 
