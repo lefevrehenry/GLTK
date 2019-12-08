@@ -239,6 +239,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${ASSIMP_IN
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs/stb_image/include>)
 target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extlibs/glad/include>)
 target_include_directories(${PROJECT_NAME}  PUBLIC $<INSTALL_INTERFACE:include>)
+target_include_directories(${PROJECT_NAME}  PUBLIC $<INSTALL_INTERFACE:include>/GLTK)
 
 find_library(ASSIMP_LIBRARY
     NAME ${ASSIMP_LIBRARIES}
