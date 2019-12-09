@@ -188,3 +188,8 @@ void ShaderProgram::unbind() const
 
     this->m_shaderProgramPrivate->unbind();
 }
+
+std::shared_ptr<ShaderProgramPrivate> ShaderProgram::shaderProgramPrivate() const
+{
+    return this->m_shaderProgramPrivate;
+}

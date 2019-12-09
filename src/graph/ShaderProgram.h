@@ -65,6 +65,9 @@ public:
     void bind() const;
     void unbind() const;
 
+protected:
+    std::shared_ptr<ShaderProgramPrivate> shaderProgramPrivate() const;
+
 private:
     std::shared_ptr<ShaderProgramPrivate> m_shaderProgramPrivate;
 
