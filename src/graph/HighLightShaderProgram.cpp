@@ -1,6 +1,7 @@
 #include "HighLightShaderProgram.h"
 
 #include <gltk.h>
+#include <ShaderProgramPrivate.h>
 
 using namespace gl;
 
@@ -21,9 +22,11 @@ HighLightShaderProgram::HighLightShaderProgram() : ShaderProgram()
 
     this->setHighLightColor(glm::vec3(1,1,0));
 
-//    shaderProgramPrivate->setRenderState<DepthFunc>(GL_LEQUAL);
-//    shaderProgramPrivate->setRenderState<LineWidth>(2.0f);
-//    shaderProgramPrivate->setRenderState<PolygonMode>(GL_LINE);
+    std::shared_ptr<ShaderProgramPrivate> shaderProgramPrivate = this->shaderProgramPrivate();
+
+    shaderProgramPrivate->setRenderState<DepthFunc>(GL_LEQUAL);
+    shaderProgramPrivate->setRenderState<LineWidth>(2.0f);
+    shaderProgramPrivate->setRenderState<PolygonMode>(GL_LINE);
 }
 
 void HighLightShaderProgram::setHighLightColor(const glm::vec3& color)
