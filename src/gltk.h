@@ -12,7 +12,8 @@ class GLTK
 {
 
 public:
-    static std::map<std::string, std::string> getMapFromIniFile(const std::string& filename);
+    static std::map<std::string, std::string> GetMapFromIniFile(const std::string& filename);
+    static std::string GetStringFromFile(const std::string& filename);
 
 public:
     enum class ShaderProgramType {

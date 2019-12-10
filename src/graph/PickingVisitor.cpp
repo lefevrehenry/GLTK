@@ -51,7 +51,7 @@ PickingVisitor::PickingVisitor() :
     this->m_pickingFramebuffer->attachTexture();
     this->m_pickingFramebuffer->attachDepthTexture();
 
-    this->m_shaderProgram.reset(ShaderProgramPrivate::Create(GLTK::ShaderProgramType::Picking));
+//    this->m_shaderProgram.reset(ShaderProgramPrivate::Create(GLTK::ShaderProgramType::Picking));
 }
 
 void PickingVisitor::set(int x, int y)
@@ -82,7 +82,7 @@ void PickingVisitor::start()
     OpenGLStateMachine::Pop<ClearColor>();
 
     this->m_shaderProgram->bind();
-    this->m_shaderProgram->updateDataIfDirty();
+//    this->m_shaderProgram->updateDataIfDirty();
 
     this->m_visualModels.clear();
     this->m_visualModels.push_back(VisualModel::CWPtr());
@@ -129,7 +129,7 @@ void PickingVisitor::end()
 
 void PickingVisitor::processNode(const Node* node)
 {
-    VisualParam param = VisualParam::DefaultInstance();
+//    VisualParam param = VisualParam::DefaultInstance();
 
     // draw each mesh
     for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
@@ -141,7 +141,7 @@ void PickingVisitor::processNode(const Node* node)
         this->m_shaderProgram->setUniformValue("index", packIndex(this->m_id));
         this->m_visualModels.push_back(visualModel);
 
-        visualModel->draw(&param);
+        visualModel->draw(/*&param*/);
 
         this->m_id += 1;
     }

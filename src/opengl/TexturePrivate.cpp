@@ -1,6 +1,5 @@
 #include "TexturePrivate.h"
 
-#include <FileRepository.h>
 #include <Message.h>
 
 // Standard Library
@@ -77,9 +76,4 @@ void TexturePrivate::unbind() const
 {
     glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
     glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-void TexturePrivate::load(const std::string&)
-{
-    msg_warning("Texture") << "Texture object can't load a file";
 }

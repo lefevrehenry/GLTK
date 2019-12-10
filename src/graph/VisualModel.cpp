@@ -59,8 +59,8 @@ void VisualModel::getBBox(glm::vec3 &min, glm::vec3 &max) const
     this->m_mesh->getBBox(min, max);
 }
 
-void VisualModel::draw(const VisualParam* param) const
+void VisualModel::draw() const
 {
     if (this->m_mesh)
-        this->m_mesh->draw(param);
+        this->m_mesh->draw();
 }

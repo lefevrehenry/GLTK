@@ -1,6 +1,7 @@
 #include "Framebuffer.h"
 
 #include <Message.h>
+#include <TexturePrivate2D.h>
 
 using namespace gl;
 
@@ -75,7 +76,7 @@ void Framebuffer::attachTexture()
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebufferId);
 
-    TexturePrivate* texture = new TexturePrivate();
+    TexturePrivate* texture = new TexturePrivate2D();
     texture->bind();
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, int(m_width), int(m_height), 0, GL_RGBA, GL_FLOAT, nullptr);
@@ -109,7 +110,7 @@ void Framebuffer::attachDepthTexture()
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_framebufferId);
 
-    this->m_depthTexture = new TexturePrivate();
+    this->m_depthTexture = new TexturePrivate2D();
     this->m_depthTexture->bind();
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, int(m_width), int(m_height), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);

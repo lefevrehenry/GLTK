@@ -11,7 +11,7 @@ DrawVisitorWithSelection::DrawVisitorWithSelection() : DrawVisitor(),
     m_outlineShader(nullptr),
     m_selected(nullptr)
 {
-    this->m_outlineShader.reset(ShaderProgramPrivate::Create(GLTK::ShaderProgramType::OutLine));
+//    this->m_outlineShader.reset(ShaderProgramPrivate::Create(GLTK::ShaderProgramType::OutLine));
 }
 
 void DrawVisitorWithSelection::start()
@@ -26,14 +26,14 @@ void DrawVisitorWithSelection::forwardNode(const Node* node)
 {
     if (this->m_selected != nullptr) {
 
-        VisualParam param = VisualParam::DefaultInstance();
+//        VisualParam param = VisualParam::DefaultInstance();
 
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
             VisualModel::CSPtr visualModel(node->getVisual(i));
 
             if (visualModel == this->m_selected) {
                 m_outlineShader->bind();
-                m_outlineShader->updateDataIfDirty();
+//                m_outlineShader->updateDataIfDirty();
 
                 // draw the object with filled primitives
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -51,7 +51,7 @@ void DrawVisitorWithSelection::forwardNode(const Node* node)
                 const Transform& transform = visualModel->transform();
                 VisualManager::UpdateUniformBufferTransform(transform);
 
-                visualModel->draw(&param);
+                visualModel->draw(/*&param*/);
 
                 // enable color buffer
                 glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
@@ -72,14 +72,14 @@ void DrawVisitorWithSelection::backwardNode(const Node* node)
 {
     if (this->m_selected != nullptr) {
 
-        VisualParam param = VisualParam::DefaultInstance();
+//        VisualParam param = VisualParam::DefaultInstance();
 
         for (unsigned int i = 0; i < node->getNbVisual(); ++i) {
             VisualModel::CSPtr visualModel(node->getVisual(i));
 
             if (visualModel == this->m_selected) {
                 m_outlineShader->bind();
-                m_outlineShader->updateDataIfDirty();
+//                m_outlineShader->updateDataIfDirty();
 
                 // draw the object with thick lines
                 glLineWidth(3.0f);
@@ -96,7 +96,7 @@ void DrawVisitorWithSelection::backwardNode(const Node* node)
                 const Transform& transform = visualModel->transform();
                 VisualManager::UpdateUniformBufferTransform(transform);
 
-                visualModel->draw(&param);
+                visualModel->draw(/*&param*/);
 
                 // deactivate stencil buffer test
                 glDisable(GL_STENCIL_TEST);

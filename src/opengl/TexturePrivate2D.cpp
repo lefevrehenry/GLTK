@@ -29,9 +29,8 @@ void TexturePrivate2D::load(const std::string& filename)
         return;
     }
 
-    glActiveTexture(GL_TEXTURE0 + this->m_textureUnit);
+    this->bind();
 
-    glBindTexture(GL_TEXTURE_2D, this->m_textureId);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -40,6 +39,8 @@ void TexturePrivate2D::load(const std::string& filename)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     glGenerateMipmap(GL_TEXTURE_2D);
+
+    this->unbind();
 
     stbi_image_free(data);
 }

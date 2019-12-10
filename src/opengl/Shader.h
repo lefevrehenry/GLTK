@@ -17,7 +17,6 @@ class Shader
 {
 
 public:
-
     enum ShaderType {
         Vertex,
         Geometry,

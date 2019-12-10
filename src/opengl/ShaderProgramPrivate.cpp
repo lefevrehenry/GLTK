@@ -1,394 +1,381 @@
 #include "ShaderProgramPrivate.h"
 
-#include <FileRepository.h>
 #include <Message.h>
 #include <Shader.h>
-#include <VisualManager.h>
 
-// Standard Library
-#include <fstream>
-#include <memory>
+// Glad
+#include <glad/glad.h>
+
+// Glm
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace gl;
-using namespace gl::helper;
 
-static bool getStringFromFile(const std::string& filename, std::string& dest)
-{
-    std::ifstream filestream(filename, std::ios::in);
+//ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgramType)
+//{
+//    typedef Shader::ShaderType ShaderType;
 
-    if(!filestream.is_open()) {
-        msg_error("Helper") << "File " << filename << " not found";
-        return false;
-    }
+//    ShaderProgramPrivate* shaderProgramPrivate = new ShaderProgramPrivate();
 
-    dest = "";
-    std::string line;
+//    std::string vertexFilename = "";
+//    std::string geometryFilename = "";
+//    std::string fragmentFilename = "";
 
-    while(getline(filestream, line)) {
-        dest += line + "\n";
-    }
+//    std::string vs = "";
+//    std::string gs = "";
+//    std::string fs = "";
 
-    filestream.close();
+//    Shader vertexShader(ShaderType::Vertex);
+//    Shader geometryShader(ShaderType::Geometry);
+//    Shader fragmentShader(ShaderType::Fragment);
 
-    return true;
-}
+//    switch (shaderProgramType)
+//    {
+//    case ShaderProgramType::Basic:
 
-ShaderProgramPrivate* ShaderProgramPrivate::Create(ShaderProgramType shaderProgramType)
-{
-    typedef Shader::ShaderType ShaderType;
+//        vertexFilename = "shaders/basic.vs";
+//        fragmentFilename = "shaders/basic.fs";
 
-    ShaderProgramPrivate* shaderProgramPrivate = new ShaderProgramPrivate();
+//        break;
+//    case ShaderProgramType::Normal:
 
-    std::string vertexFilename = "";
-    std::string geometryFilename = "";
-    std::string fragmentFilename = "";
+//        vertexFilename = "shaders/normal.vs";
+//        geometryFilename = "shaders/normal.gs";
+//        fragmentFilename = "shaders/normal.fs";
 
-    std::string vs = "";
-    std::string gs = "";
-    std::string fs = "";
+//        break;
+//    case ShaderProgramType::FlatShading:
 
-    Shader vertexShader(ShaderType::Vertex);
-    Shader geometryShader(ShaderType::Geometry);
-    Shader fragmentShader(ShaderType::Fragment);
+//        vertexFilename = "shaders/flatShading.vs";
+//        geometryFilename = "shaders/flatShading.gs";
+//        fragmentFilename = "shaders/flatShading.fs";
 
-    switch (shaderProgramType)
-    {
-    case ShaderProgramType::Basic:
+//        break;
+//    case ShaderProgramType::GouraudShading:
 
-        vertexFilename = "shaders/basic.vs";
-        fragmentFilename = "shaders/basic.fs";
+//        vertexFilename = "shaders/gouraudShading.vs";
+//        fragmentFilename = "shaders/gouraudShading.fs";
 
-        break;
-    case ShaderProgramType::Normal:
+//        break;
+//    case ShaderProgramType::PhongShading:
 
-        vertexFilename = "shaders/normal.vs";
-        geometryFilename = "shaders/normal.gs";
-        fragmentFilename = "shaders/normal.fs";
+//        vertexFilename = "shaders/phongShading.vs";
+//        fragmentFilename = "shaders/phongShading.fs";
 
-        break;
-    case ShaderProgramType::FlatShading:
+//        break;
 
-        vertexFilename = "shaders/flatShading.vs";
-        geometryFilename = "shaders/flatShading.gs";
-        fragmentFilename = "shaders/flatShading.fs";
+//    case ShaderProgramType::Frame:
 
-        break;
-    case ShaderProgramType::GouraudShading:
+//        vertexFilename = "shaders/frame.vs";
+//        fragmentFilename = "shaders/frame.fs";
 
-        vertexFilename = "shaders/gouraudShading.vs";
-        fragmentFilename = "shaders/gouraudShading.fs";
+//        break;
+//    case ShaderProgramType::HighLight:
 
-        break;
-    case ShaderProgramType::PhongShading:
+//        vertexFilename = "shaders/highLight.vs";
+//        geometryFilename = "shaders/highLight.gs";
+//        fragmentFilename = "shaders/highLight.fs";
 
-        vertexFilename = "shaders/phongShading.vs";
-        fragmentFilename = "shaders/phongShading.fs";
+//        break;
+//    case ShaderProgramType::BasicTexturing:
 
-        break;
+//        vertexFilename = "shaders/basicTexturing.vs";
+//        fragmentFilename = "shaders/basicTexturing.fs";
 
-    case ShaderProgramType::Frame:
+//        break;
+//    case ShaderProgramType::Texturing:
 
-        vertexFilename = "shaders/frame.vs";
-        fragmentFilename = "shaders/frame.fs";
+//        vertexFilename = "shaders/texturing.vs";
+//        fragmentFilename = "shaders/texturing.fs";
 
-        break;
-    case ShaderProgramType::HighLight:
+//        break;
+//    case ShaderProgramType::TangentSpace:
 
-        vertexFilename = "shaders/highLight.vs";
-        geometryFilename = "shaders/highLight.gs";
-        fragmentFilename = "shaders/highLight.fs";
+//        vertexFilename = "shaders/tangentSpace.vs";
+//        geometryFilename = "shaders/tangentSpace.gs";
+//        fragmentFilename = "shaders/tangentSpace.fs";
 
-        break;
-    case ShaderProgramType::BasicTexturing:
+//        break;
+//    case ShaderProgramType::Picking:
 
-        vertexFilename = "shaders/basicTexturing.vs";
-        fragmentFilename = "shaders/basicTexturing.fs";
+//        vertexFilename = "shaders/picking.vs";
+//        fragmentFilename = "shaders/picking.fs";
 
-        break;
-    case ShaderProgramType::Texturing:
+//        break;
+//    case ShaderProgramType::OutLine:
 
-        vertexFilename = "shaders/texturing.vs";
-        fragmentFilename = "shaders/texturing.fs";
+//        vertexFilename = "shaders/outline.vs";
+//        fragmentFilename = "shaders/outline.fs";
 
-        break;
-    case ShaderProgramType::TangentSpace:
+//        break;
+//    case ShaderProgramType::MatCap:
 
-        vertexFilename = "shaders/tangentSpace.vs";
-        geometryFilename = "shaders/tangentSpace.gs";
-        fragmentFilename = "shaders/tangentSpace.fs";
+//        vertexFilename = "shaders/matcap.vs";
+//        fragmentFilename = "shaders/matcap.fs";
 
-        break;
-    case ShaderProgramType::Picking:
+//        break;
+//    case ShaderProgramType::VaoQuad:
 
-        vertexFilename = "shaders/picking.vs";
-        fragmentFilename = "shaders/picking.fs";
+//        vertexFilename = "shaders/vaoQuad.vs";
+//        fragmentFilename = "shaders/vaoQuad.fs";
 
-        break;
-    case ShaderProgramType::OutLine:
+//        break;
+//    case ShaderProgramType::Deferred:
 
-        vertexFilename = "shaders/outline.vs";
-        fragmentFilename = "shaders/outline.fs";
+//        vertexFilename = "shaders/deferred.vs";
+//        fragmentFilename = "shaders/deferred.fs";
 
-        break;
-    case ShaderProgramType::MatCap:
+//        break;
+//    case ShaderProgramType::ShadowMapping:
 
-        vertexFilename = "shaders/matcap.vs";
-        fragmentFilename = "shaders/matcap.fs";
+//        vertexFilename = "shaders/shadowMapping.vs";
+//        fragmentFilename = "shaders/shadowMapping.fs";
 
-        break;
-    case ShaderProgramType::VaoQuad:
+//        break;
+//    case ShaderProgramType::NormalMapping:
 
-        vertexFilename = "shaders/vaoQuad.vs";
-        fragmentFilename = "shaders/vaoQuad.fs";
+//        vertexFilename = "shaders/normalMapping.vs";
+//        fragmentFilename = "shaders/normalMapping.fs";
 
-        break;
-    case ShaderProgramType::Deferred:
+//        break;
+//    case ShaderProgramType::CubeMap:
 
-        vertexFilename = "shaders/deferred.vs";
-        fragmentFilename = "shaders/deferred.fs";
+//        vertexFilename = "shaders/cubeMap.vs";
+//        fragmentFilename = "shaders/cubeMap.fs";
 
-        break;
-    case ShaderProgramType::ShadowMapping:
+//        break;
+//    case ShaderProgramType::EnvironmentMapping:
 
-        vertexFilename = "shaders/shadowMapping.vs";
-        fragmentFilename = "shaders/shadowMapping.fs";
+//        vertexFilename = "shaders/environmentMapping.vs";
+//        fragmentFilename = "shaders/environmentMapping.fs";
 
-        break;
-    case ShaderProgramType::NormalMapping:
+//        break;
+//    case ShaderProgramType::DisplacementMapping:
 
-        vertexFilename = "shaders/normalMapping.vs";
-        fragmentFilename = "shaders/normalMapping.fs";
+//        vertexFilename = "shaders/displacementMapping.vs";
+//        fragmentFilename = "shaders/displacementMapping.fs";
 
-        break;
-    case ShaderProgramType::CubeMap:
+//        break;
+//    }
 
-        vertexFilename = "shaders/cubeMap.vs";
-        fragmentFilename = "shaders/cubeMap.fs";
+//    if (DataRepository.findFile(vertexFilename))
+//        getStringFromFile(vertexFilename, vs);
 
-        break;
-    case ShaderProgramType::EnvironmentMapping:
+//    if (DataRepository.findFile(geometryFilename))
+//        getStringFromFile(geometryFilename, gs);
 
-        vertexFilename = "shaders/environmentMapping.vs";
-        fragmentFilename = "shaders/environmentMapping.fs";
+//    if (DataRepository.findFile(fragmentFilename))
+//        getStringFromFile(fragmentFilename, fs);
 
-        break;
-    case ShaderProgramType::DisplacementMapping:
+//    if (vs != "") {
+//        vertexShader.compileSourceCode(vs);
+//        shaderProgramPrivate->addShader(vertexShader);
+//    }
 
-        vertexFilename = "shaders/displacementMapping.vs";
-        fragmentFilename = "shaders/displacementMapping.fs";
+//    if (gs != "") {
+//        geometryShader.compileSourceCode(gs);
+//        shaderProgramPrivate->addShader(geometryShader);
+//    }
 
-        break;
-    }
+//    if (fs != "") {
+//        fragmentShader.compileSourceCode(fs);
+//        shaderProgramPrivate->addShader(fragmentShader);
+//    }
 
-    if (DataRepository.findFile(vertexFilename))
-        getStringFromFile(vertexFilename, vs);
+//    shaderProgramPrivate->link();
 
-    if (DataRepository.findFile(geometryFilename))
-        getStringFromFile(geometryFilename, gs);
+//    switch (shaderProgramType)
+//    {
+//    case ShaderProgramType::Basic:
 
-    if (DataRepository.findFile(fragmentFilename))
-        getStringFromFile(fragmentFilename, fs);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("material", VisualManager::MaterialIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("light", VisualManager::LightIndex);
 
-    if (vs != "") {
-        vertexShader.compileSourceCode(vs);
-        shaderProgramPrivate->addShader(vertexShader);
-    }
+//        break;
+//    case ShaderProgramType::Normal:
 
-    if (gs != "") {
-        geometryShader.compileSourceCode(gs);
-        shaderProgramPrivate->addShader(geometryShader);
-    }
+//        shaderProgramPrivate->setUniformValue("scale", .5f);
+//        shaderProgramPrivate->setUniformValue("normalColor", glm::vec3(1,1,1));
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
 
-    if (fs != "") {
-        fragmentShader.compileSourceCode(fs);
-        shaderProgramPrivate->addShader(fragmentShader);
-    }
+//        break;
+//    case ShaderProgramType::FlatShading:
 
-    shaderProgramPrivate->link();
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("material", VisualManager::MaterialIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("light", VisualManager::LightIndex);
 
-    switch (shaderProgramType)
-    {
-    case ShaderProgramType::Basic:
+//        break;
+//    case ShaderProgramType::GouraudShading:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("material", VisualManager::MaterialIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("light", VisualManager::LightIndex);
 
-        break;
-    case ShaderProgramType::Normal:
+//        break;
+//    case ShaderProgramType::PhongShading:
 
-        shaderProgramPrivate->addData<float>("scale", 0.5f);
-        shaderProgramPrivate->addData<glm::vec3>("normalColor", glm::vec3(1,1,1));
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("material", VisualManager::MaterialIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("light", VisualManager::LightIndex);
 
-        break;
-    case ShaderProgramType::FlatShading:
+//        break;
+//    case ShaderProgramType::Frame:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("light", VisualManager::LightIndex);
+////        shaderProgramPrivate->setInstancing(3);
 
-        break;
-    case ShaderProgramType::GouraudShading:
+//        break;
+//    case ShaderProgramType::HighLight:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->setUniformValue("color", glm::vec3(1.0,0.8,0.0));
+//        shaderProgramPrivate->setRenderState<DepthFunc>(GL_LEQUAL);
+//        shaderProgramPrivate->setRenderState<LineWidth>(2.0f);
+//        shaderProgramPrivate->setRenderState<PolygonMode>(GL_LINE);
 
-        break;
-    case ShaderProgramType::PhongShading:
+//        break;
+//    case ShaderProgramType::BasicTexturing:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("light", VisualManager::LightIndex);
 
-        break;
-    case ShaderProgramType::Frame:
+//        break;
+//    case ShaderProgramType::Texturing:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
-        shaderProgramPrivate->setInstancing(3);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("material", VisualManager::MaterialIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("light", VisualManager::LightIndex);
 
-        break;
-    case ShaderProgramType::HighLight:
+//        break;
+//    case ShaderProgramType::TangentSpace:
 
-        shaderProgramPrivate->addData<glm::vec3>("color", glm::vec3(1.0,0.8,0.0));
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->set<DepthFunc>(GL_LEQUAL);
-        shaderProgramPrivate->set<LineWidth>(2.0f);
-        shaderProgramPrivate->set<PolygonMode>(GL_LINE);
+////        shaderProgramPrivate->setPrimitiveType(VisualParam::PrimitiveType::POINTS);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->setUniformValue("scale", .5);
 
-        break;
-    case ShaderProgramType::BasicTexturing:
+//        break;
+//    case ShaderProgramType::Picking:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
 
-        break;
-    case ShaderProgramType::Texturing:
+//        break;
+//    case ShaderProgramType::OutLine:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
 
-        break;
-    case ShaderProgramType::TangentSpace:
+//        break;
+//    case ShaderProgramType::MatCap:
 
-        shaderProgramPrivate->setPrimitiveType(VisualParam::PrimitiveType::POINTS);
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->setUniformValue("scale", .5);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
 
-        break;
-    case ShaderProgramType::Picking:
+//        break;
+//    case ShaderProgramType::VaoQuad:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+//        break;
+//    case ShaderProgramType::Deferred:
 
-        break;
-    case ShaderProgramType::OutLine:
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("material", VisualManager::MaterialIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+//        break;
+//    case ShaderProgramType::ShadowMapping:
 
-        break;
-    case ShaderProgramType::MatCap:
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+//        break;
+//    case ShaderProgramType::NormalMapping:
 
-        break;
-    case ShaderProgramType::VaoQuad:
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("material", VisualManager::MaterialIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("light", VisualManager::LightIndex);
 
-        break;
-    case ShaderProgramType::Deferred:
+//        break;
+//    case ShaderProgramType::CubeMap:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->setRenderState<CullFace>(GL_FALSE);
+//        shaderProgramPrivate->setRenderState<DepthFunc>(GL_LEQUAL);
 
-        break;
-    case ShaderProgramType::ShadowMapping:
+//        break;
+//    case ShaderProgramType::EnvironmentMapping:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
 
-        break;
-    case ShaderProgramType::NormalMapping:
+//        break;
+//    case ShaderProgramType::DisplacementMapping:
 
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("material", VisualManager::MaterialIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
+//        shaderProgramPrivate->attachUniformBlock("transform", VisualManager::TransformIndex);
+//        shaderProgramPrivate->attachUniformBlock("camera", VisualManager::CameraIndex);
+//        shaderProgramPrivate->attachUniformBlock("light", VisualManager::LightIndex);
 
-        break;
-    case ShaderProgramType::CubeMap:
+//        break;
+//    }
 
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->set<CullFace>(GL_FALSE);
-        shaderProgramPrivate->set<DepthFunc>(GL_LEQUAL);
-
-        break;
-    case ShaderProgramType::EnvironmentMapping:
-
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-
-        break;
-    case ShaderProgramType::DisplacementMapping:
-
-        shaderProgramPrivate->addUniformBlock("transform", VisualManager::TransformIndex);
-        shaderProgramPrivate->addUniformBlock("camera", VisualManager::CameraIndex);
-        shaderProgramPrivate->addUniformBlock("light", VisualManager::LightIndex);
-
-        break;
-    }
-
-    return shaderProgramPrivate;
-}
+//    return shaderProgramPrivate;
+//}
 
 ShaderProgramPrivate::ShaderProgramPrivate() :
     m_programId(0),
     m_isLinked(false),
-    m_shaderList(3),
-    m_dataList(),
-    m_visualParam(VisualParam::DefaultInstance()),
-    m_visualOption()
+    m_renderState()
 {
     m_programId = glCreateProgram();
 }
 
 ShaderProgramPrivate::~ShaderProgramPrivate()
 {
-    for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
-        BaseData* baseData = it->second;
-        delete baseData;
-        baseData = nullptr;
-    }
     glDeleteProgram(m_programId);
 }
 
 GLuint ShaderProgramPrivate::getProgramID() const
 {
-    return this->m_programId;
+    return m_programId;
 }
 
-void ShaderProgramPrivate::link()
+void ShaderProgramPrivate::link(const std::string& vs, const std::string& gs, const std::string& fs)
 {
-    GLint linked = 0;
+    typedef Shader::ShaderType ShaderType;
 
-    for (const Shader* shader : m_shaderList) {
-        if (shader != nullptr)
+    Shader vertexShader(ShaderType::Vertex);
+    Shader geometryShader(ShaderType::Geometry);
+    Shader fragmentShader(ShaderType::Fragment);
+
+    if(vs != "")
+        vertexShader.compileSourceCode(vs);
+
+    if(gs != "")
+        geometryShader.compileSourceCode(gs);
+
+    if(fs != "")
+        fragmentShader.compileSourceCode(fs);
+
+    GLint linked = 0;
+    Shader* shaders[3] = {&vertexShader, &geometryShader, &fragmentShader};
+
+    for (Shader* shader : shaders) {
+        if(shader->isCompiled()) {
             glAttachShader(m_programId, shader->getShaderID());
+        }
     }
 
     glLinkProgram(m_programId);
@@ -398,44 +385,19 @@ void ShaderProgramPrivate::link()
     {
         GLchar infoLog[512];
         glGetProgramInfoLog(m_programId, 512, nullptr, infoLog);
-        msg_error("ShaderProgram") << "Linkage failed: " << infoLog;
+        msg_error("ShaderProgramPrivate") << "Linkage failed: " << infoLog;
     }
 
     m_isLinked = linked;
 
-    for (const Shader* shader : m_shaderList) {
-        if (shader != nullptr)
-            glDetachShader(m_programId, shader->getShaderID());
+    for (Shader* shader : shaders) {
+        glDetachShader(m_programId, shader->getShaderID());
     }
 }
 
 bool ShaderProgramPrivate::isLinked() const
 {
     return m_isLinked;
-}
-
-void ShaderProgramPrivate::addShader(const Shader& shader)
-{
-    if (!shader.isCompiled())
-        return;
-
-    typedef Shader::ShaderType ShaderType;
-    ShaderType type = shader.getShaderType();
-
-    if (m_shaderList[type] != nullptr) {
-        msg_warning("ShaderProgram") << "Shader " << type << " already set in ShaderProgram " << m_programId;
-        return;
-    }
-
-    m_shaderList[type] = &shader;
-}
-
-void ShaderProgramPrivate::removeShader(const Shader &shader)
-{
-    typedef Shader::ShaderType ShaderType;
-    ShaderType type = shader.getShaderType();
-
-    m_shaderList[type] = nullptr;
 }
 
 void ShaderProgramPrivate::bind() const
@@ -450,15 +412,7 @@ void ShaderProgramPrivate::unbind() const
     glUseProgram(0);
 }
 
-void ShaderProgramPrivate::updateDataIfDirty()
-{
-    for (auto it = m_dataList.begin(); it != m_dataList.end(); ++it) {
-        BaseData* baseData = it->second;
-        baseData->updateIfDirty();
-    }
-}
-
-bool ShaderProgramPrivate::addUniformBlock(const char* name, unsigned int binding_index)
+bool ShaderProgramPrivate::attachUniformBlock(const char* name, unsigned int binding_index)
 {
     unsigned int block_index = glGetUniformBlockIndex(this->m_programId, name);
 
@@ -478,6 +432,23 @@ int ShaderProgramPrivate::attributLocation(const char* name) const
         return -1;
 
     return glGetUniformLocation(this->m_programId, name);
+}
+
+void ShaderProgramPrivate::setUniformValue(const char* name, int x)
+{
+    int location = attributLocation(name);
+
+    if (location == -1) {
+        msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Uniform value not setted";
+        return;
+    }
+
+    setUniformValue(location, x);
+}
+
+void ShaderProgramPrivate::setUniformValue(int attributLocation, int x)
+{
+    glUniform1i(attributLocation, x);
 }
 
 void ShaderProgramPrivate::setUniformValue(const char* name, float x)
@@ -599,37 +570,33 @@ void ShaderProgramPrivate::setUniformValue(int attributLocation, const glm::mat4
     glUniformMatrix4fv(attributLocation, 1, GL_FALSE, glm::value_ptr(m));
 }
 
-VisualParam ShaderProgramPrivate::visualParam() const
+void ShaderProgramPrivate::setUniformValue(const char* name, TexturePrivate::SPtr t)
 {
-    return this->m_visualParam;
+    int location = attributLocation(name);
+
+    if (location == -1) {
+        msg_warning("ShaderProgram") << "uniform location '" << name << "' not found. Uniform value not setted";
+        return;
+    }
+
+    setUniformValue(location, t);
 }
 
-unsigned int ShaderProgramPrivate::instancing() const
+void ShaderProgramPrivate::setUniformValue(int attributLocation, TexturePrivate::SPtr t)
 {
-    return this->m_visualParam.instancing;
-}
+    unsigned short unit = t->getTextureUnit();
 
-void ShaderProgramPrivate::setInstancing(unsigned int instancing)
-{
-    this->m_visualParam.instancing = instancing;
-}
+    t->bind();
 
-VisualParam::PrimitiveType ShaderProgramPrivate::primitiveType() const
-{
-    return this->m_visualParam.primitiveType;
-}
-
-void ShaderProgramPrivate::setPrimitiveType(VisualParam::PrimitiveType primitiveType)
-{
-    this->m_visualParam.primitiveType = primitiveType;
+    glUniform1i(attributLocation, unit);
 }
 
 void ShaderProgramPrivate::pushAttribute() const
 {
-    this->m_visualOption.pushAttribute();
+    this->m_renderState.pushAttribute();
 }
 
 void ShaderProgramPrivate::popAttribute() const
 {
-    this->m_visualOption.popAttribute();
+    this->m_renderState.popAttribute();
 }

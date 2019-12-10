@@ -12,8 +12,12 @@ set(HEADER_FILES
     src/graph/DrawVisitor.h
     src/graph/DrawWithSelectionVisitor.h
     src/graph/FetchVisualModelVisitor.h
+    src/graph/HighLightShaderProgram.h
+    src/graph/MatCapShaderProgram.h
     src/graph/Mesh.h
     src/graph/Node.h
+    src/graph/NormalShaderProgram.h
+    src/graph/PhongShaderProgram.h
     src/graph/PickingVisitor.h
     src/graph/SceneGraph.h
     src/graph/ShaderProgram.h
@@ -56,8 +60,12 @@ set(SOURCE_FILES
     src/graph/DrawVisitor.cpp
     src/graph/DrawWithSelectionVisitor.cpp
     src/graph/FetchVisualModelVisitor.cpp
+    src/graph/HighLightShaderProgram.cpp
+    src/graph/MatCapShaderProgram.cpp
     src/graph/Mesh.cpp
     src/graph/Node.cpp
+    src/graph/NormalShaderProgram.cpp
+    src/graph/PhongShaderProgram.cpp
     src/graph/PickingVisitor.cpp
     src/graph/SceneGraph.cpp
     src/graph/ShaderProgram.cpp
@@ -98,12 +106,12 @@ set(PRIVATE_HEADER_FILES
     src/opengl/Data.h
     src/opengl/Framebuffer.h
     src/opengl/MeshPrivate.h
+    src/opengl/RenderState.h
     src/opengl/Shader.h
     src/opengl/ShaderProgramPrivate.h
     src/opengl/TexturePrivate.h
     src/opengl/TexturePrivate2D.h
     src/opengl/VisualManager.h
-    src/opengl/VisualOption.h
 
     src/statemachine/OpenGLAttribute.h
     src/statemachine/OpenGLStateMachine.h
@@ -114,12 +122,12 @@ set(PRIVATE_SOURCE_FILES
     src/opengl/Data.cpp
     src/opengl/Framebuffer.cpp
     src/opengl/MeshPrivate.cpp
+    src/opengl/RenderState.cpp
     src/opengl/Shader.cpp
     src/opengl/ShaderProgramPrivate.cpp
     src/opengl/TexturePrivate.cpp
     src/opengl/TexturePrivate2D.cpp
     src/opengl/VisualManager.cpp
-    src/opengl/VisualOption.cpp
 
     src/statemachine/OpenGLAttribute.cpp
     src/statemachine/OpenGLAttribute.inl

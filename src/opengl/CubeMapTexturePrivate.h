@@ -16,6 +16,9 @@ class CubeMapTexturePrivate : public TexturePrivate
 {
 
 public:
+    using SPtr = std::shared_ptr<CubeMapTexturePrivate>;
+
+public:
     virtual void bind() const;
     virtual void unbind() const;
 

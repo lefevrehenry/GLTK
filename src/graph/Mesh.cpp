@@ -18,11 +18,11 @@ void Mesh::getBBox(glm::vec3 &min, glm::vec3 &max) const
     this->m_meshPrivate->getBBox(min, max);
 }
 
-void Mesh::draw(const VisualParam* param) const
+void Mesh::draw() const
 {
     if(!this->m_meshPrivate)
         return;
 
-    this->m_meshPrivate->draw(param);
+    this->m_meshPrivate->draw();
 }
 

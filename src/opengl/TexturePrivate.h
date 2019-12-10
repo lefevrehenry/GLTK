@@ -3,6 +3,7 @@
 
 // Standard Library
 #include <list>
+#include <memory>
 #include <string>
 
 // Glad
@@ -18,6 +19,9 @@ class TexturePrivate
 {
 
 public:
+    using SPtr = std::shared_ptr<TexturePrivate>;
+
+public:
     TexturePrivate();
     virtual ~TexturePrivate();
 
@@ -30,7 +34,7 @@ public:
     virtual void unbind() const;
 
 public:
-    virtual void load(const std::string& filename);
+    virtual void load(const std::string& filename) = 0;
 
 private:
     static std::list<unsigned short> ActiveTexture;

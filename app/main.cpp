@@ -16,6 +16,10 @@
 #include <Visitor.h>
 #include <VisualModel.h>
 #include <Rect.h>
+#include <PhongShaderProgram.h>
+#include <MatCapShaderProgram.h>
+#include <NormalShaderProgram.h>
+#include <HighLightShaderProgram.h>
 
 // Glm
 #include <glm/gtx/transform.hpp>
@@ -47,7 +51,7 @@ void addPiece(Node* node, Mesh::SPtr mesh, Material material, int i, int j)
 }
 
 void addPhongShadingShader(Node* node) {
-    ShaderProgram::SPtr sp( ShaderProgram::Create(ShaderProgramType::PhongShading) );
+    ShaderProgram::SPtr sp(new PhongShaderProgram());
     node->setShaderProgram(sp);
 }
 
@@ -55,8 +59,9 @@ void addMatCapShader(Node* node, const std::string& filename) {
     Texture::SPtr matcapTexture(new Texture2D());
     matcapTexture->load(filename);
 
-    ShaderProgram::SPtr sp( ShaderProgram::Create(ShaderProgramType::MatCap) );
-    sp->addData("matcap", matcapTexture.get());
+    MatCapShaderProgram::SPtr sp(new MatCapShaderProgram());
+    sp->setMatCapTexture(std::string(""));
+    //sp->addData("matcap", matcapTexture.get());
 
     node->setShaderProgram(sp);
 }
@@ -126,19 +131,19 @@ void createChessboard(Node* node)
 
 void createBoard(Node* node)
 {
-    float s = 118.5;
+//    float s = 118.5;
 
-    Texture::SPtr boardColorTex(new Texture2D());
-    boardColorTex->load("textures/chessboard2.jpg");
+//    Texture::SPtr boardColorTex(new Texture2D());
+//    boardColorTex->load("textures/chessboard2.jpg");
 
-    ShaderProgram::SPtr shaderProgram( ShaderProgram::Create(ShaderProgramType::BasicTexturing) );
-    shaderProgram->addData("colorMap", boardColorTex.get());
+//    ShaderProgram::SPtr shaderProgram( ShaderProgram::Create(ShaderProgramType::BasicTexturing) );
+//    shaderProgram->addData("colorMap", boardColorTex.get());
 
-    VisualModel::SPtr board(new VisualModel("mesh/flatQuad.obj"));
-    board->transform().scale(s,s,s);
+//    VisualModel::SPtr board(new VisualModel("mesh/flatQuad.obj"));
+//    board->transform().scale(s,s,s);
 
-    node->setShaderProgram(shaderProgram);
-    node->addVisual(board);
+//    node->setShaderProgram(shaderProgram);
+//    node->addVisual(board);
 }
 
 void createScene(Node* rootNode)
@@ -150,21 +155,25 @@ void createScene(Node* rootNode)
     visualModel.reset(new VisualModel("mesh/dragon_low.obj", Material::Emerald()));
     rootNode->addVisual(visualModel);
 
-    shaderProgram.reset( ShaderProgram::Create(GLTK::ShaderProgramType::PhongShading) );
+    shaderProgram.reset( new PhongShaderProgram() );
     rootNode->setShaderProgram(shaderProgram);
 
     // node 1
     Node* node1 = rootNode->addChild();
     node1->addVisual(visualModel);
 
-    shaderProgram.reset( ShaderProgram::Create(GLTK::ShaderProgramType::HighLight) );
+    shaderProgram.reset( new HighLightShaderProgram() );
     node1->setShaderProgram(shaderProgram);
 
     // node 2
     Node* node2 = rootNode->addChild();
     node2->addVisual(visualModel);
 
-    shaderProgram.reset( ShaderProgram::Create(GLTK::ShaderProgramType::Normal) );
+    NormalShaderProgram* nsp = new NormalShaderProgram();
+    nsp->setNormalScale(.5f);
+    nsp->setNormalColor(glm::vec3(1,1,1));
+
+    shaderProgram.reset( nsp );
     node2->setShaderProgram(shaderProgram);
 
 //    createBoard(rootNode);
@@ -315,7 +324,7 @@ int main()
 
 void initGLTK()
 {
-    std::map<std::string, std::string> iniFileValues = GLTK::getMapFromIniFile("../etc/config.ini");
+    std::map<std::string, std::string> iniFileValues = GLTK::GetMapFromIniFile("../etc/config.ini");
 
     if (iniFileValues.find("SHARE_DIR") != iniFileValues.end()) {
         std::string ini_directories[4] = {
@@ -330,6 +339,7 @@ void initGLTK()
     } else {
         msg_warning("FileRepository") << "No share/ directory added";
     }
+    DataRepository.addFirstPath("../share/");
 
     createScene(scene->root());
 

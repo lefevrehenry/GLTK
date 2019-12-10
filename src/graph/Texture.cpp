@@ -35,7 +35,7 @@ void Texture::unbind() const
     this->m_texturePrivate->unbind();
 }
 
-TexturePrivate *Texture::texturePrivate() const
+std::shared_ptr<TexturePrivate> Texture::texturePrivate() const
 {
-    return this->m_texturePrivate.get();
+    return this->m_texturePrivate;
 }

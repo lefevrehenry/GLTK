@@ -1,15 +1,11 @@
-#include "VisualOption.h"
+#include "RenderState.h"
 
 #include <OpenGLStateMachine.h>
 
 using namespace gl;
 
-VisualOption::VisualOption()
-{
-
-}
-
-VisualOption::~VisualOption()
+RenderSate::RenderSate() :
+    m_attributeStack()
 {
 
 }
@@ -23,7 +19,7 @@ void PushAndApply(BaseOpenGLAttribut::SPtr baseAttribut)
     OpenGLStateMachine::Set<N>(*attribut);
 }
 
-void VisualOption::pushAttribute() const
+void RenderSate::pushAttribute() const
 {
     // ugly as fuck !
     // mixing compile-time template compilation with runtime check :/
@@ -66,7 +62,7 @@ void VisualOption::pushAttribute() const
     }
 }
 
-void VisualOption::popAttribute() const
+void RenderSate::popAttribute() const
 {
     // same as above, ugly idea
 
