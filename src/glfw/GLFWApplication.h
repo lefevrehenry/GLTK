@@ -1,7 +1,7 @@
 #ifndef GLTK_GLFWAPPLICATION_H
 #define GLTK_GLFWAPPLICATION_H
 
-#include <Application.h>
+#include <BaseApplication.h>
 #include <Rect.h>
 
 
@@ -12,7 +12,7 @@ namespace gl {
 /**
  * @brief The GLFWApplication class
  */
-class GLFWApplication : public Application
+class GLFWApplication : public BaseApplication
 {
 
 public:
@@ -32,18 +32,16 @@ protected:
     virtual ~GLFWApplication();
 
 public:
-    virtual void init();
-    virtual void loop();
+    float time() const override;
+    void loop() override;
+
+public:
+    Rect windowRect() const override;
+    void setWindowRect(const Rect& rect) override;
 
 public:
     GLFWwindow* getWindow() const;
     void setWindow(GLFWwindow* newHandle);
-
-    Rect windowRect() const;
-    void setWindowRect(const Rect& rect);
-
-private:
-    void draw();
 
 public:
     static int OpenGLMajorVersion;
@@ -54,7 +52,6 @@ private:
 
 private:
     GLFWwindow* m_windowHandle;
-    double      m_previousTime;
 
 };
 

@@ -33,7 +33,7 @@ set(HEADER_FILES
     src/helper/Message.h
     src/helper/FileRepository.h
 
-    src/misc/Application.h
+    src/misc/BaseApplication.h
     src/misc/Animation.h
     src/misc/AnimationGroup.h
     src/misc/BaseAnimation.h
@@ -81,11 +81,11 @@ set(SOURCE_FILES
     src/helper/FileRepository.cpp
     src/helper/Message.cpp
 
-    src/misc/Application.cpp
     src/misc/Animation.cpp
     src/misc/Animation.inl
     src/misc/AnimationGroup.cpp
     src/misc/BaseAnimation.cpp
+    src/misc/BaseApplication.cpp
     src/misc/Camera.cpp
     src/misc/Light.cpp
     src/misc/Material.cpp

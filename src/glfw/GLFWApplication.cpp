@@ -43,8 +43,8 @@ GLFWApplication* GLFWApplication::CreateWindow(int width, int height)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLFWApplication::OpenGLMinorVersion);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    Application::ScreenWidth = uint(width);
-    Application::ScreenHeight = uint(height);
+    BaseApplication::ScreenWidth = uint(width);
+    BaseApplication::ScreenHeight = uint(height);
 
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow* windowHandle = glfwCreateWindow(width, height, "OpenGL", nullptr, nullptr);
@@ -124,8 +124,8 @@ void GLFWApplication::FramebufferSizeCallback(GLFWwindow* handle, int width, int
             sceneView->interface()->framebufferSizeCallback(handle, width, height);
     }
 
-    Application::ScreenWidth = uint(width);
-    Application::ScreenHeight = uint(height);
+    BaseApplication::ScreenWidth = uint(width);
+    BaseApplication::ScreenHeight = uint(height);
 }
 
 void GLFWApplication::MouseButtonCallback(GLFWwindow* handle, int button, int action, int mods)
@@ -189,9 +189,8 @@ void GLFWApplication::KeyCallback(GLFWwindow* handle, int key, int scancode, int
     }
 }
 
-GLFWApplication::GLFWApplication(GLFWwindow* handle) : Application(),
-    m_windowHandle(nullptr),
-    m_previousTime(0)
+GLFWApplication::GLFWApplication(GLFWwindow* handle) : BaseApplication(),
+    m_windowHandle(nullptr)
 {
     setWindow(handle);
 
@@ -202,9 +201,9 @@ GLFWApplication::~GLFWApplication()
 {
 }
 
-void GLFWApplication::init()
+float GLFWApplication::time() const
 {
-
+    return glfwGetTime();
 }
 
 void GLFWApplication::loop()
@@ -213,8 +212,6 @@ void GLFWApplication::loop()
         msg_error("App") << "Can't loop, set window first";
         return;
     }
-
-    this->m_previousTime = glfwGetTime();
 
 //    double lastTime = glfwGetTime();
 //    unsigned int nbFrames = 0;
@@ -233,33 +230,43 @@ void GLFWApplication::loop()
 //            lastTime += 1.0;
 //        }
 
-        double currentTime = glfwGetTime();                     // second
-        double dt = 1000.0 * (currentTime - m_previousTime);    // millisecond
-
-        float t = std::round(float(currentTime) * 100) / 100;
-        VisualManager::UpdateUniformBufferTime(t);
-
-        /* Call prepareFrame to update animations */
-        this->prepareFrame(dt);
-
-        /* Call beforeDrawing callback */
-        this->callBeforeDrawingCallback(t);
-
         /* Call the drawing function */
         this->draw();
-
-        /* Call afterDrawing callback */
-        this->callAfterDrawingCallback(t);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(this->m_windowHandle);
 
         /* Poll for and process events */
         glfwPollEvents();
-
-        /* Record the current time for the next frame */
-        this->m_previousTime = currentTime;
     }
+}
+
+Rect GLFWApplication::windowRect() const
+{
+    GLFWwindow* window = getWindow();
+
+    if (window == nullptr)
+        return Rect();
+
+    int x = 0;
+    int y = 0;
+    glfwGetWindowPos(window, &x, &y);
+
+    int width = static_cast<int>(BaseApplication::ScreenWidth);
+    int height = static_cast<int>(BaseApplication::ScreenHeight);
+
+    return Rect(x,y,width,height);
+}
+
+void GLFWApplication::setWindowRect(const Rect& rect)
+{
+    GLFWwindow* window = getWindow();
+
+    if (window == nullptr)
+        return;
+
+    glfwSetWindowPos(window, rect.x(), rect.y());
+    glfwSetWindowSize(window, rect.width(), rect.height());
 }
 
 GLFWwindow* GLFWApplication::getWindow() const
@@ -289,41 +296,5 @@ void GLFWApplication::setWindow(GLFWwindow* newHandle)
         glfwSetCursorPosCallback(newHandle, GLFWApplication::CursorPosCallback);
         glfwSetScrollCallback(newHandle, GLFWApplication::ScrollCallback);
         glfwSetKeyCallback(newHandle, GLFWApplication::KeyCallback);
-    }
-}
-
-Rect GLFWApplication::windowRect() const
-{
-    GLFWwindow* window = getWindow();
-
-    if (window == nullptr)
-        return Rect();
-
-    int x = 0;
-    int y = 0;
-    glfwGetWindowPos(window, &x, &y);
-
-    int width = static_cast<int>(Application::ScreenWidth);
-    int height = static_cast<int>(Application::ScreenHeight);
-
-    return Rect(x,y,width,height);
-}
-
-void GLFWApplication::setWindowRect(const Rect& rect)
-{
-    GLFWwindow* window = getWindow();
-
-    if (window == nullptr)
-        return;
-
-    glfwSetWindowPos(window, rect.x(), rect.y());
-    glfwSetWindowSize(window, rect.width(), rect.height());
-}
-
-void GLFWApplication::draw()
-{
-    for (const std::shared_ptr<SceneView>& sceneView : sceneViews()) {
-        if(sceneView)
-            sceneView->draw();
     }
 }
