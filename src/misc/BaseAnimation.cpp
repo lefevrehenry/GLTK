@@ -21,7 +21,7 @@ void BaseAnimation::setDuration(unsigned int duration)
 
 BaseAnimation::EasingType BaseAnimation::easing() const
 {
-    return this-> m_easingType;
+    return this->m_easingType;
 }
 
 void BaseAnimation::setEasing(BaseAnimation::EasingType easingType)

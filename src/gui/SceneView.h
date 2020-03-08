@@ -39,10 +39,10 @@ public:
 
 public:
     SceneGraph* scene() const;
-    void setScene(std::weak_ptr<SceneGraph> scene);
+    void setScene(const std::weak_ptr<SceneGraph>& scene);
 
     Camera* camera() const;
-    void setCamera(std::weak_ptr<Camera> camera);
+    void setCamera(const std::weak_ptr<Camera>& camera);
 
     const std::shared_ptr<Controller>& interface() const;
     void setInterface(const std::shared_ptr<Controller>& interface);

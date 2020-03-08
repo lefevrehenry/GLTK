@@ -64,7 +64,7 @@ public:
     static unsigned int ScreenHeight;
 
 private:
-    BaseApplication(const BaseApplication&)     = delete;
+    BaseApplication(const BaseApplication&) = delete;
     void operator=(const BaseApplication&)  = delete;
 
 private:

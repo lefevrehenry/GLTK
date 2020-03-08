@@ -57,9 +57,9 @@ SceneGraph* SceneView::scene() const
     return scene.get();
 }
 
-void SceneView::setScene(std::weak_ptr<SceneGraph> scene)
+void SceneView::setScene(const std::weak_ptr<SceneGraph>& scene)
 {
-    this->m_scene = std::shared_ptr<SceneGraph>(scene);
+    this->m_scene = scene;
 }
 
 Camera* SceneView::camera() const
@@ -69,7 +69,7 @@ Camera* SceneView::camera() const
     return camera.get();
 }
 
-void SceneView::setCamera(std::weak_ptr<Camera> camera)
+void SceneView::setCamera(const std::weak_ptr<Camera>& camera)
 {
     this->m_camera = std::shared_ptr<Camera>(camera);
 }
