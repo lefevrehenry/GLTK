@@ -29,6 +29,8 @@ public:
 
 protected:
     GLFWApplication(GLFWwindow* handle);
+
+public:
     virtual ~GLFWApplication();
 
 public:

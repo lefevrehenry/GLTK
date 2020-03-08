@@ -220,11 +220,13 @@ if(${BUILD_WITH_GLFW})
         src/glfw/GLFWApplication.h
         src/glfw/GLFWCameraController.h
         src/glfw/GLFWPickingController.h
+        src/glfw/QuickGLFWApplication.h
     )
     list(APPEND SOURCE_FILES
         src/glfw/GLFWApplication.cpp
         src/glfw/GLFWCameraController.cpp
         src/glfw/GLFWPickingController.cpp
+        src/glfw/QuickGLFWApplication.cpp
     )
 endif()
 
