@@ -345,8 +345,8 @@ void initGLTK()
 
     std::shared_ptr<SceneView> sceneView(new SceneView());
 
-    int width = static_cast<int>(Application::ScreenWidth);
-    int height = static_cast<int>(Application::ScreenHeight);
+    int width = static_cast<int>(BaseApplication::ScreenWidth);
+    int height = static_cast<int>(BaseApplication::ScreenHeight);
     Rect rect(0,0,width,height);
     std::shared_ptr<Controller> controller(new GLFWCameraController(sceneView));
 

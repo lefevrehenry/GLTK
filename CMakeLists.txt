@@ -207,7 +207,7 @@ configure_file(${CMAKE_SOURCE_DIR}/etc/config.ini.in "${CMAKE_BINARY_DIR}/etc/co
 
 # Required packages
 find_package(OpenGL REQUIRED)
-find_package(assimp 4.0.0 EXACT REQUIRED)
+find_package(assimp REQUIRED)
 
 if(${BUILD_EXAMPLES})
     add_subdirectory(app)
